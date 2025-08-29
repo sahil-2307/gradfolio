@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { AuthService } from '../services/authService';
+import type { User } from '../config/supabase';
 import './Login.css';
 
 interface LoginProps {
-  onLogin: (user: any) => void;
+  onLogin: (user: User) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {

@@ -7,11 +7,12 @@ import TemplateSelector from './components/TemplateSelector';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { AuthService } from './services/authService';
+import type { User } from './config/supabase';
 import './App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function App() {
     checkAuth();
   }, []);
 
-  const handleLogin = (userData: any) => {
+  const handleLogin = (userData: User) => {
     setIsAuthenticated(true);
     setUser(userData);
   };
