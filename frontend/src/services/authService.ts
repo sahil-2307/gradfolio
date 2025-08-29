@@ -11,18 +11,28 @@ export class AuthService {
   // Sign up new user
   static async signUp(email: string, password: string, username: string, fullName?: string): Promise<AuthResponse> {
     try {
+      console.log('🔧 SignUp Debug - Starting signup process...')
+      console.log('🔧 Supabase URL:', supabase.supabaseUrl)
+      
       // Check if username is already taken
-      const { data: existingUser } = await supabase
+      console.log('🔧 Checking username availability...')
+      const { data: existingUser, error: checkError } = await supabase
         .from('users')
         .select('username')
         .eq('username', username)
         .single()
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('🔧 Username check error:', checkError)
+        return { success: false, error: `Username check failed: ${checkError.message}` }
+      }
 
       if (existingUser) {
         return { success: false, error: 'Username already taken' }
       }
 
       // Create auth user
+      console.log('🔧 Creating auth user...')
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -34,8 +44,10 @@ export class AuthService {
         }
       })
 
+      console.log('🔧 Auth signup result:', { authData, authError })
+
       if (authError) {
-        return { success: false, error: authError.message }
+        return { success: false, error: `Auth error: ${authError.message}` }
       }
 
       if (!authData.user) {
@@ -63,7 +75,8 @@ export class AuthService {
 
       return { success: true, user: userData }
     } catch (error: any) {
-      return { success: false, error: error.message }
+      console.error('🔧 SignUp catch error:', error)
+      return { success: false, error: `Network error: ${error.message}` }
     }
   }
 

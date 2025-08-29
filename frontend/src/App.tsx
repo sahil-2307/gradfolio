@@ -7,6 +7,7 @@ import TemplateSelector from './components/TemplateSelector';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import DebugEnv from './components/DebugEnv';
+import SupabaseTest from './components/SupabaseTest';
 import { AuthService } from './services/authService';
 import type { User } from './config/supabase';
 import './App.css';
@@ -69,6 +70,7 @@ function App() {
     <Router>
       <div className="App">
         <DebugEnv />
+        <SupabaseTest />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/templates" element={<TemplateSelector />} />
