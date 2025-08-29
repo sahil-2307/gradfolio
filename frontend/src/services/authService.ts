@@ -12,9 +12,23 @@ export class AuthService {
   static async signUp(email: string, password: string, username: string, fullName?: string): Promise<AuthResponse> {
     try {
       console.log('🔧 SignUp Debug - Starting signup process...')
-      console.log('🔧 Skipping username check for now - creating auth user directly')
       
-      // Skip username check for now - database access is blocked
+      // Check if username is already taken
+      console.log('🔧 Checking username availability...')
+      const { data: existingUser, error: checkError } = await supabase
+        .from('users')
+        .select('username')
+        .eq('username', username)
+        .single()
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('🔧 Username check error:', checkError)
+        return { success: false, error: `Username check failed: ${checkError.message}` }
+      }
+
+      if (existingUser) {
+        return { success: false, error: 'Username already taken' }
+      }
 
       // Create auth user
       console.log('🔧 Creating auth user...')
@@ -39,22 +53,29 @@ export class AuthService {
         return { success: false, error: 'User creation failed' }
       }
 
-      // Skip user profile creation for now - return basic user data
-      console.log('🔧 Skipping user profile creation - RLS blocking access')
-      
-      const basicUser = {
-        id: authData.user.id,
-        email: authData.user.email!,
-        username,
-        full_name: fullName,
-        subscription_plan: 'free' as const,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        is_active: true
+      // Create user profile in database
+      console.log('🔧 Creating user profile in database...')
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .insert([
+          {
+            id: authData.user.id,
+            email: authData.user.email!,
+            username,
+            full_name: fullName,
+            subscription_plan: 'free'
+          }
+        ])
+        .select()
+        .single()
+
+      if (userError) {
+        console.error('🔧 User profile creation error:', userError)
+        return { success: false, error: `Profile creation failed: ${userError.message}` }
       }
 
-      console.log('🔧 Returning basic user data:', basicUser)
-      return { success: true, user: basicUser }
+      console.log('🔧 User profile created successfully:', userData)
+      return { success: true, user: userData }
     } catch (error: any) {
       console.error('🔧 SignUp catch error:', error)
       return { success: false, error: `Network error: ${error.message}` }
