@@ -1,0 +1,116 @@
+.minimal-template {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #555;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+.container {
+  padding: 30px;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  color: #333;
+  font-weight: 300;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 15px 0;
+}
+
+section {
+  margin-bottom: 25px;
+}
+
+h2 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.experience {
+  margin-bottom: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.experience h3 {
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.skill {
+  display: inline-block;
+  background: #f5f5f5;
+  color: #666;
+  padding: 5px 10px;
+  margin: 3px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.project {
+  margin-bottom: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.project h3 {
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.project a {
+  display: inline-block;
+  margin-right: 10px;
+  color: #666;
+  text-decoration: none;
+  padding: 3px 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.project a:hover {
+  background: #f5f5f5;
+}
+
+footer {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  margin-top: 30px;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+footer a {
+  color: #666;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

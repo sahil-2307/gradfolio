@@ -1,0 +1,7 @@
+# Netlify redirects file
+# Handle React Router routes
+/*    /index.html   200
+
+# Specific routes for portfolio templates
+/landing_1/*  /landing_1/:splat  200
+/landing_2/*  /landing_2/:splat  200

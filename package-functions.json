@@ -1,0 +1,9 @@
+{
+  "name": "gradfolio-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for Gradfolio",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  }
+}

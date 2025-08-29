@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Portfolio - Admin Panel</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading Admin Panel...</p>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-nav">
+                <h1><i class="fas fa-rocket"></i> Advanced Portfolio Admin</h1>
+                <div class="admin-actions">
+                    <button class="btn btn-preview" onclick="previewSite()">
+                        <i class="fas fa-eye"></i> Preview Site
+                    </button>
+                    <button class="btn btn-export" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <div class="btn-import">
+                        <i class="fas fa-upload"></i> Import Data
+                        <input type="file" id="import-data" accept=".json" onchange="importData(event)">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <!-- Sidebar -->
+            <nav class="admin-sidebar">
+                <div class="admin-menu">
+                    <a href="#personal" class="menu-item active" data-section="personal">
+                        <i class="fas fa-user"></i>
+                        <span>Personal Info</span>
+                    </a>
+                    <a href="#about" class="menu-item" data-section="about">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                    <a href="#skills" class="menu-item" data-section="skills">
+                        <i class="fas fa-code"></i>
+                        <span>Skills</span>
+                    </a>
+                    <a href="#experience" class="menu-item" data-section="experience">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Experience</span>
+                    </a>
+                    <a href="#projects" class="menu-item" data-section="projects">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="#contact" class="menu-item" data-section="contact">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                    <a href="#theme" class="menu-item" data-section="theme">
+                        <i class="fas fa-palette"></i>
+                        <span>Theme</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <!-- Personal Info Section -->
+                <section id="personal" class="admin-section active">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user"></i> Personal Information</h2>
+                        <p>Manage your personal details and profile</p>
+                    </div>
+
+                    <form class="admin-form" id="personal-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="designation">Designation/Title</label>
+                                <input type="text" id="designation" name="designation" placeholder="e.g., Full Stack Developer" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="heroDescription">Hero Description</label>
+                            <textarea id="heroDescription" name="heroDescription" rows="3" 
+                                placeholder="Brief description for the hero section" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="typingRoles">Typing Animation Roles (comma separated)</label>
+                            <input type="text" id="typingRoles" name="typingRoles" 
+                                placeholder="Full Stack Developer, UI/UX Designer, Creative Coder" required>
+                        </div>
+
+                        <!-- Profile Photo Section -->
+                        <div class="photo-upload-section">
+                            <h3>Profile Photo</h3>
+                            <div class="upload-options">
+                                <div class="btn-import btn-sm">
+                                    <i class="fas fa-upload"></i> Upload from Device
+                                    <input type="file" id="profile-photo" accept="image/*" onchange="handleProfilePhoto(event)">
+                                </div>
+                                <span class="upload-divider">or</span>
+                                <input type="url" id="profile-photo-url" placeholder="Enter image URL">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="loadPhotoFromURL()">Load URL</button>
+                            </div>
+                            <div id="photo-preview" class="photo-preview" style="display: none;">
+                                <img id="photo-preview-img" src="" alt="Profile Preview">
+                                <button type="button" class="btn btn-danger btn-xs photo-remove" onclick="removePhoto()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Resume Upload Section -->
+                        <div class="resume-upload-section">
+                            <h3>Resume/CV</h3>
+                            <div class="upload-options">
+                                <div class="btn-import btn-sm">
+                                    <i class="fas fa-upload"></i> Upload Resume
+                                    <input type="file" id="resume-file" accept=".pdf,.doc,.docx" onchange="handleResumeUpload(event)">
+                                </div>
+                                <span class="upload-divider">or</span>
+                                <input type="url" id="resume-url" placeholder="Enter resume URL">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="loadResumeFromURL()">Load URL</button>
+                            </div>
+                            <div id="resume-preview" class="resume-preview" style="display: none;">
+                                <div class="file-info">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span id="resume-filename">Resume.pdf</span>
+                                    <button type="button" class="btn btn-danger btn-xs resume-remove" onclick="removeResume()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Personal Info
+                        </button>
+                    </form>
+                </section>
+
+                <!-- About Section -->
+                <section id="about" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-info-circle"></i> About Section</h2>
+                        <p>Tell your story and showcase your achievements</p>
+                    </div>
+
+                    <form class="admin-form" id="about-form">
+                        <div class="form-group">
+                            <label for="aboutTitle">About Title</label>
+                            <input type="text" id="aboutTitle" name="aboutTitle" 
+                                placeholder="e.g., Creative Developer & Problem Solver" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aboutDescription">About Description</label>
+                            <textarea id="aboutDescription" name="aboutDescription" rows="4" 
+                                placeholder="Write a detailed description about yourself" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="whatIDo">What I Do</label>
+                                <textarea id="whatIDo" name="whatIDo" rows="3" 
+                                    placeholder="Describe what you do professionally" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="myApproach">My Approach</label>
+                                <textarea id="myApproach" name="myApproach" rows="3" 
+                                    placeholder="Describe your work approach and philosophy" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Stats Section -->
+                        <div class="stats-section">
+                            <h3>Statistics</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="projectsCount">Projects Completed</label>
+                                    <input type="number" id="projectsCount" name="projectsCount" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="yearsExperience">Years Experience</label>
+                                    <input type="number" id="yearsExperience" name="yearsExperience" min="0" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="happyClients">Happy Clients</label>
+                                    <input type="number" id="happyClients" name="happyClients" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="technologies">Technologies</label>
+                                    <input type="number" id="technologies" name="technologies" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save About Info
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Skills Section -->
+                <section id="skills" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-code"></i> Skills Management</h2>
+                        <p>Manage your technical skills and expertise levels</p>
+                    </div>
+
+                    <div class="skills-manager">
+                        <div id="skills-categories">
+                            <!-- Skill categories will be populated here -->
+                        </div>
+
+                        <div class="add-category-form">
+                            <h3>Add New Skill Category</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" id="new-category-name" placeholder="Category Name (e.g., Frontend Development)">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="new-category-icon" placeholder="FontAwesome Icon (e.g., fas fa-laptop-code)">
+                                </div>
+                                <button type="button" class="btn btn-secondary" onclick="addSkillCategory()">
+                                    <i class="fas fa-plus"></i> Add Category
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="saveSkills()">
+                            <i class="fas fa-save"></i> Save All Skills
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Experience Section -->
+                <section id="experience" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-briefcase"></i> Experience Management</h2>
+                        <p>Manage your work experience and professional timeline</p>
+                    </div>
+
+                    <div id="experience-list">
+                        <!-- Experience items will be populated here -->
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="addExperience()">
+                        <i class="fas fa-plus"></i> Add New Experience
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="saveExperience()">
+                        <i class="fas fa-save"></i> Save All Experience
+                    </button>
+                </section>
+
+                <!-- Projects Section -->
+                <section id="projects" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-project-diagram"></i> Projects Management</h2>
+                        <p>Showcase your best work and achievements</p>
+                    </div>
+
+                    <div id="projects-list">
+                        <!-- Project items will be populated here -->
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="addProject()">
+                        <i class="fas fa-plus"></i> Add New Project
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="saveProjects()">
+                        <i class="fas fa-save"></i> Save All Projects
+                    </button>
+                </section>
+
+                <!-- Contact Section -->
+                <section id="contact" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-envelope"></i> Contact Information</h2>
+                        <p>Manage your contact details and social links</p>
+                    </div>
+
+                    <form class="admin-form" id="contact-form">
+                        <div class="contact-methods">
+                            <h3>Contact Methods</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contactEmail">Email Address</label>
+                                    <input type="email" id="contactEmail" name="contactEmail" placeholder="your@email.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactPhone">Phone Number</label>
+                                    <input type="tel" id="contactPhone" name="contactPhone" placeholder="+1 (555) 123-4567" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactLocation">Location</label>
+                                <input type="text" id="contactLocation" name="contactLocation" placeholder="City, Country" required>
+                            </div>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="social-links">
+                            <h3>Social Media Links</h3>
+                            <div id="social-links-list">
+                                <!-- Social links will be populated here -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="addSocialLink()">
+                                <i class="fas fa-plus"></i> Add Social Link
+                            </button>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Contact Info
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Theme Section -->
+                <section id="theme" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-palette"></i> Theme Customization</h2>
+                        <p>Customize colors and visual appearance</p>
+                    </div>
+
+                    <form class="admin-form" id="theme-form">
+                        <div class="theme-presets">
+                            <h3>Quick Presets</h3>
+                            <div class="preset-buttons">
+                                <button type="button" class="preset-btn" onclick="applyThemePreset('purple')">
+                                    Purple Gradient
+                                </button>
+                                <button type="button" class="preset-btn" onclick="applyThemePreset('blue')">
+                                    Ocean Blue
+                                </button>
+                                <button type="button" class="preset-btn" onclick="applyThemePreset('green')">
+                                    Forest Green
+                                </button>
+                                <button type="button" class="preset-btn" onclick="applyThemePreset('orange')">
+                                    Sunset Orange
+                                </button>
+                                <button type="button" class="preset-btn" onclick="applyThemePreset('pink')">
+                                    Pink Vibes
+                                </button>
+                                <button type="button" class="preset-btn" onclick="applyThemePreset('default')">
+                                    Default Theme
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="color-picker-section">
+                            <h3>Custom Colors</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="primaryColor">Primary Color</label>
+                                    <input type="color" id="primaryColor" name="primaryColor" value="#667eea">
+                                </div>
+                                <div class="form-group">
+                                    <label for="secondaryColor">Secondary Color</label>
+                                    <input type="color" id="secondaryColor" name="secondaryColor" value="#764ba2">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="accentColor">Accent Color</label>
+                                    <input type="color" id="accentColor" name="accentColor" value="#f093fb">
+                                </div>
+                                <div class="form-group">
+                                    <label for="backgroundColor">Background Color</label>
+                                    <input type="color" id="backgroundColor" name="backgroundColor" value="#0a0a0a">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Theme
+                        </button>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="message-container"></div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
