@@ -11,10 +11,7 @@ export class AuthService {
   // Sign up new user
   static async signUp(email: string, password: string, username: string, fullName?: string): Promise<AuthResponse> {
     try {
-      console.log('🔧 SignUp Debug - Starting signup process...')
-      
       // Check if username is already taken
-      console.log('🔧 Checking username availability...')
       const { data: existingUser, error: checkError } = await supabase
         .from('users')
         .select('username')
@@ -22,7 +19,6 @@ export class AuthService {
         .single()
 
       if (checkError && checkError.code !== 'PGRST116') {
-        console.error('🔧 Username check error:', checkError)
         return { success: false, error: `Username check failed: ${checkError.message}` }
       }
 
@@ -31,7 +27,6 @@ export class AuthService {
       }
 
       // Create auth user
-      console.log('🔧 Creating auth user...')
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -43,10 +38,8 @@ export class AuthService {
         }
       })
 
-      console.log('🔧 Auth signup result:', { authData, authError })
-
       if (authError) {
-        return { success: false, error: `Auth error: ${authError.message}` }
+        return { success: false, error: authError.message }
       }
 
       if (!authData.user) {
@@ -54,7 +47,6 @@ export class AuthService {
       }
 
       // Create user profile in database
-      console.log('🔧 Creating user profile in database...')
       const { data: userData, error: userError } = await supabase
         .from('users')
         .insert([
@@ -70,14 +62,11 @@ export class AuthService {
         .single()
 
       if (userError) {
-        console.error('🔧 User profile creation error:', userError)
         return { success: false, error: `Profile creation failed: ${userError.message}` }
       }
 
-      console.log('🔧 User profile created successfully:', userData)
       return { success: true, user: userData }
     } catch (error: any) {
-      console.error('🔧 SignUp catch error:', error)
       return { success: false, error: `Network error: ${error.message}` }
     }
   }
