@@ -643,9 +643,13 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .template-selector-container {
-    padding: 1.5rem;
+  .template-selector {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
+  
+  .template-selector-container {
+    padding: 1rem;
   
   .template-header {
     margin-bottom: 3rem;
@@ -667,7 +671,8 @@
   
   .templates-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
   }
   
   .template-card {
@@ -702,24 +707,84 @@
 }
 
 @media (max-width: 480px) {
+  .template-selector {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
   .template-selector-container {
-    padding: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .template-header {
+    margin-bottom: 2rem;
+  }
+  
+  .back-button {
+    margin-bottom: 1.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
   
   .header-content h1 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
   }
   
   .header-content p {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+  
+  .templates-grid {
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
   }
   
   .template-card {
-    padding: 1.5rem;
+    padding: 1.2rem;
+    border-radius: 16px;
   }
   
   .template-preview {
-    height: 220px;
+    height: 200px;
+    margin-bottom: 1rem;
+  }
+  
+  .template-title h3 {
+    font-size: 1.3rem;
+  }
+  
+  .template-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+  }
+  
+  .template-features {
+    margin-bottom: 1.5rem;
+  }
+  
+  .template-features h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+  
+  .template-features li {
+    font-size: 0.85rem;
+    padding: 0.2rem 0;
+  }
+  
+  .select-btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 25px;
+  }
+  
+  .preview-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 20px;
   }
   
   .template-badge {

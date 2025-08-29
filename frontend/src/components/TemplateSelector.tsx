@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './TemplateSelector.css';
 import PaymentPage from './PaymentPage';
+import { AuthService } from '../services/authService';
 
 interface Template {
   id: number;
@@ -68,11 +70,22 @@ const TemplateSelector: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [showPayment, setShowPayment] = useState(false);
 
-  const handleTemplateSelect = (template: Template) => {
+  const navigate = useNavigate();
+
+  const handleTemplateSelect = async (template: Template) => {
     if (template.id === 3) {
       alert('This template is coming soon! Please choose another template.');
       return;
     }
+    
+    // Check if user is authenticated
+    const isAuthenticated = await AuthService.isAuthenticated();
+    if (!isAuthenticated) {
+      // Redirect to login page
+      navigate('/login');
+      return;
+    }
+    
     // Show payment page instead of directly going to admin
     setSelectedTemplate(template);
     setShowPayment(true);
@@ -89,8 +102,10 @@ const TemplateSelector: React.FC = () => {
       alert('This template is coming soon!');
       return;
     }
+    // Construct the absolute URL for the template preview
+    const previewUrl = `${window.location.origin}${template.previewUrl}`;
     // Open preview in new tab
-    window.open(template.previewUrl, '_blank');
+    window.open(previewUrl, '_blank');
   };
 
   // Show payment page if template is selected
