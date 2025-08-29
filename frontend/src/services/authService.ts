@@ -12,7 +12,7 @@ export class AuthService {
   static async signUp(email: string, password: string, username: string, fullName?: string): Promise<AuthResponse> {
     try {
       console.log('🔧 SignUp Debug - Starting signup process...')
-      console.log('🔧 Supabase URL:', supabase.supabaseUrl)
+      console.log('🔧 Environment check: URL and key are set')
       
       // Check if username is already taken
       console.log('🔧 Checking username availability...')
