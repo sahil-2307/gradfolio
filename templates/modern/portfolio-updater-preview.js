@@ -626,3 +626,9 @@ window.downloadResume = function() {
         alert('Error downloading resume');
     }
 };
+
+// Initialize the portfolio updater when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const updater = new PortfolioUpdater();
+    updater.init();
+});
