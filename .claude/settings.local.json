@@ -12,7 +12,10 @@
       "Bash(grep:*)",
       "Bash(npm start)",
       "Bash(python3:*)",
-      "Bash(open http://localhost:8001/admin.html)"
+      "Bash(open http://localhost:8001/admin.html)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
