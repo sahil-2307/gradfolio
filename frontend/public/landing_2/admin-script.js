@@ -871,7 +871,7 @@ function removeResume() {
 
 // Utility functions
 function previewSite() {
-    window.open('index.html', '_blank');
+    window.open('preview.html', '_blank');
 }
 
 function exportData() {

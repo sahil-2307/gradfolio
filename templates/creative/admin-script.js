@@ -871,7 +871,7 @@ function removeResume() {
 
 // Utility functions
 function previewSite() {
-    window.open('index.html', '_blank');
+    window.open('preview.html', '_blank');
 }
 
 function exportData() {
@@ -902,6 +902,363 @@ function importData(event) {
             }
         };
         reader.readAsText(file);
+    }
+}
+
+// Download source code as ZIP
+async function downloadSourceCode() {
+    try {
+        // Check if JSZip is available
+        if (typeof JSZip === 'undefined') {
+            alert('Download library not loaded. Please refresh the page and try again.');
+            return;
+        }
+        
+        if (!adminInstance) {
+            console.error('Admin instance not found');
+            return;
+        }
+        
+        // Save current data first
+        adminInstance.saveData();
+        
+        // Show loading message
+        adminInstance.showNotification('Preparing download...', 'info');
+        
+        const zip = new JSZip();
+        const data = adminInstance.getCurrentData();
+        
+        console.log('Starting download for landing_2 with data:', data);
+        
+        // Get all the files we need to include
+        const filesToInclude = [
+            'index.html',
+            'styles.css',
+            'particles.js',
+            'script.js'
+        ];
+        
+        // Add each file to the zip
+        for (const fileName of filesToInclude) {
+            try {
+                const response = await fetch(fileName);
+                if (response.ok) {
+                    let content = await response.text();
+                    
+                    // If it's the HTML file, inject the current data
+                    if (fileName === 'index.html') {
+                        // Remove the portfolio-updater.js script from the downloaded version
+                        content = content.replace(/<script src="portfolio-updater\.js"[^>]*><\/script>/g, '');
+                        
+                        // Inject the current data directly into the HTML
+                        content = injectDataIntoHTML(content, data);
+                    }
+                    
+                    zip.file(fileName, content);
+                }
+            } catch (error) {
+                console.error(`Error fetching ${fileName}:`, error);
+            }
+        }
+        
+        // Add a README file with instructions
+        const readmeContent = `# ${data.personal?.name || 'Your'} Creative Portfolio
+
+This is your customized creative portfolio website generated with Gradfolio.
+
+## Files included:
+- index.html - Your main portfolio page
+- styles.css - Styling for your portfolio  
+- particles.js - Interactive particle effects
+- script.js - Interactive functionality
+
+## How to use:
+1. Extract all files to a folder
+2. Open index.html in a web browser to view your portfolio
+3. Upload the files to any web hosting service to make it live
+
+## Customization:
+To make changes, edit the content directly in index.html or modify the styles in styles.css
+
+Generated on: ${new Date().toLocaleDateString()}
+`;
+        
+        zip.file('README.md', readmeContent);
+        
+        console.log('Generating ZIP file for landing_2...');
+        // Generate and download the ZIP file
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: {
+                level: 6
+            }
+        });
+        
+        console.log(`ZIP file generated, size: ${zipBlob.size} bytes`);
+        
+        const url = URL.createObjectURL(zipBlob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        const fileName = (data.personal?.name || 'creative-portfolio').replace(/\s+/g, '-').toLowerCase();
+        a.download = `${fileName}-portfolio.zip`;
+        a.style.display = 'none';
+        
+        document.body.appendChild(a);
+        console.log(`Triggering download of ${fileName}-portfolio.zip`);
+        a.click();
+        
+        // Clean up after a short delay
+        setTimeout(() => {
+            if (document.body.contains(a)) {
+                document.body.removeChild(a);
+            }
+            URL.revokeObjectURL(url);
+        }, 100);
+        
+        adminInstance.showNotification('Portfolio source code downloaded successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Error downloading source code:', error);
+        if (adminInstance) {
+            adminInstance.showNotification('Error preparing download. Please try again.', 'error');
+        }
+    }
+}
+
+// Inject current form data directly into HTML for landing_2
+function injectDataIntoHTML(htmlContent, data) {
+    if (!data || !data.personal) return htmlContent;
+    
+    // Replace hero content
+    if (data.personal.name) {
+        htmlContent = htmlContent.replace(/<h1 class="hero-title"[^>]*>.*?<\/h1>/s, 
+            `<h1 class="hero-title">${data.personal.name}</h1>`);
+    }
+    
+    if (data.personal.title) {
+        htmlContent = htmlContent.replace(/<h2 class="hero-subtitle"[^>]*>.*?<\/h2>/s, 
+            `<h2 class="hero-subtitle">${data.personal.title}</h2>`);
+    }
+    
+    if (data.personal.tagline) {
+        htmlContent = htmlContent.replace(/<p class="hero-description"[^>]*>.*?<\/p>/s, 
+            `<p class="hero-description">${data.personal.tagline}</p>`);
+    }
+    
+    // Replace about section
+    if (data.about?.description) {
+        const aboutRegex = /<div class="about-text"[^>]*>[\s\S]*?<\/div>/;
+        const aboutReplacement = `<div class="about-text">
+                        <p>${data.about.description}</p>
+                    </div>`;
+        htmlContent = htmlContent.replace(aboutRegex, aboutReplacement);
+    }
+    
+    // Replace contact info
+    if (data.contact?.email) {
+        htmlContent = htmlContent.replace(/creative@email\.com/g, data.contact.email);
+    }
+    if (data.contact?.phone) {
+        htmlContent = htmlContent.replace(/\+1 \(555\) 987-6543/g, data.contact.phone);
+    }
+    if (data.contact?.location) {
+        htmlContent = htmlContent.replace(/New York, NY/g, data.contact.location);
+    }
+    
+    // Replace social links
+    if (data.contact?.linkedin) {
+        htmlContent = htmlContent.replace(/href="#"([^>]*linkedin)/g, `href="${data.contact.linkedin}" target="_blank"$1`);
+    }
+    if (data.contact?.github) {
+        htmlContent = htmlContent.replace(/href="#"([^>]*github)/g, `href="${data.contact.github}" target="_blank"$1`);
+    }
+    if (data.contact?.twitter) {
+        htmlContent = htmlContent.replace(/href="#"([^>]*twitter)/g, `href="${data.contact.twitter}" target="_blank"$1`);
+    }
+    if (data.contact?.instagram) {
+        htmlContent = htmlContent.replace(/href="#"([^>]*instagram)/g, `href="${data.contact.instagram}" target="_blank"$1`);
+    }
+    
+    return htmlContent;
+}
+
+// Save portfolio to server and get unique URL
+async function savePortfolioToServer() {
+    try {
+        // Check if user is authenticated
+        const token = localStorage.getItem('gradfolio_token');
+        const user = JSON.parse(localStorage.getItem('gradfolio_user') || '{}');
+        
+        if (!token || !user.username) {
+            alert('Please login to save your portfolio. Redirecting to login...');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+            return;
+        }
+        
+        if (!adminInstance) {
+            console.error('Admin instance not found');
+            return;
+        }
+        
+        // Save current data first
+        adminInstance.saveData();
+        const portfolioData = adminInstance.getCurrentData();
+        
+        adminInstance.showNotification('Saving portfolio to server...', 'info');
+        
+        // Send to server
+        const response = await fetch('/.netlify/functions/portfolio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                portfolioData: portfolioData,
+                templateType: 'creative'
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            adminInstance.showNotification(`Portfolio saved successfully! Your portfolio URL: ${result.portfolioUrl}`, 'success');
+            
+            // Show the portfolio URL in a modal
+            showPortfolioUrlModal(result.portfolioUrl);
+        } else {
+            adminInstance.showNotification(`Error saving portfolio: ${result.error}`, 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error saving portfolio:', error);
+        if (adminInstance) {
+            adminInstance.showNotification('Error connecting to server. Please try again.', 'error');
+        }
+    }
+}
+
+// Show portfolio URL modal
+function showPortfolioUrlModal(url) {
+    // Create modal HTML
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: var(--admin-surface);
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                max-width: 600px;
+                width: 90%;
+                text-align: center;
+                border: 1px solid var(--admin-border);
+            ">
+                <h2 style="color: var(--admin-success); margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i> Portfolio Saved!
+                </h2>
+                <p style="color: var(--admin-text); margin-bottom: 1.5rem;">
+                    Your creative portfolio is now live at:
+                </p>
+                <div style="
+                    background: var(--admin-surface-light);
+                    padding: 1rem;
+                    border-radius: 8px;
+                    margin-bottom: 1.5rem;
+                    border: 1px solid var(--admin-border);
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                ">
+                    <input 
+                        type="text" 
+                        value="${url}" 
+                        readonly 
+                        id="portfolio-url-input"
+                        style="
+                            flex: 1;
+                            background: transparent;
+                            border: none;
+                            color: var(--admin-primary);
+                            font-size: 1rem;
+                            outline: none;
+                        "
+                    >
+                    <button onclick="copyPortfolioUrl()" style="
+                        background: linear-gradient(135deg, var(--gradient-primary));
+                        color: white;
+                        border: none;
+                        padding: 0.5rem 1rem;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    ">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button onclick="window.open('${url}', '_blank')" style="
+                        background: linear-gradient(135deg, var(--gradient-primary));
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: 500;
+                    ">
+                        <i class="fas fa-eye"></i> View Portfolio
+                    </button>
+                    <button onclick="closePortfolioUrlModal()" style="
+                        background: var(--admin-surface-light);
+                        color: var(--admin-text);
+                        border: 1px solid var(--admin-border);
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: 500;
+                    ">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.id = 'portfolio-url-modal';
+    document.body.appendChild(modal);
+}
+
+// Copy portfolio URL to clipboard
+function copyPortfolioUrl() {
+    const input = document.getElementById('portfolio-url-input');
+    if (input) {
+        input.select();
+        document.execCommand('copy');
+        if (adminInstance) {
+            adminInstance.showNotification('Portfolio URL copied to clipboard!', 'success');
+        }
+    }
+}
+
+// Close portfolio URL modal
+function closePortfolioUrlModal() {
+    const modal = document.getElementById('portfolio-url-modal');
+    if (modal) {
+        document.body.removeChild(modal);
     }
 }
 

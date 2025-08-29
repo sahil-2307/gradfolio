@@ -931,11 +931,395 @@ function importData(event) {
 function previewPortfolio() {
     // Apply current data and open preview
     updatePortfolioPage();
-    window.open('index.html', '_blank');
+    window.open('preview.html', '_blank');
 }
 
 // Update the main portfolio page with current data
 function updatePortfolioPage() {
     saveDataToStorage();
     // The main portfolio page will read from localStorage on load
+}
+
+// Save portfolio to server and get unique URL
+async function savePortfolioToServer() {
+    try {
+        // Check if user is authenticated
+        const token = localStorage.getItem('gradfolio_token');
+        const user = JSON.parse(localStorage.getItem('gradfolio_user') || '{}');
+        
+        if (!token || !user.username) {
+            showMessage('Please login to save your portfolio. Redirecting to login...', 'warning');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+            return;
+        }
+        
+        // Save current data first
+        saveDataToStorage();
+        const portfolioData = getCurrentFormData();
+        
+        showMessage('Saving portfolio to server...', 'info');
+        
+        // Try to save to server with fallback
+        let result;
+        try {
+            const response = await fetch('/.netlify/functions/portfolio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    portfolioData: portfolioData,
+                    templateType: 'modern'
+                })
+            });
+            
+            if (response.ok) {
+                result = await response.json();
+            } else {
+                throw new Error('Server error');
+            }
+        } catch (serverError) {
+            console.warn('Server save failed, using fallback storage:', serverError);
+            
+            // Fallback to localStorage-based storage
+            const portfolios = JSON.parse(localStorage.getItem('gradfolio_portfolios') || '{}');
+            portfolios[user.username] = {
+                portfolioData: portfolioData,
+                templateType: 'modern',
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('gradfolio_portfolios', JSON.stringify(portfolios));
+            
+            result = {
+                success: true,
+                portfolioUrl: `${window.location.origin}/u/${user.username}`
+            };
+        }
+        
+        if (result.success) {
+            showMessage(`Portfolio saved successfully! Your portfolio URL: ${result.portfolioUrl}`, 'success');
+            
+            // Show the portfolio URL in a modal or copy to clipboard
+            showPortfolioUrlModal(result.portfolioUrl);
+        } else {
+            showMessage(`Error saving portfolio: ${result.error}`, 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error saving portfolio:', error);
+        showMessage('Error connecting to server. Please try again.', 'error');
+    }
+}
+
+// Show portfolio URL modal
+function showPortfolioUrlModal(url) {
+    // Create modal HTML
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: var(--admin-surface);
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                max-width: 600px;
+                width: 90%;
+                text-align: center;
+                border: 1px solid var(--admin-border);
+            ">
+                <h2 style="color: var(--admin-success); margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i> Portfolio Saved!
+                </h2>
+                <p style="color: var(--admin-text); margin-bottom: 1.5rem;">
+                    Your portfolio is now live at:
+                </p>
+                <div style="
+                    background: var(--admin-surface-light);
+                    padding: 1rem;
+                    border-radius: 8px;
+                    margin-bottom: 1.5rem;
+                    border: 1px solid var(--admin-border);
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                ">
+                    <input 
+                        type="text" 
+                        value="${url}" 
+                        readonly 
+                        id="portfolio-url-input"
+                        style="
+                            flex: 1;
+                            background: transparent;
+                            border: none;
+                            color: var(--admin-primary);
+                            font-size: 1rem;
+                            outline: none;
+                        "
+                    >
+                    <button onclick="copyPortfolioUrl()" style="
+                        background: var(--admin-primary);
+                        color: white;
+                        border: none;
+                        padding: 0.5rem 1rem;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    ">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button onclick="window.open('${url}', '_blank')" style="
+                        background: var(--admin-success);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: 500;
+                    ">
+                        <i class="fas fa-eye"></i> View Portfolio
+                    </button>
+                    <button onclick="closePortfolioUrlModal()" style="
+                        background: var(--admin-surface-light);
+                        color: var(--admin-text);
+                        border: 1px solid var(--admin-border);
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: 500;
+                    ">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.id = 'portfolio-url-modal';
+    document.body.appendChild(modal);
+}
+
+// Copy portfolio URL to clipboard
+function copyPortfolioUrl() {
+    const input = document.getElementById('portfolio-url-input');
+    if (input) {
+        input.select();
+        document.execCommand('copy');
+        showMessage('Portfolio URL copied to clipboard!', 'success');
+    }
+}
+
+// Close portfolio URL modal
+function closePortfolioUrlModal() {
+    const modal = document.getElementById('portfolio-url-modal');
+    if (modal) {
+        document.body.removeChild(modal);
+    }
+}
+
+// Download source code as ZIP
+async function downloadSourceCode() {
+    try {
+        // Check if JSZip is available
+        if (typeof JSZip === 'undefined') {
+            showMessage('Download library not loaded. Please refresh the page and try again.', 'error');
+            return;
+        }
+        
+        // Save current data first
+        saveDataToStorage();
+        
+        // Show loading message
+        showMessage('Preparing download...', 'info');
+        
+        const zip = new JSZip();
+        const data = getCurrentFormData();
+        
+        console.log('Starting download with data:', data);
+        
+        // Get all the files we need to include
+        const filesToInclude = [
+            'index.html',
+            'styles.css',
+            'script.js',
+            'debug-fix.js'
+        ];
+        
+        // Add each file to the zip
+        for (const fileName of filesToInclude) {
+            try {
+                console.log(`Fetching ${fileName}...`);
+                const response = await fetch(fileName);
+                if (response.ok) {
+                    let content = await response.text();
+                    console.log(`Successfully fetched ${fileName}, size: ${content.length}`);
+                    
+                    // If it's the HTML file, inject the current data
+                    if (fileName === 'index.html') {
+                        // Remove the portfolio-updater.js script from the downloaded version
+                        content = content.replace(/<script src="portfolio-updater\.js"><\/script>/g, '');
+                        
+                        // Inject the current data directly into the HTML
+                        content = injectDataIntoHTML(content, data);
+                        console.log('HTML content processed with user data');
+                    }
+                    
+                    zip.file(fileName, content);
+                } else {
+                    console.error(`Failed to fetch ${fileName}: ${response.status}`);
+                    showMessage(`Failed to fetch ${fileName}. Continuing with other files...`, 'warning');
+                }
+            } catch (error) {
+                console.error(`Error fetching ${fileName}:`, error);
+                showMessage(`Error fetching ${fileName}: ${error.message}`, 'warning');
+            }
+        }
+        
+        // Add a README file with instructions
+        const readmeContent = `# ${data.personal.fullName}'s Portfolio
+
+This is your customized portfolio website generated with Gradfolio.
+
+## Files included:
+- index.html - Your main portfolio page
+- styles.css - Styling for your portfolio
+- script.js - Interactive functionality
+- debug-fix.js - Browser compatibility fixes
+
+## How to use:
+1. Extract all files to a folder
+2. Open index.html in a web browser to view your portfolio
+3. Upload the files to any web hosting service to make it live
+
+## Customization:
+To make changes, edit the content directly in index.html or modify the styles in styles.css
+
+Generated on: ${new Date().toLocaleDateString()}
+`;
+        
+        zip.file('README.md', readmeContent);
+        
+        console.log('Generating ZIP file...');
+        // Generate and download the ZIP file
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: {
+                level: 6
+            }
+        });
+        
+        console.log(`ZIP file generated, size: ${zipBlob.size} bytes`);
+        
+        const url = URL.createObjectURL(zipBlob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        const fileName = `${(data.personal.fullName || 'portfolio').replace(/\s+/g, '-').toLowerCase()}-portfolio.zip`;
+        a.download = fileName;
+        a.style.display = 'none';
+        
+        document.body.appendChild(a);
+        console.log(`Triggering download of ${fileName}`);
+        a.click();
+        
+        // Clean up after a short delay
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+        
+        showMessage('Portfolio source code downloaded successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Error downloading source code:', error);
+        showMessage(`Error preparing download: ${error.message}. Please try again.`, 'error');
+        
+        // Fallback: offer to download just the current data
+        if (confirm('Would you like to download just your portfolio data instead?')) {
+            exportData();
+        }
+    }
+}
+
+// Simple test function for debugging
+function testDownload() {
+    console.log('Testing download functionality...');
+    console.log('JSZip available:', typeof JSZip !== 'undefined');
+    console.log('Current data:', getCurrentFormData());
+    
+    if (typeof JSZip === 'undefined') {
+        alert('JSZip library is not loaded. Please refresh the page.');
+        return;
+    }
+    
+    // Create a simple test zip
+    const zip = new JSZip();
+    zip.file('test.txt', 'This is a test file from Gradfolio admin panel.');
+    
+    zip.generateAsync({type: 'blob'}).then(function(content) {
+        const url = URL.createObjectURL(content);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'test-download.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('Test download completed!');
+    }).catch(function(error) {
+        console.error('Test download failed:', error);
+        alert('Test download failed: ' + error.message);
+    });
+}
+
+// Inject current form data directly into HTML
+function injectDataIntoHTML(htmlContent, data) {
+    // Replace placeholder content with actual data
+    htmlContent = htmlContent.replace(/Hello, I'm <span class="highlight">.*?<\/span>/, 
+        `Hello, I'm <span class="highlight">${data.personal.fullName}</span>`);
+    
+    htmlContent = htmlContent.replace(/<h2>Computer Science Graduate<\/h2>/, 
+        `<h2>${data.personal.designation}</h2>`);
+    
+    // Replace about paragraphs
+    const aboutRegex = /<div class="about-text">\s*<p>.*?<\/p>\s*<p>.*?<\/p>\s*<\/div>/s;
+    const aboutReplacement = `<div class="about-text">
+                <p>${data.about.paragraph1}</p>
+                <p>${data.about.paragraph2}</p>
+            </div>`;
+    htmlContent = htmlContent.replace(aboutRegex, aboutReplacement);
+    
+    // Replace contact info
+    htmlContent = htmlContent.replace(/alex\.johnson@email\.com/, data.contact.email);
+    htmlContent = htmlContent.replace(/\+1 \(555\) 123-4567/, data.contact.phone);
+    htmlContent = htmlContent.replace(/San Francisco, CA/, data.contact.location);
+    
+    // Replace social links
+    if (data.contact.linkedin) {
+        htmlContent = htmlContent.replace(/href="#".*?linkedin/g, `href="${data.contact.linkedin}" target="_blank"><i class="fab fa-linkedin`);
+    }
+    if (data.contact.github) {
+        htmlContent = htmlContent.replace(/href="#".*?github/g, `href="${data.contact.github}" target="_blank"><i class="fab fa-github`);
+    }
+    if (data.contact.twitter) {
+        htmlContent = htmlContent.replace(/href="#".*?twitter/g, `href="${data.contact.twitter}" target="_blank"><i class="fab fa-twitter`);
+    }
+    
+    return htmlContent;
 }
