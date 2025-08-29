@@ -6,6 +6,7 @@ import StripeCheckout from './components/StripeCheckout';
 import TemplateSelector from './components/TemplateSelector';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import { AuthService } from './services/authService';
 import './App.css';
 
 function App() {
@@ -14,35 +15,37 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem('gradfolio_token');
-    const userData = localStorage.getItem('gradfolio_user');
-    
-    if (token && userData) {
+    // Check if user is already authenticated with Supabase
+    const checkAuth = async () => {
       try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
+        const currentUser = await AuthService.getCurrentUser();
+        if (currentUser) {
+          setUser(currentUser);
+          setIsAuthenticated(true);
+        }
       } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('gradfolio_token');
-        localStorage.removeItem('gradfolio_user');
+        console.error('Error checking authentication:', error);
+      } finally {
+        setLoading(false);
       }
-    }
-    
-    setLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
-  const handleLogin = (token: string, userData: any) => {
+  const handleLogin = (userData: any) => {
     setIsAuthenticated(true);
     setUser(userData);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('gradfolio_token');
-    localStorage.removeItem('gradfolio_user');
-    setIsAuthenticated(false);
-    setUser(null);
+  const handleLogout = async () => {
+    try {
+      await AuthService.signOut();
+      setIsAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   if (loading) {
@@ -108,10 +111,19 @@ const UserPortfolio: React.FC = () => {
 
   const fetchPortfolio = async (username: string) => {
     try {
-      const response = await fetch(`/.netlify/functions/portfolio/${username}`);
-      if (response.ok) {
-        const html = await response.text();
-        setPortfolioHtml(html);
+      // Import PortfolioService dynamically to avoid circular imports
+      const { PortfolioService } = await import('./services/portfolioService');
+      const result = await PortfolioService.getPortfolioByUsername(username);
+      
+      if (result.success && result.portfolio) {
+        // If we have HTML content, use it; otherwise generate basic HTML
+        if (result.portfolio.html_content) {
+          setPortfolioHtml(result.portfolio.html_content);
+        } else {
+          // Generate basic HTML from portfolio data
+          const basicHtml = generateBasicPortfolioHtml(result.portfolio);
+          setPortfolioHtml(basicHtml);
+        }
       } else {
         setError('Portfolio not found');
       }
@@ -120,6 +132,33 @@ const UserPortfolio: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const generateBasicPortfolioHtml = (portfolio: any) => {
+    const data = portfolio.portfolio_data;
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${data.personal?.fullName || portfolio.title}</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; background: #1a1a2e; color: white; }
+          .container { max-width: 800px; margin: 0 auto; }
+          h1 { color: #ffd700; }
+          .section { margin: 2rem 0; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>${data.personal?.fullName || portfolio.title}</h1>
+          <div class="section">
+            <h2>About</h2>
+            <p>${data.about?.paragraph1 || 'Welcome to my portfolio'}</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
   };
 
   if (loading) {
