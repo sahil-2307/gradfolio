@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { authenticate } from '../utils/auth';
+import { AuthService } from '../services/authService';
 import './Login.css';
 
 interface LoginProps {
-  onLogin: (token: string, user: any) => void;
+  onLogin: (user: any) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
@@ -22,19 +22,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setError('');
 
     try {
-      const result = await authenticate(
-        isLogin ? 'login' : 'register',
-        {
-          email: formData.email,
-          password: formData.password,
-          username: formData.username
-        }
-      );
+      const result = isLogin 
+        ? await AuthService.signIn(formData.email, formData.password)
+        : await AuthService.signUp(formData.email, formData.password, formData.username);
 
-      if (result.success && result.token && result.user) {
-        localStorage.setItem('gradfolio_token', result.token);
-        localStorage.setItem('gradfolio_user', JSON.stringify(result.user));
-        onLogin(result.token, result.user);
+      if (result.success && result.user) {
+        onLogin(result.user);
       } else {
         setError(result.error || 'Authentication failed');
       }
