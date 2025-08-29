@@ -10,17 +10,28 @@ const SupabaseTest: React.FC = () => {
     setTestResult('Testing...');
     
     try {
-      // Simple test: Try to get the current session
-      const { data, error } = await supabase.auth.getSession();
-      console.log('Session test:', { data, error });
+      // Test 1: Basic auth session (doesn't require DB access)
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      console.log('Session test:', { sessionData, sessionError });
       
-      if (error) {
-        setTestResult(`❌ Session Error: ${error.message}`);
+      if (sessionError) {
+        setTestResult(`❌ Auth Error: ${sessionError.message}`);
+        return;
       } else {
-        setTestResult('✅ Connection successful!');
+        setTestResult('✅ Auth service accessible!');
       }
 
-      // Test database connection
+      // Test 2: Simple RPC call (bypasses RLS)
+      const { data: rpcData, error: rpcError } = await supabase.rpc('test_connection');
+      console.log('RPC test:', { rpcData, rpcError });
+      
+      if (rpcError) {
+        setTestResult(prev => prev + `\n❌ RPC Error: ${rpcError.message}`);
+      } else {
+        setTestResult(prev => prev + '\n✅ Database RPC working!');
+      }
+
+      // Test 3: Public table access (if RLS is disabled)
       const { data: dbData, error: dbError } = await supabase
         .from('users')
         .select('count')
@@ -29,7 +40,8 @@ const SupabaseTest: React.FC = () => {
       console.log('DB test:', { dbData, dbError });
       
       if (dbError) {
-        setTestResult(prev => prev + `\n❌ DB Error: ${dbError.message}`);
+        setTestResult(prev => prev + `\n❌ DB Access: ${dbError.message}`);
+        setTestResult(prev => prev + '\n💡 Try disabling RLS policies');
       } else {
         setTestResult(prev => prev + '\n✅ Database accessible!');
       }
