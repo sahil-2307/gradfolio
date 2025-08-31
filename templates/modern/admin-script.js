@@ -1891,13 +1891,71 @@ function injectDataIntoHTML(htmlContent, data) {
     htmlContent = htmlContent.replace(/&copy; \d{4} Alex Johnson\. All rights reserved\./, 
         `&copy; ${new Date().getFullYear()} ${data.personal.fullName}. All rights reserved.`);
         
-    // Remove references to JS files that won't exist in S3 (keep only essential functionality)
+    // Remove references to JS files that won't exist in S3 and replace with inline essential functionality
     htmlContent = htmlContent.replace(/<script src="debug-fix\.js"><\/script>\s*/g, '');
     htmlContent = htmlContent.replace(/<script src="portfolio-updater-preview\.js"><\/script>\s*/g, '');
+    htmlContent = htmlContent.replace(/<script src="script\.js"><\/script>/, '');
     
-    // Keep script.js but make it optional
-    htmlContent = htmlContent.replace(/<script src="script\.js"><\/script>/, 
-        '<script src="script.js" onerror="console.log(\'Script not found but portfolio works without it\')"></script>');
+    // Add essential inline JavaScript to ensure full page functionality
+    const inlineScript = `
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Remove loading overlay
+        setTimeout(function() {
+            document.body.classList.add('loaded');
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }, 500);
+        
+        // Mobile Navigation Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // Smooth scrolling for navigation links
+        const navLinks = document.querySelectorAll('.nav-link, .btn[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        const offsetTop = targetSection.offsetTop - 70;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+        
+        // Close mobile menu when clicking on a link
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (hamburger && navMenu) {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
+        });
+        
+        console.log('Portfolio loaded successfully!');
+    });
+    </script>`;
+    
+    // Add the inline script before the closing body tag
+    htmlContent = htmlContent.replace('</body>', inlineScript + '</body>');
     
     // Replace profile photo
     if (data.personal.profilePhoto) {

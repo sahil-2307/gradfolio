@@ -1392,6 +1392,9 @@ function injectCreativeDataIntoHTML(htmlContent, data) {
     let logoAnimation = letters.map(letter => `<span>${letter}</span>`).join('');
     htmlContent = htmlContent.replace(/<div class="logo-animation">[\s\S]*?<\/div>/, `<div class="logo-animation">${logoAnimation}</div>`);
     
+    // Replace SAHIL in navigation and footer logo
+    htmlContent = htmlContent.replace(/<span class="logo-text">SAHIL<\/span>/g, `<span class="logo-text">${firstName}</span>`);
+    
     // Replace personal information
     htmlContent = htmlContent.replace(/Sahil Bhujbal/g, data.personal.fullName);
     htmlContent = htmlContent.replace(/Full Stack Developer/g, data.personal.designation);
