@@ -40,8 +40,9 @@ const Home: React.FC = () => {
             </div>
             
             <div className="hero-description">
-              <h2>— Introduction</h2>
+              <h2>Introduction</h2>
               <h3>Generate stunning portfolios that land you dream jobs in minutes.</h3>
+              <h4>No Code, No Hosting Hassles</h4>
               <p>
                 Join thousands of successful graduates who've used OnlinePortfolios to automatically 
                 generate professional portfolios that impressed recruiters at top companies 
@@ -74,9 +75,10 @@ const Home: React.FC = () => {
                   <h5>Display Your Projects</h5>
                   <div className="project-items">
                     
-                    <div className="project-item-small">React E-commerce</div>
-                    <div className="project-item-small">ML Recommendation System</div>
-                    <div className="project-item-small">Mobile Banking App</div>
+                    <div className="project-item-small">Instant setup</div>
+                    <div className="project-item-small">No tech skills needed</div>
+                    <div className="project-item-small">Free custom URL</div>
+                    <div className="project-item-small">No expensive hosting fees</div>
                   </div>
                 </div>
                 
