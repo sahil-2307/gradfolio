@@ -15,42 +15,42 @@ interface Testimonial {
 const testimonialsData: Testimonial[] = [
   {
     id: 1,
-    name: "Sarah Chen",
-    role: "Software Engineer",
-    company: "Google",
-    university: "Stanford University",
-    graduationYear: "2023",
+    name: "Chinmay Toke",
+    role: "ETL Engineer",
+    company: "Nagarro",
+    university: "DY Patil",
+    graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1494790108755-2616b612b407?w=150&h=150&fit=crop&crop=face",
     quote: "GradGen helped me stand out from thousands of applicants. The clean design and interactive elements caught the recruiter's attention immediately. I got interviews at 5 FAANG companies!",
-    linkedin: "https://linkedin.com/in/sarahchen"
+    linkedin: "https://www.linkedin.com/in/chinmay-toke/"
   },
   {
     id: 2,
-    name: "Marcus Johnson",
-    role: "Product Manager",
-    company: "Microsoft",
+    name: "Saish Rananaware",
+    role: "Business Analyst",
+    company: "TMF Group",
     university: "MIT",
     graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
     quote: "The premium template's 3D animations were a conversation starter in every interview. It showed my attention to detail and creativity. Landed my dream PM role in just 2 months!",
-    linkedin: "https://linkedin.com/in/marcusj"
+    linkedin: "https://www.linkedin.com/in/saish-rananaware-/"
   },
   {
     id: 3,
-    name: "Priya Patel",
-    role: "Data Scientist",
-    company: "Netflix",
-    university: "UC Berkeley",
+    name: "Shravani Junghare",
+    role: "Analyst",
+    company: "Nomura",
+    university: "Cummins",
     graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
     quote: "My GradGen page got 500+ views in the first week after sharing it on LinkedIn. The projects section beautifully showcased my work. Received 15 interview calls!",
-    linkedin: "https://linkedin.com/in/priyapatel"
+    linkedin: "https://www.linkedin.com/in/shravani-junghare-370b95218/"
   },
   {
     id: 4,
-    name: "Alex Rodriguez",
-    role: "UX Designer",
-    company: "Apple",
+    name: "Prashant Pawar",
+    role: "Full Stack Developer",
+    company: "Dhristhi Systems",
     university: "Carnegie Mellon",
     graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
@@ -59,25 +59,25 @@ const testimonialsData: Testimonial[] = [
   },
   {
     id: 5,
-    name: "Emily Wang",
-    role: "Marketing Manager",
-    company: "Spotify",
-    university: "Northwestern",
-    graduationYear: "2024",
+    name: "Madhura Phansalkar",
+    role: "Data Scientist",
+    company: "ImpactCraft",
+    university: "BITS Pilani",
+    graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
     quote: "GradGen made it so easy to showcase my extracurricular leadership roles. The testimonials section added credibility. Got hired 2 weeks after graduation!",
-    linkedin: "https://linkedin.com/in/emilywang"
+    linkedin: "https://www.linkedin.com/in/madhura-phansalkar-910913191/"
   },
   {
     id: 6,
-    name: "David Kim",
-    role: "Financial Analyst",
-    company: "Goldman Sachs",
-    university: "Wharton",
-    graduationYear: "2023",
+    name: "Aditi Sinha",
+    role: "Social Media Lead",
+    company: "YOSKA",
+    university: "MIT",
+    graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
     quote: "The professional layout and premium animations impressed senior executives during my final round interviews. They said it showed exceptional presentation skills.",
-    linkedin: "https://linkedin.com/in/davidkim"
+    linkedin: "https://www.linkedin.com/in/aditi-s-35295a236/"
   }
 ];
 
@@ -158,9 +158,11 @@ const Testimonials: React.FC = () => {
           <button className="cta-nav-button" onClick={openPortfolioBuilder}>
             Get Started Free
           </button>
-          <br />
+          
         </div>
+        
       </div>
+      <br />
     </section>
   );
 };
