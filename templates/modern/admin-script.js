@@ -1420,7 +1420,17 @@ async function generateLivePortfolio() {
             })
         });
         
-        const result = await response.json();
+        let result;
+        let responseText;
+        try {
+            responseText = await response.text();
+            console.log('API Response Status:', response.status);
+            console.log('API Response Text:', responseText);
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('Failed to parse API response:', parseError);
+            throw new Error(`API returned invalid response. Status: ${response.status}. Response: ${responseText || 'No response text'}`);
+        }
         
         if (result.success) {
             showMessage(`Portfolio generated successfully!`, 'success');

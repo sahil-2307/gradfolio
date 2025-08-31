@@ -26,6 +26,15 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Check if AWS credentials are configured
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    console.error('AWS credentials not configured');
+    res.status(500).json({ 
+      error: 'AWS credentials not configured. Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.' 
+    });
+    return;
+  }
+
   try {
     const { username, templateType, htmlContent, cssContent } = req.body;
 
