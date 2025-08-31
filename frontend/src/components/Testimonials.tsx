@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Testimonials.css';
 interface Testimonial {
   id: number;
@@ -82,13 +82,42 @@ const testimonialsData: Testimonial[] = [
 ];
 
 const Testimonials: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check initial theme
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark-theme'));
+    };
+    
+    checkTheme();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(() => {
+      checkTheme();
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
+    return () => observer.disconnect();
+  }, []);
+
   const openPortfolioBuilder = () => {
     // Navigate to template selector
     window.location.href = '/templates';
   };
   
   return (
-    <section className="testimonials-section">
+    <section 
+      className="testimonials-section"
+      style={{ 
+        backgroundColor: isDarkMode ? '#1a1a2e' : '#F4F8FB',
+        background: isDarkMode ? '#1a1a2e' : '#F4F8FB'
+      }}
+    >
       <div className="container">
         <div className="testimonials-header">
           <br />
