@@ -963,15 +963,24 @@ function importData(event) {
     reader.readAsText(file);
 }
 
-function previewPortfolio() {
-    // Generate HTML with current form data for preview
-    const portfolioData = collectPortfolioData();
-    const htmlContent = generatePortfolioHTML(portfolioData);
-    
-    // Create a blob URL for preview
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
+async function previewPortfolio() {
+    try {
+        // Generate HTML with current form data for preview
+        const portfolioData = collectPortfolioData();
+        
+        // Load the preview template and inject current form data
+        const templateResponse = await fetch('preview.html');
+        const templateContent = await templateResponse.text();
+        const htmlContent = injectDataIntoHTML(templateContent, portfolioData);
+        
+        // Create a blob URL for preview
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+    } catch (error) {
+        console.error('Error generating preview:', error);
+        showMessage('Error generating preview. Please try again.', 'error');
+    }
 }
 
 // Update the main portfolio page with current data
@@ -1398,8 +1407,10 @@ async function generateLivePortfolio() {
         
         showMessage('Generating your live portfolio...', 'info');
         
-        // Generate personalized HTML
-        const htmlContent = generatePortfolioHTML(portfolioData);
+        // Generate personalized HTML by loading the preview template and injecting data
+        const templateResponse = await fetch('preview.html');
+        const templateContent = await templateResponse.text();
+        const htmlContent = injectDataIntoHTML(templateContent, portfolioData);
         
         // Get CSS content
         const cssResponse = await fetch('styles.css');

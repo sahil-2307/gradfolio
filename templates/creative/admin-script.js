@@ -1307,8 +1307,10 @@ async function generateLivePortfolio() {
             token = localStorage.getItem('access_token') || localStorage.getItem('gradfolio_token') || 'fallback_token';
         }
         
-        // Generate personalized HTML using the admin instance data
-        const htmlContent = generateCreativePortfolioHTML(adminInstance.data);
+        // Generate personalized HTML by loading the preview template and injecting data
+        const templateResponse = await fetch('preview.html');
+        const templateContent = await templateResponse.text();
+        const htmlContent = injectCreativeDataIntoHTML(templateContent, adminInstance.data);
         
         showMessage('Generating your live portfolio...', 'info');
         
@@ -1356,81 +1358,40 @@ async function generateLivePortfolio() {
     }
 }
 
-// Generate creative portfolio HTML with user data
-function generateCreativePortfolioHTML(data) {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${data.personal.fullName} - ${data.personal.designation}</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <!-- Include your creative portfolio HTML structure with injected data -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">${data.personal.fullName}</div>
-            <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>${data.personal.fullName}</h1>
-            <h2>${data.personal.designation}</h2>
-            <p>${data.personal.heroDescription}</p>
-            <div class="hero-buttons">
-                <a href="#projects" class="btn btn-primary">View Projects</a>
-                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="about">
-        <div class="container">
-            <h2>About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>${data.about.title}</h3>
-                    <p>${data.about.description}</p>
-                    <p><strong>What I Do:</strong> ${data.about.whatIDo}</p>
-                    <p><strong>My Approach:</strong> ${data.about.myApproach}</p>
-                </div>
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-number">${data.about.stats.projects}+</span>
-                        <span class="stat-label">Projects</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">${data.about.stats.experience}</span>
-                        <span class="stat-label">Years Experience</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">${data.about.stats.clients}</span>
-                        <span class="stat-label">Happy Clients</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; ${new Date().getFullYear()} ${data.personal.fullName}. All rights reserved.</p>
-    </footer>
-
-    <script src="particles.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>`;
+// Inject creative template data into HTML
+function injectCreativeDataIntoHTML(htmlContent, data) {
+    // Replace personal information
+    htmlContent = htmlContent.replace(/Sahil Bhujbal/g, data.personal.fullName);
+    htmlContent = htmlContent.replace(/Full Stack Developer/g, data.personal.designation);
+    htmlContent = htmlContent.replace(/Passionate about creating innovative digital solutions that blend creativity with cutting-edge technology\. I transform ideas into immersive experiences\./g, data.personal.heroDescription);
+    
+    // Replace about section
+    htmlContent = htmlContent.replace(/Creative Developer & Problem Solver/g, data.about.title);
+    htmlContent = htmlContent.replace(/I'm a passionate full-stack developer with over 3 years of experience creating digital experiences that make a difference\. My journey began with curiosity about how things work, and it has evolved into a deep love for crafting elegant solutions to complex problems\./g, data.about.description);
+    htmlContent = htmlContent.replace(/I specialize in building modern web applications using cutting-edge technologies\. From responsive frontends to scalable backends, I create comprehensive solutions\./g, data.about.whatIDo);
+    htmlContent = htmlContent.replace(/I believe in clean code, user-centered design, and continuous learning\. Every project is an opportunity to push boundaries and explore new possibilities\./g, data.about.myApproach);
+    
+    // Replace stats
+    if (data.about.stats) {
+        htmlContent = htmlContent.replace(/50/g, data.about.stats.projects);
+        htmlContent = htmlContent.replace(/3/g, data.about.stats.experience);
+        htmlContent = htmlContent.replace(/25/g, data.about.stats.clients);
+    }
+    
+    // Replace contact information if available
+    if (data.contact) {
+        if (data.contact.email) {
+            htmlContent = htmlContent.replace(/sahil@example\.com/g, data.contact.email);
+        }
+        if (data.contact.phone) {
+            htmlContent = htmlContent.replace(/\+1 \(555\) 123-4567/g, data.contact.phone);
+        }
+        if (data.contact.location) {
+            htmlContent = htmlContent.replace(/Mumbai, India/g, data.contact.location);
+        }
+    }
+    
+    return htmlContent;
 }
 
 // Show live portfolio URL modal
@@ -1484,6 +1445,24 @@ function closePortfolioModal() {
     const modal = document.getElementById('portfolio-modal');
     if (modal) {
         modal.style.display = 'none';
+    }
+}
+
+// Preview portfolio with current data
+async function previewSite() {
+    try {
+        // Load the preview template and inject current form data
+        const templateResponse = await fetch('preview.html');
+        const templateContent = await templateResponse.text();
+        const htmlContent = injectCreativeDataIntoHTML(templateContent, adminInstance.data);
+        
+        // Create a blob URL for preview
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+    } catch (error) {
+        console.error('Error generating preview:', error);
+        showMessage('Error generating preview. Please try again.', 'error');
     }
 }
 
