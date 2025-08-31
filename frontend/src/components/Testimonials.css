@@ -37,6 +37,34 @@
   background: var(--bg-primary) !important;
 }
 
+/* Additional specificity for dark mode testimonials */
+html.dark-theme .testimonials-section {
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+html.dark-theme section.testimonials-section {
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+/* Force dark mode testimonials background with highest specificity */
+html.dark-theme body .testimonials-section {
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+html.dark-theme .home .testimonials-section {
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+/* Target the section element directly in dark mode */
+html.dark-theme section[class*="testimonials"] {
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
 .testimonials-section .container {
   max-width: 1200px;
   margin: 0 auto;
