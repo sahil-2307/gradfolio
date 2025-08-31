@@ -1872,6 +1872,11 @@ function injectDataIntoHTML(htmlContent, data) {
     // Replace title
     htmlContent = htmlContent.replace(/<title>.*?<\/title>/, `<title>${data.personal.fullName} - ${data.personal.designation}</title>`);
     
+    // Replace nav-logo (Portfolio -> User's name or keep Portfolio)
+    const firstName = data.personal.fullName.split(' ')[0];
+    htmlContent = htmlContent.replace(/<div class="nav-logo">Portfolio<\/div>/, 
+        `<div class="nav-logo">${firstName}</div>`);
+    
     // Replace placeholder content with actual data
     htmlContent = htmlContent.replace(/Hello, I'm <span class="highlight">.*?<\/span>/, 
         `Hello, I'm <span class="highlight">${data.personal.fullName}</span>`);
@@ -1881,6 +1886,18 @@ function injectDataIntoHTML(htmlContent, data) {
     
     htmlContent = htmlContent.replace(/Passionate about creating innovative solutions through code\. Ready to make an impact in the tech industry\./, 
         data.personal.heroDescription);
+        
+    // Replace footer name
+    htmlContent = htmlContent.replace(/&copy; \d{4} Alex Johnson\. All rights reserved\./, 
+        `&copy; ${new Date().getFullYear()} ${data.personal.fullName}. All rights reserved.`);
+        
+    // Remove references to JS files that won't exist in S3 (keep only essential functionality)
+    htmlContent = htmlContent.replace(/<script src="debug-fix\.js"><\/script>\s*/g, '');
+    htmlContent = htmlContent.replace(/<script src="portfolio-updater-preview\.js"><\/script>\s*/g, '');
+    
+    // Keep script.js but make it optional
+    htmlContent = htmlContent.replace(/<script src="script\.js"><\/script>/, 
+        '<script src="script.js" onerror="console.log(\'Script not found but portfolio works without it\')"></script>');
     
     // Replace profile photo
     if (data.personal.profilePhoto) {
