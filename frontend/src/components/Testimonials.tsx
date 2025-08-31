@@ -21,7 +21,7 @@ const testimonialsData: Testimonial[] = [
     university: "DY Patil",
     graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1494790108755-2616b612b407?w=150&h=150&fit=crop&crop=face",
-    quote: "GradGen helped me stand out from thousands of applicants. The clean design and interactive elements caught the recruiter's attention immediately. I got interviews at 5 FAANG companies!",
+    quote: "OnlinePortfolios helped me stand out from thousands of applicants. The clean design and interactive elements caught the recruiter's attention immediately. I got interviews at 5 FAANG companies!",
     linkedin: "https://www.linkedin.com/in/chinmay-toke/"
   },
   {
@@ -43,7 +43,7 @@ const testimonialsData: Testimonial[] = [
     university: "Cummins",
     graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    quote: "My GradGen page got 500+ views in the first week after sharing it on LinkedIn. The projects section beautifully showcased my work. Received 15 interview calls!",
+    quote: "My OnlinePortfolios page got 500+ views in the first week after sharing it on LinkedIn. The projects section beautifully showcased my work. Received 15 interview calls!",
     linkedin: "https://www.linkedin.com/in/shravani-junghare-370b95218/"
   },
   {

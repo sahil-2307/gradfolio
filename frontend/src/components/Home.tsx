@@ -98,60 +98,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Recruiter Section */}
-      <section className="recruiter-section">
-        <div className="recruiter-content">
-          <div className="recruiter-text">
-            <div className="recruiter-badge">
-              <span className="badge-icon">🎯</span>
-              <span>For Recruiters</span>
-            </div>
-            <h2>Discover Top Talent</h2>
-            <p>
-              Browse through our curated collection of professional portfolios from 
-              skilled graduates and developers. Find your next hire from candidates 
-              who've already impressed companies like Google, Microsoft, and Netflix.
-            </p>
-            <div className="recruiter-stats">
-              <div className="recruiter-stat">
-                <span className="stat-number">500+</span>
-                <span className="stat-text">Active Portfolios</span>
-              </div>
-              <div className="recruiter-stat">
-                <span className="stat-number">95%</span>
-                <span className="stat-text">Hire Success Rate</span>
-              </div>
-              <div className="recruiter-stat">
-                <span className="stat-number">50+</span>
-                <span className="stat-text">Companies Hiring</span>
-              </div>
-            </div>
-          </div>
-          <div className="recruiter-actions">
-            <button 
-              className="browse-profiles-btn primary"
-              onClick={() => window.open('/browse-profiles', '_blank')}
-            >
-              <span className="btn-icon">👥</span>
-              <span>Browse All Profiles</span>
-              <span className="btn-arrow">→</span>
-            </button>
-            <button 
-              className="browse-profiles-btn secondary"
-              onClick={() => window.open('/featured-profiles', '_blank')}
-            >
-              <span className="btn-icon">⭐</span>
-              <span>Featured Talent</span>
-              <span className="btn-arrow">→</span>
-            </button>
-            <div className="recruiter-note">
-              <span className="note-icon">💼</span>
-              <span>Free access to all portfolios • No registration required</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* About Section */}
       <section id="about" className="about-section">
         <div className="about-content">
