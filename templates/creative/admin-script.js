@@ -871,7 +871,7 @@ function removeResume() {
 
 // Utility functions
 function previewSite() {
-    window.open('preview.html', '_blank');
+    window.open('https://gradfolio-previews.s3.amazonaws.com/creative/preview.html', '_blank');
 }
 
 function exportData() {
@@ -1259,6 +1259,241 @@ function closePortfolioUrlModal() {
     const modal = document.getElementById('portfolio-url-modal');
     if (modal) {
         document.body.removeChild(modal);
+    }
+}
+
+// Generate and save live portfolio to S3
+async function generateLivePortfolio() {
+    try {
+        // Simplified authentication check
+        let authFound = false;
+        let username = null;
+        
+        // Check for any authentication indicators
+        for (const key of Object.keys(localStorage)) {
+            if (key.includes('auth') || key.includes('token') || key.includes('session')) {
+                authFound = true;
+                break;
+            }
+        }
+        
+        // Try to get username from various sources
+        try {
+            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
+            if (supabaseAuth) {
+                const authData = JSON.parse(supabaseAuth);
+                username = authData.user?.user_metadata?.username || authData.user?.email?.split('@')[0];
+                authFound = true;
+            }
+        } catch (e) {
+            // Try other storage locations
+        }
+        
+        // Fallback username generation
+        if (!username) {
+            username = 'user_' + Date.now().toString().slice(-6);
+        }
+        
+        console.log('Auth check:', { authFound, username });
+        
+        // Get token for API authorization
+        let token = null;
+        try {
+            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
+            if (supabaseAuth) {
+                const authData = JSON.parse(supabaseAuth);
+                token = authData.access_token;
+            }
+        } catch (e) {
+            // Fallback token
+            token = localStorage.getItem('access_token') || localStorage.getItem('gradfolio_token') || 'fallback_token';
+        }
+        
+        // Generate personalized HTML using the admin instance data
+        const htmlContent = generateCreativePortfolioHTML(adminInstance.data);
+        
+        if (adminInstance) {
+            adminInstance.showNotification('Generating your live portfolio...', 'info');
+        }
+        
+        // Get CSS content
+        const cssResponse = await fetch('styles.css');
+        const cssContent = await cssResponse.text();
+        
+        // Upload to S3 via our API
+        const response = await fetch('/api/portfolio-s3', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                username: username,
+                templateType: 'creative',
+                htmlContent: htmlContent,
+                cssContent: cssContent
+            })
+        });
+        
+        let result;
+        let responseText;
+        try {
+            responseText = await response.text();
+            console.log('API Response Status:', response.status);
+            console.log('API Response Text:', responseText);
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('Failed to parse API response:', parseError);
+            throw new Error(`API returned invalid response. Status: ${response.status}. Response: ${responseText || 'No response text'}`);
+        }
+        
+        if (result.success) {
+            if (adminInstance) {
+                adminInstance.showNotification(`Portfolio generated successfully!`, 'success');
+            }
+            showLivePortfolioModal(result.portfolioUrl);
+        } else {
+            throw new Error(result.error || 'Unknown error occurred');
+        }
+        
+    } catch (error) {
+        console.error('Error generating live portfolio:', error);
+        if (adminInstance) {
+            adminInstance.showNotification(`Error: ${error.message}`, 'error');
+        }
+    }
+}
+
+// Generate creative portfolio HTML with user data
+function generateCreativePortfolioHTML(data) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${data.personal.fullName} - ${data.personal.designation}</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Include your creative portfolio HTML structure with injected data -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">${data.personal.fullName}</div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>${data.personal.fullName}</h1>
+            <h2>${data.personal.designation}</h2>
+            <p>${data.personal.heroDescription}</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>${data.about.title}</h3>
+                    <p>${data.about.description}</p>
+                    <p><strong>What I Do:</strong> ${data.about.whatIDo}</p>
+                    <p><strong>My Approach:</strong> ${data.about.myApproach}</p>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number">${data.about.stats.projects}+</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">${data.about.stats.experience}</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">${data.about.stats.clients}</span>
+                        <span class="stat-label">Happy Clients</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; ${new Date().getFullYear()} ${data.personal.fullName}. All rights reserved.</p>
+    </footer>
+
+    <script src="particles.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>`;
+}
+
+// Show live portfolio URL modal
+function showLivePortfolioModal(url) {
+    const modal = document.getElementById('portfolio-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    modalContent.innerHTML = `
+        <h3>
+            <i class="fas fa-check-circle" style="color: #4caf50;"></i>
+            Live Portfolio Generated!
+        </h3>
+        <p>Your personalized portfolio is now live and accessible at:</p>
+        
+        <div class="portfolio-url-container">
+            <div class="portfolio-url" id="live-portfolio-url">${url}</div>
+            <div class="url-actions">
+                <button class="btn btn-secondary" onclick="copyLivePortfolioUrl()">
+                    <i class="fas fa-copy"></i> Copy URL
+                </button>
+                <button class="btn btn-preview" onclick="window.open('${url}', '_blank')">
+                    <i class="fas fa-eye"></i> View Portfolio
+                </button>
+                <button class="btn btn-primary" onclick="closePortfolioModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+}
+
+// Copy live portfolio URL to clipboard
+function copyLivePortfolioUrl() {
+    const urlElement = document.getElementById('live-portfolio-url');
+    if (urlElement) {
+        // Create a temporary input element to copy the text
+        const tempInput = document.createElement('input');
+        tempInput.value = urlElement.textContent;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        if (adminInstance) {
+            adminInstance.showNotification('Portfolio URL copied to clipboard!', 'success');
+        }
+    }
+}
+
+// Close portfolio modal
+function closePortfolioModal() {
+    const modal = document.getElementById('portfolio-modal');
+    if (modal) {
+        modal.style.display = 'none';
     }
 }
 
