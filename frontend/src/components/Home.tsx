@@ -102,8 +102,8 @@ const Home: React.FC = () => {
       <section id="about" className="about-section">
         <div className="about-content">
           <div className="section-header">
-            <h2>Why Choose OnlinePortfolios?</h2>
-            <p>Generate portfolios that stand out from the crowd</p>
+            <h2>Why Choose US?</h2>
+            <p>To build your future, not just a portfolio.</p>
           </div>
           
           <div className="features-grid">

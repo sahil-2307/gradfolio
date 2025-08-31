@@ -91,6 +91,7 @@ const Testimonials: React.FC = () => {
     <section className="testimonials-section">
       <div className="container">
         <div className="testimonials-header">
+          <br />
           <h2>Success Stories</h2>
           <p>Join thousands of students who landed their dream jobs with GradGen</p>
           <div className="stats">
@@ -157,6 +158,7 @@ const Testimonials: React.FC = () => {
           <button className="cta-nav-button" onClick={openPortfolioBuilder}>
             Get Started Free
           </button>
+          <br />
         </div>
       </div>
     </section>
