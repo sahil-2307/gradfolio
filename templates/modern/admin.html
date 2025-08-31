@@ -17,6 +17,9 @@
                     <button class="btn btn-preview" onclick="previewPortfolio()">
                         <i class="fas fa-eye"></i> Preview
                     </button>
+                    <button class="btn btn-generate" onclick="generateLivePortfolio()">
+                        <i class="fas fa-rocket"></i> Generate & Save Portfolio
+                    </button>
                     <button class="btn btn-export" onclick="exportData()">
                         <i class="fas fa-download"></i> Export
                     </button>
@@ -358,6 +361,16 @@
 
     <!-- Success/Error Messages -->
     <div id="message-container"></div>
+
+    <!-- Portfolio Generation Modal -->
+    <div id="portfolio-modal" class="portfolio-modal">
+        <div class="portfolio-modal-content">
+            <button class="modal-close" onclick="closePortfolioModal()">&times;</button>
+            <div id="modal-content">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
 
     <script src="admin-script.js"></script>
 </body>

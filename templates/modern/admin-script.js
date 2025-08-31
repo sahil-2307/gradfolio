@@ -931,7 +931,7 @@ function importData(event) {
 function previewPortfolio() {
     // Apply current data and open preview
     updatePortfolioPage();
-    window.open('preview.html', '_blank');
+    window.open('https://gradfolio-previews.s3.amazonaws.com/modern/preview.html', '_blank');
 }
 
 // Update the main portfolio page with current data
@@ -1288,6 +1288,420 @@ function testDownload() {
     });
 }
 
+// Generate and save live portfolio to S3
+async function generateLivePortfolio() {
+    try {
+        // Check if user is authenticated
+        const token = localStorage.getItem('gradfolio_token');
+        const user = JSON.parse(localStorage.getItem('gradfolio_user') || '{}');
+        
+        if (!token || !user.username) {
+            showMessage('Please login to generate your live portfolio. Redirecting to login...', 'warning');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+            return;
+        }
+        
+        // Save current data first
+        saveDataToStorage();
+        const portfolioData = getCurrentFormData();
+        
+        showMessage('Generating your live portfolio...', 'info');
+        
+        // Generate personalized HTML
+        const htmlContent = generatePortfolioHTML(portfolioData);
+        
+        // Get CSS content
+        const cssResponse = await fetch('styles.css');
+        const cssContent = await cssResponse.text();
+        
+        // Upload to S3 via our API
+        const response = await fetch('/api/portfolio-s3', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                username: user.username,
+                templateType: 'modern',
+                htmlContent: htmlContent,
+                cssContent: cssContent
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showMessage(`Portfolio generated successfully!`, 'success');
+            showLivePortfolioModal(result.portfolioUrl);
+        } else {
+            showMessage(`Error generating portfolio: ${result.error}`, 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error generating live portfolio:', error);
+        showMessage('Error generating portfolio. Please try again.', 'error');
+    }
+}
+
+// Generate personalized portfolio HTML
+function generatePortfolioHTML(data) {
+    const profilePhotoHTML = data.personal?.profilePhoto 
+        ? `<img src="${data.personal.profilePhoto}" alt="${data.personal.fullName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+        : '<i class="fas fa-user-graduate"></i>';
+
+    const statsHTML = data.about?.stats ? `
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">${data.about.stats.projects.number}+</span>
+                <span class="stat-label">${data.about.stats.projects.label}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">${data.about.stats.gpa.number}</span>
+                <span class="stat-label">${data.about.stats.gpa.label}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">${data.about.stats.internships.number}</span>
+                <span class="stat-label">${data.about.stats.internships.label}</span>
+            </div>
+        </div>` : '';
+
+    const skillsHTML = data.skills?.categories ? data.skills.categories.map(category => `
+        <div class="skill-category">
+            <h3>${category.name}</h3>
+            <div class="skill-items">
+                ${category.skills.map(skill => `<span class="skill-tag">${skill.name}</span>`).join('')}
+            </div>
+        </div>
+    `).join('') : `
+        <div class="skill-category">
+            <h3>Development</h3>
+            <div class="skill-items">
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">React</span>
+            </div>
+        </div>`;
+
+    const experienceHTML = data.experience?.length ? data.experience.map(exp => `
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="experience-header">
+                    <h3>${exp.title}</h3>
+                    <div class="company-info">
+                        <span class="company">${exp.company}</span>
+                        <span class="duration">${exp.duration}</span>
+                    </div>
+                </div>
+                <div class="experience-description">
+                    <p>${exp.description}</p>
+                    ${exp.achievements ? `<ul class="achievements">${exp.achievements.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}
+                    ${exp.technologies ? `<div class="tech-stack">${exp.technologies.map(t => `<span class="tech">${t}</span>`).join('')}</div>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('') : `
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="experience-header">
+                    <h3>Your Experience</h3>
+                    <div class="company-info">
+                        <span class="company">Company Name</span>
+                        <span class="duration">Duration</span>
+                    </div>
+                </div>
+                <div class="experience-description">
+                    <p>Add your professional experience here.</p>
+                </div>
+            </div>
+        </div>`;
+
+    const projectsHTML = data.projects?.length ? data.projects.map(project => `
+        <div class="project-card">
+            <div class="project-image">
+                ${project.image ? `<img src="${project.image}" alt="${project.title}">` : '<i class="fas fa-code"></i>'}
+            </div>
+            <div class="project-content">
+                <h3>${project.title}</h3>
+                <p>${project.description}</p>
+                <div class="project-tech">
+                    ${project.technologies.map(tech => `<span>${tech}</span>`).join('')}
+                </div>
+                <div class="project-links">
+                    ${project.githubUrl ? `<a href="${project.githubUrl}" class="project-link" target="_blank"><i class="fab fa-github"></i> Code</a>` : ''}
+                    ${project.demoUrl ? `<a href="${project.demoUrl}" class="project-link" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('') : `
+        <div class="project-card">
+            <div class="project-image">
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="project-content">
+                <h3>Your Amazing Project</h3>
+                <p>Add your projects to showcase your skills and experience.</p>
+                <div class="project-tech">
+                    <span>Technology</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
+                </div>
+            </div>
+        </div>`;
+
+    const resumeButtonHTML = data.personal?.resumeUrl ? `
+        <br>
+        <button id="download-resume-btn" class="btn btn-resume" onclick="downloadResume()">
+            <i class="fas fa-download"></i> Download Resume
+        </button>` : '';
+
+    const resumeScriptHTML = data.personal?.resumeUrl ? `
+        function downloadResume() {
+            const resumeUrl = '${data.personal.resumeUrl}';
+            const resumeFileName = '${data.personal.resumeFileName || data.personal.fullName + '-resume'}';
+            
+            if (resumeUrl.startsWith('data:')) {
+                const link = document.createElement('a');
+                link.href = resumeUrl;
+                link.download = resumeFileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                window.open(resumeUrl, '_blank');
+            }
+        }
+        window.downloadResume = downloadResume;` : '';
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${data.personal?.fullName || 'Portfolio'} - ${data.personal?.designation || 'Professional'}</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="loaded">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">Portfolio</div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 id="hero-name">Hello, I'm <span class="highlight">${data.personal?.fullName || 'Your Name'}</span></h1>
+                <h2>${data.personal?.designation || 'Your Title'}</h2>
+                <p>${data.personal?.heroDescription || 'Your professional description goes here.'}</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="profile-circle">
+                    ${profilePhotoHTML}
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>${data.about?.paragraph1 || 'Tell your story here. What makes you unique?'}</p>
+                    <p>${data.about?.paragraph2 || 'Share your journey and aspirations.'}</p>
+                    ${statsHTML}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid">
+                ${skillsHTML}
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="experience-timeline">
+                ${experienceHTML}
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                ${projectsHTML}
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>I'm always interested in new opportunities and collaborations. Feel free to reach out!</p>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <span>${data.contact?.email || 'your.email@example.com'}</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <span>${data.contact?.phone || '+1 (555) 123-4567'}</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${data.contact?.location || 'Your City, Country'}</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        ${data.contact?.linkedin ? `<a href="${data.contact.linkedin}" class="social-link" target="_blank"><i class="fab fa-linkedin"></i></a>` : ''}
+                        ${data.contact?.github ? `<a href="${data.contact.github}" class="social-link" target="_blank"><i class="fab fa-github"></i></a>` : ''}
+                        ${data.contact?.twitter ? `<a href="${data.contact.twitter}" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>` : ''}
+                    </div>
+                    ${resumeButtonHTML}
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; ${new Date().getFullYear()} ${data.personal?.fullName || 'Your Name'}. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+            
+            // Smooth scrolling
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    hamburger?.classList.remove('active');
+                    navMenu?.classList.remove('active');
+                });
+            });
+        });
+        
+        ${resumeScriptHTML}
+    </script>
+</body>
+</html>`;
+}
+
+// Show live portfolio URL modal
+function showLivePortfolioModal(url) {
+    const modal = document.getElementById('portfolio-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    modalContent.innerHTML = \`
+        <h3>
+            <i class="fas fa-check-circle" style="color: var(--admin-success);"></i>
+            Live Portfolio Generated!
+        </h3>
+        <p>Your personalized portfolio is now live and accessible at:</p>
+        
+        <div class="portfolio-url-container">
+            <div class="portfolio-url" id="live-portfolio-url">\${url}</div>
+            <div class="url-actions">
+                <button class="btn btn-secondary" onclick="copyLivePortfolioUrl()">
+                    <i class="fas fa-copy"></i> Copy URL
+                </button>
+                <button class="btn btn-success" onclick="window.open('\${url}', '_blank')">
+                    <i class="fas fa-eye"></i> View Portfolio
+                </button>
+                <button class="btn btn-primary" onclick="closePortfolioModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    \`;
+    
+    modal.style.display = 'block';
+}
+
+// Copy live portfolio URL to clipboard
+function copyLivePortfolioUrl() {
+    const urlElement = document.getElementById('live-portfolio-url');
+    if (urlElement) {
+        // Create a temporary input element to copy the text
+        const tempInput = document.createElement('input');
+        tempInput.value = urlElement.textContent;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        showMessage('Portfolio URL copied to clipboard!', 'success');
+    }
+}
+
+
 // Inject current form data directly into HTML
 function injectDataIntoHTML(htmlContent, data) {
     // Replace placeholder content with actual data
@@ -1322,4 +1736,12 @@ function injectDataIntoHTML(htmlContent, data) {
     }
     
     return htmlContent;
+}
+
+// Close portfolio modal function
+function closePortfolioModal() {
+    const modal = document.getElementById('portfolio-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
