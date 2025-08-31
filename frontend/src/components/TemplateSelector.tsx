@@ -102,7 +102,7 @@ const TemplateSelector: React.FC = () => {
       alert('This template is coming soon!');
       return;
     }
-    // Use S3 URLs for previews
+    // Use S3 URLs for previews - updated with working S3 bucket
     let previewUrl = '';
     if (template.id === 1) {
       previewUrl = 'https://gradfolio-previews.s3.amazonaws.com/modern/preview.html';
