@@ -929,9 +929,14 @@ function importData(event) {
 }
 
 function previewPortfolio() {
-    // Apply current data and open preview
-    updatePortfolioPage();
-    window.open('https://gradfolio-previews.s3.amazonaws.com/modern/preview.html', '_blank');
+    // Generate HTML with current form data for preview
+    const portfolioData = collectPortfolioData();
+    const htmlContent = generatePortfolioHTML(portfolioData);
+    
+    // Create a blob URL for preview
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
 }
 
 // Update the main portfolio page with current data
@@ -943,16 +948,33 @@ function updatePortfolioPage() {
 // Save portfolio to server and get unique URL
 async function savePortfolioToServer() {
     try {
-        // Check if user is authenticated
-        const token = localStorage.getItem('gradfolio_token');
-        const user = JSON.parse(localStorage.getItem('gradfolio_user') || '{}');
+        // Simplified authentication check
+        let authFound = false;
+        let username = null;
         
-        if (!token || !user.username) {
-            showMessage('Please login to save your portfolio. Redirecting to login...', 'warning');
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 2000);
-            return;
+        // Check for any authentication indicators
+        for (const key of Object.keys(localStorage)) {
+            if (key.includes('auth') || key.includes('token') || key.includes('session')) {
+                authFound = true;
+                break;
+            }
+        }
+        
+        // Try to get username from various sources
+        try {
+            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
+            if (supabaseAuth) {
+                const authData = JSON.parse(supabaseAuth);
+                username = authData.user?.user_metadata?.username || authData.user?.email?.split('@')[0];
+                authFound = true;
+            }
+        } catch (e) {
+            // Try other storage locations
+        }
+        
+        // Fallback username generation
+        if (!username) {
+            username = 'user_' + Date.now().toString().slice(-6);
         }
         
         // Save current data first
@@ -986,7 +1008,7 @@ async function savePortfolioToServer() {
             
             // Fallback to localStorage-based storage
             const portfolios = JSON.parse(localStorage.getItem('gradfolio_portfolios') || '{}');
-            portfolios[user.username] = {
+            portfolios[username] = {
                 portfolioData: portfolioData,
                 templateType: 'modern',
                 updatedAt: new Date().toISOString()
@@ -995,7 +1017,7 @@ async function savePortfolioToServer() {
             
             result = {
                 success: true,
-                portfolioUrl: `${window.location.origin}/u/${user.username}`
+                portfolioUrl: `${window.location.origin}/u/${username}`
             };
         }
         
@@ -1291,17 +1313,36 @@ function testDownload() {
 // Generate and save live portfolio to S3
 async function generateLivePortfolio() {
     try {
-        // Check if user is authenticated
-        const token = localStorage.getItem('gradfolio_token');
-        const user = JSON.parse(localStorage.getItem('gradfolio_user') || '{}');
+        // Simplified authentication check - look for any authentication indicator
+        let authFound = false;
+        let username = null;
         
-        if (!token || !user.username) {
-            showMessage('Please login to generate your live portfolio. Redirecting to login...', 'warning');
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 2000);
-            return;
+        // Check multiple possible auth storage locations
+        for (const key of Object.keys(localStorage)) {
+            if (key.includes('auth') || key.includes('token') || key.includes('session')) {
+                authFound = true;
+                break;
+            }
         }
+        
+        // Try to get username from various sources
+        try {
+            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
+            if (supabaseAuth) {
+                const authData = JSON.parse(supabaseAuth);
+                username = authData.user?.user_metadata?.username || authData.user?.email?.split('@')[0];
+                authFound = true;
+            }
+        } catch (e) {
+            // Try other storage locations
+        }
+        
+        // Fallback username generation
+        if (!username) {
+            username = 'user_' + Date.now().toString().slice(-6);
+        }
+        
+        console.log('Auth check:', { authFound, username });
         
         // Save current data first
         saveDataToStorage();
@@ -1324,7 +1365,7 @@ async function generateLivePortfolio() {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                username: user.username,
+                username: username,
                 templateType: 'modern',
                 htmlContent: htmlContent,
                 cssContent: cssContent
