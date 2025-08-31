@@ -173,9 +173,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Testimonials moved below */}
-      <section id="testimonials">
-        <Testimonials />
-      </section>
+      <Testimonials />
 
       {/* Contact Section */}
       <section id = 'contact'  className="contact-section">
