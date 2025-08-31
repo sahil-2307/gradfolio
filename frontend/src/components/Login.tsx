@@ -80,7 +80,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="login-container">
       <div className="login-card">
         <button onClick={handleBackClick} className="back-button" aria-label="Go back">
-          ← Back
+          Back
         </button>
         
         <div className="login-header">

@@ -70,7 +70,7 @@ const ResetPassword: React.FC = () => {
     <div className="login-container">
       <div className="login-card">
         <button onClick={handleBackToLogin} className="back-button" aria-label="Back to login">
-          ← Back to Login
+          Back to Login
         </button>
         
         <div className="login-header">
