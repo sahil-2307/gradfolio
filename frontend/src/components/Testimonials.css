@@ -1,6 +1,6 @@
 .testimonials-section {
   padding: 5rem 2rem;
-  background: var(--white);
+  background: var(--bg-primary);
   position: relative;
   transition: background-color 0.3s ease;
 }
@@ -44,7 +44,7 @@
 .stat {
   text-align: center;
   padding: 2rem 1.5rem;
-  background: var(--bg-card);
+  background: var(--white);
   border: 1px solid var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -192,7 +192,7 @@
 .testimonials-cta {
   text-align: center;
   padding: 3rem;
-  background: var(--bg-card);
+  background: var(--white);
   border: 1px solid var(--bg-card);
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
