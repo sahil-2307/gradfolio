@@ -32,6 +32,11 @@
   transition: background-color 0.3s ease;
 }
 
+/* Ensure testimonials background changes in dark mode */
+.dark-theme .testimonials-section {
+  background: var(--bg-primary) !important;
+}
+
 .testimonials-section .container {
   max-width: 1200px;
   margin: 0 auto;

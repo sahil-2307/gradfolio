@@ -75,6 +75,11 @@ body {
   transition: color 0.3s ease;
 }
 
+/* Ensure brand text changes in dark mode */
+.dark-theme .nav-brand .brand-text {
+  color: var(--text-dark) !important;
+}
+
 .brand-logo {
   width: 40px;
   height: 40px;
@@ -471,6 +476,15 @@ body {
 #testimonials {
   background: var(--bg-primary);
   transition: background-color 0.3s ease;
+}
+
+/* Ensure testimonials section changes in dark mode */
+.dark-theme #testimonials {
+  background: var(--bg-primary) !important;
+}
+
+.dark-theme #testimonials .testimonials-section {
+  background: var(--bg-primary) !important;
 }
 
 /* Contact Section */
