@@ -1379,6 +1379,19 @@ async function generateLivePortfolio() {
         
         console.log('Auth check:', { authFound, username });
         
+        // Get token for API authorization
+        let token = null;
+        try {
+            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
+            if (supabaseAuth) {
+                const authData = JSON.parse(supabaseAuth);
+                token = authData.access_token;
+            }
+        } catch (e) {
+            // Fallback token
+            token = localStorage.getItem('access_token') || localStorage.getItem('gradfolio_token') || 'fallback_token';
+        }
+        
         // Save current data first
         saveDataToStorage();
         const portfolioData = getCurrentFormData();
