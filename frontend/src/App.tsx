@@ -6,6 +6,7 @@ import StripeCheckout from './components/StripeCheckout';
 import TemplateSelector from './components/TemplateSelector';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import BrowseProfiles from './components/BrowseProfiles';
 import { AuthService } from './services/authService';
 import type { User } from './config/supabase';
 import './App.css';
@@ -72,6 +73,8 @@ function App() {
           <Route path="/templates" element={<TemplateSelector />} />
           <Route path="/profile/:username" element={<LandingPage />} />
           <Route path="/checkout/:username" element={<StripeCheckout />} />
+          <Route path="/browse-profiles" element={<BrowseProfiles />} />
+          <Route path="/featured-profiles" element={<BrowseProfiles />} />
           
           {/* Authentication Routes */}
           <Route 
