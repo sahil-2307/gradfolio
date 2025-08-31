@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage';
 import StripeCheckout from './components/StripeCheckout';
 import TemplateSelector from './components/TemplateSelector';
 import Login from './components/Login';
+import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import BrowseProfiles from './components/BrowseProfiles';
 import { AuthService } from './services/authService';
@@ -84,6 +85,10 @@ function App() {
                 <Navigate to="/dashboard" replace /> : 
                 <Login onLogin={handleLogin} />
             } 
+          />
+          <Route 
+            path="/reset-password" 
+            element={<ResetPassword />}
           />
           <Route 
             path="/dashboard" 

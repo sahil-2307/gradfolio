@@ -57,11 +57,22 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       return;
     }
     
+    setLoading(true);
+    setError('');
+    
     try {
-      // Add forgot password logic here when authService supports it
-      setError('Password reset link sent to your email (feature coming soon)');
+      const result = await AuthService.resetPassword(formData.email);
+      
+      if (result.success) {
+        setError('Password reset link sent to your email. Please check your inbox and spam folder.');
+      } else {
+        setError(result.error || 'Failed to send password reset email');
+      }
     } catch (error) {
-      setError('Failed to send password reset email');
+      console.error('Password reset error:', error);
+      setError('Failed to send password reset email. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
