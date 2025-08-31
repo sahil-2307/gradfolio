@@ -27,42 +27,17 @@
 
 .testimonials-section {
   padding: 5rem 2rem;
-  background: var(--bg-primary);
+  background: var(--bg-primary) !important;
   position: relative;
   transition: background-color 0.3s ease;
 }
 
-/* Ensure testimonials background changes in dark mode */
+/* ULTIMATE DARK MODE FIX - This MUST work */
+html.dark-theme .testimonials-section,
+html.dark-theme section.testimonials-section,
 .dark-theme .testimonials-section {
-  background: var(--bg-primary) !important;
-}
-
-/* Additional specificity for dark mode testimonials */
-html.dark-theme .testimonials-section {
-  background-color: var(--bg-primary) !important;
-  background: var(--bg-primary) !important;
-}
-
-html.dark-theme section.testimonials-section {
-  background-color: var(--bg-primary) !important;
-  background: var(--bg-primary) !important;
-}
-
-/* Force dark mode testimonials background with highest specificity */
-html.dark-theme body .testimonials-section {
-  background-color: var(--bg-primary) !important;
-  background: var(--bg-primary) !important;
-}
-
-html.dark-theme .home .testimonials-section {
-  background-color: var(--bg-primary) !important;
-  background: var(--bg-primary) !important;
-}
-
-/* Target the section element directly in dark mode */
-html.dark-theme section[class*="testimonials"] {
-  background-color: var(--bg-primary) !important;
-  background: var(--bg-primary) !important;
+  background: #1a1a2e !important;
+  background-color: #1a1a2e !important;
 }
 
 .testimonials-section .container {

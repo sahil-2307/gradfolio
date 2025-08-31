@@ -474,7 +474,7 @@ body {
 
 /* Testimonials Section */
 #testimonials {
-  background: var(--bg-primary);
+  background: var(--bg-primary) !important;
   transition: background-color 0.3s ease;
 }
 
@@ -484,6 +484,17 @@ body {
 }
 
 .dark-theme #testimonials .testimonials-section {
+  background: var(--bg-primary) !important;
+}
+
+/* Force the outer testimonials section to inherit background */
+html.dark-theme #testimonials {
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+html.dark-theme section#testimonials {
+  background-color: var(--bg-primary) !important;
   background: var(--bg-primary) !important;
 }
 

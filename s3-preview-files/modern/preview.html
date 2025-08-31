@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Graduate Showcase</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading Portfolio...</p>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">Portfolio</div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 id="hero-name">Hello, I'm <span class="highlight">Alex Johnson</span></h1>
+                <h2>Computer Science Graduate</h2>
+                <p>Passionate about creating innovative solutions through code. Ready to make an impact in the tech industry.</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="profile-circle">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I'm a recent Computer Science graduate with a passion for full-stack development and problem-solving. During my studies, I've worked on various projects that showcase my ability to learn new technologies quickly and deliver quality solutions.</p>
+                    <p>My journey in technology started with curiosity and has evolved into a deep appreciation for clean code, user experience, and innovative solutions. I'm always eager to take on new challenges and contribute to meaningful projects.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Projects Completed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">3.8</span>
+                            <span class="stat-label">GPA</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">2</span>
+                            <span class="stat-label">Internships</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Frontend</h3>
+                    <div class="skill-items">
+                        <span class="skill-tag">HTML5</span>
+                        <span class="skill-tag">CSS3</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Vue.js</span>
+                        <span class="skill-tag">TypeScript</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Backend</h3>
+                    <div class="skill-items">
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Express.js</span>
+                        <span class="skill-tag">Django</span>
+                        <span class="skill-tag">REST APIs</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Database & Tools</h3>
+                    <div class="skill-items">
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Linux</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="experience-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-header">
+                            <h3>Software Engineering Intern</h3>
+                            <div class="company-info">
+                                <span class="company">TechCorp Solutions</span>
+                                <span class="duration">Jun 2023 - Aug 2023</span>
+                            </div>
+                        </div>
+                        <div class="experience-description">
+                            <p>Developed and maintained web applications using React and Node.js. Collaborated with senior developers on feature implementation and code optimization.</p>
+                            <ul class="achievements">
+                                <li>Built responsive user interfaces for 3 client projects</li>
+                                <li>Improved application performance by 25% through code optimization</li>
+                                <li>Participated in agile development processes and daily standups</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span class="tech">React</span>
+                                <span class="tech">Node.js</span>
+                                <span class="tech">MongoDB</span>
+                                <span class="tech">Git</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-header">
+                            <h3>Frontend Developer Intern</h3>
+                            <div class="company-info">
+                                <span class="company">Digital Innovations Ltd</span>
+                                <span class="duration">Jan 2023 - Apr 2023</span>
+                            </div>
+                        </div>
+                        <div class="experience-description">
+                            <p>Focused on creating modern, responsive web interfaces and improving user experience across multiple platforms.</p>
+                            <ul class="achievements">
+                                <li>Redesigned company landing page resulting in 40% increase in conversions</li>
+                                <li>Implemented mobile-first design principles for better accessibility</li>
+                                <li>Collaborated with UX/UI team to translate designs into functional code</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span class="tech">Vue.js</span>
+                                <span class="tech">Sass</span>
+                                <span class="tech">JavaScript</span>
+                                <span class="tech">Figma</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-header">
+                            <h3>Research Assistant</h3>
+                            <div class="company-info">
+                                <span class="company">University Computer Science Dept</span>
+                                <span class="duration">Sep 2022 - Dec 2022</span>
+                            </div>
+                        </div>
+                        <div class="experience-description">
+                            <p>Assisted in machine learning research projects and data analysis for academic publications.</p>
+                            <ul class="achievements">
+                                <li>Developed Python scripts for data preprocessing and analysis</li>
+                                <li>Co-authored research paper on neural network optimization</li>
+                                <li>Presented findings at university research symposium</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span class="tech">Python</span>
+                                <span class="tech">TensorFlow</span>
+                                <span class="tech">Pandas</span>
+                                <span class="tech">Jupyter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>E-Commerce Platform</h3>
+                        <p>Full-stack e-commerce solution built with React, Node.js, and MongoDB. Features user authentication, payment integration, and admin dashboard.</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>Task Management App</h3>
+                        <p>Collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.</p>
+                        <div class="project-tech">
+                            <span>Vue.js</span>
+                            <span>Socket.io</span>
+                            <span>Express</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>Data Analytics Dashboard</h3>
+                        <p>Interactive dashboard for data visualization and analysis built with Python, Flask, and D3.js. Processes large datasets efficiently.</p>
+                        <div class="project-tech">
+                            <span>Python</span>
+                            <span>Flask</span>
+                            <span>D3.js</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>I'm always interested in new opportunities and collaborations. Feel free to reach out if you'd like to discuss potential projects or just want to connect!</p>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <span>alex.johnson@email.com</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>San Francisco, CA</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                    <br>
+                    <button id="download-resume-btn" class="btn btn-resume" onclick="downloadResume()" style="display: none;">
+                        <i class="fas fa-download"></i> Download Resume
+                    </button>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Alex Johnson. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="debug-fix.js"></script>
+    <script src="script.js"></script>
+    <script src="portfolio-updater-preview.js"></script>
+    
+    <!-- Fallback to ensure page shows even if JS fails -->
+    <script>
+    setTimeout(function() {
+        document.body.classList.add('loaded');
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }, 2000);
+    </script>
+</body>
+</html>
