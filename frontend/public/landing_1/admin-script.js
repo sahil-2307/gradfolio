@@ -931,7 +931,7 @@ function importData(event) {
 function previewPortfolio() {
     // Apply current data and open preview
     updatePortfolioPage();
-    window.open('preview.html', '_blank');
+    window.open('https://gradfolio-previews.s3.amazonaws.com/modern/preview.html', '_blank');
 }
 
 // Update the main portfolio page with current data

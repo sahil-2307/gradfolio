@@ -113,7 +113,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
               </div>
               <div className="template-actions">
                 <button 
-                  onClick={() => window.open(`${window.location.origin}/landing_1/preview.html`, '_blank')}
+                  onClick={() => window.open('https://gradfolio-previews.s3.amazonaws.com/modern/preview.html', '_blank')}
                   className="btn btn-outline"
                 >
                   Preview
@@ -136,7 +136,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
               </div>
               <div className="template-actions">
                 <button 
-                  onClick={() => window.open(`${window.location.origin}/landing_2/preview.html`, '_blank')}
+                  onClick={() => window.open('https://gradfolio-previews.s3.amazonaws.com/creative/preview.html', '_blank')}
                   className="btn btn-outline"
                 >
                   Preview

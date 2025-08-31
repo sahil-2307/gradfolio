@@ -871,7 +871,7 @@ function removeResume() {
 
 // Utility functions
 function previewSite() {
-    window.open('preview.html', '_blank');
+    window.open('https://gradfolio-previews.s3.amazonaws.com/creative/preview.html', '_blank');
 }
 
 function exportData() {

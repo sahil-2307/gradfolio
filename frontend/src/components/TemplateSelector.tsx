@@ -102,8 +102,13 @@ const TemplateSelector: React.FC = () => {
       alert('This template is coming soon!');
       return;
     }
-    // Construct the absolute URL for the template preview
-    const previewUrl = `${window.location.origin}${template.previewUrl}`;
+    // Use S3 URLs for previews
+    let previewUrl = '';
+    if (template.id === 1) {
+      previewUrl = 'https://gradfolio-previews.s3.amazonaws.com/modern/preview.html';
+    } else if (template.id === 2) {
+      previewUrl = 'https://gradfolio-previews.s3.amazonaws.com/creative/preview.html';
+    }
     // Open preview in new tab
     window.open(previewUrl, '_blank');
   };
