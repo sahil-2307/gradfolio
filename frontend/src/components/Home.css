@@ -459,7 +459,7 @@ body {
 }
 
 .feature-card h3 {
-  color: var(--text-dark);
+  color: #123C63 !important; /* Force dark blue text in light mode */
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -467,7 +467,7 @@ body {
 }
 
 .feature-card p {
-  color: var(--text-body);
+  color: #4A4A4A !important; /* Force darker gray text in light mode */
   font-size: 1rem;
   line-height: 1.6;
 }
