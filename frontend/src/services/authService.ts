@@ -157,8 +157,13 @@ export class AuthService {
   // Send password reset email
   static async resetPassword(email: string): Promise<{ success: boolean; error?: string }> {
     try {
+      // Use the current domain or fallback to localhost for development
+      const baseUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : 'https://onlineportfolios.vercel.app';
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
+        redirectTo: `${baseUrl}/reset-password`
       })
       
       if (error) {

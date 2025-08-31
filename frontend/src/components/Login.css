@@ -38,45 +38,32 @@
 
 .back-button {
   position: absolute;
-  top: -4rem;
-  left: 0;
-  background: rgba(26, 26, 46, 0.9);
-  border: 2px solid rgba(255, 215, 0, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(20px);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  letter-spacing: 0.025em;
 }
 
 .back-button::before {
   content: '←';
-  font-size: 1.1em;
-  transition: transform 0.3s ease;
+  font-size: 1em;
 }
 
 .back-button:hover {
-  background: rgba(255, 215, 0, 0.15);
+  background: rgba(255, 215, 0, 0.1);
   color: #ffd700;
-  border-color: rgba(255, 215, 0, 0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.2);
-}
-
-.back-button:hover::before {
-  transform: translateX(-3px);
-}
-
-.back-button:active {
-  transform: translateY(-1px);
+  border-color: rgba(255, 215, 0, 0.5);
 }
 
 .login-header {
@@ -293,12 +280,6 @@
     padding: 0.875rem 1.5rem;
     font-size: 1rem;
   }
-
-  .back-button {
-    top: -3rem;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -321,12 +302,6 @@
   
   .tab {
     padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-  }
-
-  .back-button {
-    top: -2.5rem;
-    padding: 0.5rem 1rem;
     font-size: 0.85rem;
   }
 }
