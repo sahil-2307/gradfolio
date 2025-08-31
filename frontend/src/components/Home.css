@@ -472,6 +472,20 @@ body {
   line-height: 1.6;
 }
 
+/* Dark mode support for feature cards */
+.dark-theme .feature-card {
+  background: var(--white) !important;
+  color: var(--text-dark) !important;
+}
+
+.dark-theme .feature-card h3 {
+  color: var(--text-dark) !important;
+}
+
+.dark-theme .feature-card p {
+  color: var(--text-body) !important;
+}
+
 /* Testimonials Section */
 #testimonials {
   background: var(--bg-primary) !important;
