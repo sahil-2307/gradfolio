@@ -8,11 +8,31 @@
       "destination": "/api/$1"
     },
     {
-      "source": "/(templates|profile|checkout|login|dashboard|register)/(.*)",
+      "source": "/templates/(.*)",
       "destination": "/index.html"
     },
     {
-      "source": "/(templates|login|dashboard|register)/?$",
+      "source": "/templates",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/profile/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/checkout/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/register",
       "destination": "/index.html"
     },
     {
@@ -20,7 +40,7 @@
       "destination": "/api/portfolio-serve?username=$1"
     },
     {
-      "source": "/([a-zA-Z0-9_-]+)/?$",
+      "source": "/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
     }
   ],
