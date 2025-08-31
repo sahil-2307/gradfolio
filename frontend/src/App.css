@@ -31,6 +31,15 @@ html.dark-theme [class*="testimonials"] {
   background-color: #1a1a2e !important;
 }
 
+/* SPECIFIC FIX: Target testimonials containers */
+html.dark-theme .testimonials-section .container,
+html.dark-theme .testimonials-section .testimonials-header,
+html.dark-theme .testimonials-section .testimonials-grid,
+html.dark-theme .testimonials-section .testimonials-cta {
+  background: #1a1a2e !important;
+  background-color: #1a1a2e !important;
+}
+
 /* Force all testimonials containers */
 html.dark-theme * {
   --bg-primary: #1a1a2e !important;
