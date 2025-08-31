@@ -1006,17 +1006,40 @@ async function savePortfolioToServer() {
         
         // Try to get username from various sources
         try {
-            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
-            if (supabaseAuth) {
-                const authData = JSON.parse(supabaseAuth);
-                username = authData.user?.user_metadata?.username || authData.user?.email?.split('@')[0];
-                authFound = true;
+            // Check all localStorage keys for Supabase auth
+            for (const key of Object.keys(localStorage)) {
+                if (key.includes('sb-') && key.includes('auth-token')) {
+                    const authData = JSON.parse(localStorage.getItem(key));
+                    if (authData.user) {
+                        username = authData.user.user_metadata?.username || 
+                                 authData.user.email?.split('@')[0] ||
+                                 authData.user.identities?.[0]?.identity_data?.username;
+                        if (username) {
+                            authFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Try other storage locations
+            if (!username) {
+                const userObj = JSON.parse(localStorage.getItem('user') || localStorage.getItem('gradfolio_user') || '{}');
+                username = userObj.username || userObj.email?.split('@')[0];
             }
         } catch (e) {
-            // Try other storage locations
+            console.error('Error extracting username:', e);
         }
         
-        // Fallback username generation
+        // If still no username, get from form data
+        if (!username) {
+            const fullName = document.getElementById('full-name')?.value;
+            if (fullName) {
+                username = fullName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            }
+        }
+        
+        // Final fallback
         if (!username) {
             username = 'user_' + Date.now().toString().slice(-6);
         }
@@ -1371,17 +1394,40 @@ async function generateLivePortfolio() {
         
         // Try to get username from various sources
         try {
-            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
-            if (supabaseAuth) {
-                const authData = JSON.parse(supabaseAuth);
-                username = authData.user?.user_metadata?.username || authData.user?.email?.split('@')[0];
-                authFound = true;
+            // Check all localStorage keys for Supabase auth
+            for (const key of Object.keys(localStorage)) {
+                if (key.includes('sb-') && key.includes('auth-token')) {
+                    const authData = JSON.parse(localStorage.getItem(key));
+                    if (authData.user) {
+                        username = authData.user.user_metadata?.username || 
+                                 authData.user.email?.split('@')[0] ||
+                                 authData.user.identities?.[0]?.identity_data?.username;
+                        if (username) {
+                            authFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Try other storage locations
+            if (!username) {
+                const userObj = JSON.parse(localStorage.getItem('user') || localStorage.getItem('gradfolio_user') || '{}');
+                username = userObj.username || userObj.email?.split('@')[0];
             }
         } catch (e) {
-            // Try other storage locations
+            console.error('Error extracting username:', e);
         }
         
-        // Fallback username generation
+        // If still no username, get from form data
+        if (!username) {
+            const fullName = document.getElementById('full-name')?.value;
+            if (fullName) {
+                username = fullName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            }
+        }
+        
+        // Final fallback
         if (!username) {
             username = 'user_' + Date.now().toString().slice(-6);
         }

@@ -1277,17 +1277,40 @@ async function generateLivePortfolio() {
         
         // Try to get username from various sources
         try {
-            const supabaseAuth = localStorage.getItem('sb-gncigcattvlrfehmjmdb-auth-token');
-            if (supabaseAuth) {
-                const authData = JSON.parse(supabaseAuth);
-                username = authData.user?.user_metadata?.username || authData.user?.email?.split('@')[0];
-                authFound = true;
+            // Check all localStorage keys for Supabase auth
+            for (const key of Object.keys(localStorage)) {
+                if (key.includes('sb-') && key.includes('auth-token')) {
+                    const authData = JSON.parse(localStorage.getItem(key));
+                    if (authData.user) {
+                        username = authData.user.user_metadata?.username || 
+                                 authData.user.email?.split('@')[0] ||
+                                 authData.user.identities?.[0]?.identity_data?.username;
+                        if (username) {
+                            authFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Try other storage locations
+            if (!username) {
+                const userObj = JSON.parse(localStorage.getItem('user') || localStorage.getItem('gradfolio_user') || '{}');
+                username = userObj.username || userObj.email?.split('@')[0];
             }
         } catch (e) {
-            // Try other storage locations
+            console.error('Error extracting username:', e);
         }
         
-        // Fallback username generation
+        // If still no username, get from form data
+        if (!username) {
+            const fullName = adminInstance.data.personal.fullName;
+            if (fullName && fullName !== 'Sahil Bhujbal') {
+                username = fullName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            }
+        }
+        
+        // Final fallback
         if (!username) {
             username = 'user_' + Date.now().toString().slice(-6);
         }
@@ -1360,6 +1383,15 @@ async function generateLivePortfolio() {
 
 // Inject creative template data into HTML
 function injectCreativeDataIntoHTML(htmlContent, data) {
+    // Replace title
+    htmlContent = htmlContent.replace(/<title>.*?<\/title>/, `<title>${data.personal.fullName} - ${data.personal.designation}</title>`);
+    
+    // Replace loading screen name (SAHIL letters)
+    const firstName = data.personal.fullName.split(' ')[0].toUpperCase();
+    const letters = firstName.split('').slice(0, 6); // Max 6 letters for styling
+    let logoAnimation = letters.map(letter => `<span>${letter}</span>`).join('');
+    htmlContent = htmlContent.replace(/<div class="logo-animation">[\s\S]*?<\/div>/, `<div class="logo-animation">${logoAnimation}</div>`);
+    
     // Replace personal information
     htmlContent = htmlContent.replace(/Sahil Bhujbal/g, data.personal.fullName);
     htmlContent = htmlContent.replace(/Full Stack Developer/g, data.personal.designation);

@@ -55,8 +55,8 @@ export default async function handler(req, res) {
 
     console.log('Uploading to S3 for user:', username);
 
-    // Upload HTML file
-    const htmlKey = `portfolios/${username}/index.html`;
+    // Upload HTML file with template-specific structure
+    const htmlKey = `portfolios/${username}/${templateType}/index.html`;
     await s3.upload({
       Bucket: BUCKET_NAME,
       Key: htmlKey,
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
 
     // Upload CSS file
     if (cssContent) {
-      const cssKey = `portfolios/${username}/styles.css`;
+      const cssKey = `portfolios/${username}/${templateType}/styles.css`;
       await s3.upload({
         Bucket: BUCKET_NAME,
         Key: cssKey,
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
       console.log('CSS uploaded successfully');
     }
 
-    const portfolioUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/index.html`;
+    const portfolioUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/${templateType}/index.html`;
     console.log('Portfolio URL:', portfolioUrl);
 
     res.status(200).json({
