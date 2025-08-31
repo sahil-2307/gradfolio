@@ -1,4 +1,4 @@
-// Vercel serverless function for S3 portfolio upload
+// Vercel serverless function for S3 portfolio upload - Updated with custom URLs
 const BUCKET_NAME = 'gradfolio-previews';
 
 export default async function handler(req, res) {
