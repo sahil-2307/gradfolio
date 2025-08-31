@@ -61,8 +61,7 @@ export default async function handler(req, res) {
       Bucket: BUCKET_NAME,
       Key: htmlKey,
       Body: htmlContent,
-      ContentType: 'text/html',
-      ACL: 'public-read'
+      ContentType: 'text/html'
     }).promise();
 
     console.log('HTML uploaded successfully');
@@ -74,8 +73,7 @@ export default async function handler(req, res) {
         Bucket: BUCKET_NAME,
         Key: cssKey,
         Body: cssContent,
-        ContentType: 'text/css',
-        ACL: 'public-read'
+        ContentType: 'text/css'
       }).promise();
       
       console.log('CSS uploaded successfully');
