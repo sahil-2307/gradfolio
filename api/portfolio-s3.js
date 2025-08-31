@@ -1,16 +1,16 @@
 // Vercel serverless function for S3 portfolio upload
-import AWS from 'aws-sdk';
-
-// Configure AWS (you'll need to set these environment variables in Vercel)
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION || 'us-east-1'
-});
-
 const BUCKET_NAME = 'gradfolio-previews';
 
 export default async function handler(req, res) {
+  // Log function start for debugging
+  console.log('Portfolio S3 function started');
+  console.log('Method:', req.method);
+  console.log('Environment variables check:', {
+    hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
+    hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION
+  });
+
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -26,22 +26,34 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Check if AWS credentials are configured
-  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
-    console.error('AWS credentials not configured');
-    res.status(500).json({ 
-      error: 'AWS credentials not configured. Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.' 
-    });
-    return;
-  }
-
   try {
+    // Check if AWS credentials are configured
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+      console.error('AWS credentials not configured');
+      res.status(500).json({ 
+        error: 'AWS credentials not configured. Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.' 
+      });
+      return;
+    }
+
     const { username, templateType, htmlContent, cssContent } = req.body;
 
     if (!username || !htmlContent) {
       res.status(400).json({ error: 'Username and HTML content are required' });
       return;
     }
+
+    // Dynamically import AWS SDK to avoid Vercel issues
+    const AWS = await import('aws-sdk');
+    
+    // Configure AWS
+    const s3 = new AWS.default.S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION || 'us-east-1'
+    });
+
+    console.log('Uploading to S3 for user:', username);
 
     // Upload HTML file
     const htmlKey = `portfolios/${username}/index.html`;
@@ -53,6 +65,8 @@ export default async function handler(req, res) {
       ACL: 'public-read'
     }).promise();
 
+    console.log('HTML uploaded successfully');
+
     // Upload CSS file
     if (cssContent) {
       const cssKey = `portfolios/${username}/styles.css`;
@@ -63,9 +77,12 @@ export default async function handler(req, res) {
         ContentType: 'text/css',
         ACL: 'public-read'
       }).promise();
+      
+      console.log('CSS uploaded successfully');
     }
 
     const portfolioUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/index.html`;
+    console.log('Portfolio URL:', portfolioUrl);
 
     res.status(200).json({
       success: true,
@@ -76,7 +93,8 @@ export default async function handler(req, res) {
     console.error('S3 upload error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to upload portfolio to S3'
+      error: 'Failed to upload portfolio to S3',
+      details: error.message
     });
   }
 }
