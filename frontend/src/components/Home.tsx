@@ -17,8 +17,8 @@ const Home: React.FC = () => {
       <section className="hero-section">
         <nav className="navbar">
           <div className="nav-brand">
-            <div className="brand-logo">G</div>
-            <span className="brand-text">radGen</span>
+            <div className="brand-logo">O</div>
+            <span className="brand-text">nlinePortfolios</span>
           </div>
           <div className="nav-links">
             <a href="#about">About</a>
@@ -43,7 +43,7 @@ const Home: React.FC = () => {
               <h2>— Introduction</h2>
               <h3>Generate stunning portfolios that land you dream jobs in minutes.</h3>
               <p>
-                Join thousands of successful graduates who've used GradGen to automatically 
+                Join thousands of successful graduates who've used OnlinePortfolios to automatically 
                 generate professional portfolios that impressed recruiters at top companies 
                 like Google, Microsoft, and Netflix. Get your own custom URL like 
                 <strong> onlineportfolios.in/yourname</strong>.
@@ -100,7 +100,7 @@ const Home: React.FC = () => {
       <section id="about" className="about-section">
         <div className="about-content">
           <div className="section-header">
-            <h2>Why Choose GradGen?</h2>
+            <h2>Why Choose OnlinePortfolios?</h2>
             <p>Generate portfolios that stand out from the crowd</p>
           </div>
           
@@ -162,11 +162,11 @@ const Home: React.FC = () => {
             <h3>Let's Get Started.</h3>
             <p>
               Join the thousands of graduates who have successfully landed their 
-              dream jobs using GradGen. Generate your professional portfolio today
+              dream jobs using OnlinePortfolios. Generate your professional portfolio today
               and get your own custom URL at onlineportfolios.in.
             </p>
-            <a href="mailto:hello@gradgen.com" className="contact-email">
-              hello@gradgen.com →
+            <a href="mailto:hello@onlineportfolios.in" className="contact-email">
+              hello@onlineportfolios.in →
             </a>
           </div>
           
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
         <div className="footer-content">
           <div className="footer-brand">
             <div className="brand-logo"></div>
-            <span>GradGen</span>
+            <span>OnlinePortfolios</span>
           </div>
           <div className="footer-links">
             <a href="#about">About</a>

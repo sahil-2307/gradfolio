@@ -126,7 +126,7 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ profile }) => {
         )}
 
         <footer>
-          <p>Built with <Link to="/">GradGen</Link></p>
+          <p>Built with <Link to="/">OnlinePortfolios</Link></p>
           {!profile.isPremium && (
             <Link to={`/checkout/${profile.username}`}>
               Upgrade to Premium
