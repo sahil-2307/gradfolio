@@ -72,7 +72,7 @@ const Home: React.FC = () => {
               
               <div className="floating-cards">
                 <div className="project-card-preview">
-                  <h5>Display Your Projects</h5>
+                  <h5>Advantages</h5>
                   <div className="project-items">
                     
                     <div className="project-item-small">Instant setup</div>
