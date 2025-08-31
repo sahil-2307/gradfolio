@@ -45,7 +45,8 @@ const Home: React.FC = () => {
               <p>
                 Join thousands of successful graduates who've used GradGen to automatically 
                 generate professional portfolios that impressed recruiters at top companies 
-                like Google, Microsoft, and Netflix.
+                like Google, Microsoft, and Netflix. Get your own custom URL like 
+                <strong> onlineportfolios.in/yourname</strong>.
               </p>
               <button className="my-story-btn" onClick={openPortfolioBuilder}>
                 Create Your Story →
@@ -127,6 +128,12 @@ const Home: React.FC = () => {
               <h3>Instant Generation</h3>
               <p>Generate your portfolio online in minutes with our AI-powered process</p>
             </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🌐</div>
+              <h3>Custom Professional URLs</h3>
+              <p>Get a clean, professional URL like <strong>onlineportfolios.in/yourname</strong> that's perfect for resumes and business cards</p>
+            </div>
             <div className="feature-card">
               <div className="feature-icon">💻</div>
               <h3>Export Codebase</h3>
@@ -155,7 +162,8 @@ const Home: React.FC = () => {
             <h3>Let's Get Started.</h3>
             <p>
               Join the thousands of graduates who have successfully landed their 
-              dream jobs using GradGen. Generate your professional portfolio today.
+              dream jobs using GradGen. Generate your professional portfolio today
+              and get your own custom URL at onlineportfolios.in.
             </p>
             <a href="mailto:hello@gradgen.com" className="contact-email">
               hello@gradgen.com →

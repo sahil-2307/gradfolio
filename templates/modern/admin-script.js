@@ -1091,9 +1091,14 @@ async function savePortfolioToServer() {
             };
             localStorage.setItem('gradfolio_portfolios', JSON.stringify(portfolios));
             
+            // Show custom domain URL in preview
+            const customDomainUrl = `https://onlineportfolios.in/${username}`;
+            const fallbackUrl = `${window.location.origin}/${username}`;
+            
             result = {
                 success: true,
-                portfolioUrl: `${window.location.origin}/u/${username}`
+                portfolioUrl: customDomainUrl,
+                fallbackUrl: fallbackUrl
             };
         }
         

@@ -79,19 +79,26 @@ export default async function handler(req, res) {
       console.log('CSS uploaded successfully');
     }
 
-    // Generate clean custom URL without /u/ prefix
-    const cleanUrl = `https://${req.headers.host}/${username}`;
-    const fallbackUrl = `https://${req.headers.host}/u/${username}`;
+    // Use custom domain if available, otherwise use current host
+    const customDomain = 'onlineportfolios.in';
+    const currentHost = req.headers.host;
+    
+    // Check if custom domain is ready by trying both
+    const primaryUrl = `https://${customDomain}/${username}`;
+    const fallbackUrl = `https://${currentHost}/${username}`;
+    const legacyUrl = `https://${currentHost}/u/${username}`;
     const s3Url = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/${templateType}/index.html`;
     
     console.log('Portfolio uploaded to S3:', s3Url);
-    console.log('Clean custom URL:', cleanUrl);
+    console.log('Primary URL (custom domain):', primaryUrl);
     console.log('Fallback URL:', fallbackUrl);
+    console.log('Legacy URL:', legacyUrl);
 
     res.status(200).json({
       success: true,
-      portfolioUrl: cleanUrl, // Show the clean URL to users
-      fallbackUrl: fallbackUrl, // Keep /u/ version working
+      portfolioUrl: primaryUrl, // Show the custom domain URL
+      fallbackUrl: fallbackUrl,
+      legacyUrl: legacyUrl,
       s3Url: s3Url // Keep S3 URL for debugging
     });
 
