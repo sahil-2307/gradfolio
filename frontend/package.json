@@ -26,7 +26,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run postbuild",
+    "postbuild": "mkdir -p build/templates/modern && mkdir -p build/templates/creative && cp -r ../templates/modern/* build/templates/modern/ && cp -r ../templates/creative/* build/templates/creative/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
