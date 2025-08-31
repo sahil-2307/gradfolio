@@ -6,16 +6,23 @@ export default async function handler(req, res) {
   console.log('Method:', req.method);
   console.log('Query params:', req.query);
 
-  // Extract username from query parameters
-  const { username, template } = req.query;
+  // Extract username and template from the URL path
+  const { username } = req.query;
 
   if (!username) {
     res.status(400).json({ error: 'Username is required' });
     return;
   }
 
-  // Default to modern template if not specified
-  const templateType = template || 'modern';
+  // Parse username to extract template if specified (e.g., "johndoe/creative")
+  let actualUsername = username;
+  let templateType = 'modern'; // default
+  
+  if (username.includes('/')) {
+    const parts = username.split('/');
+    actualUsername = parts[0];
+    templateType = parts[1] || 'modern';
+  }
 
   try {
     // Check if AWS credentials are configured
@@ -37,10 +44,10 @@ export default async function handler(req, res) {
       region: process.env.AWS_REGION || 'us-east-1'
     });
 
-    console.log(`Fetching portfolio for user: ${username}, template: ${templateType}`);
+    console.log(`Fetching portfolio for user: ${actualUsername}, template: ${templateType}`);
 
     // Fetch HTML content from S3
-    const htmlKey = `portfolios/${username}/${templateType}/index.html`;
+    const htmlKey = `portfolios/${actualUsername}/${templateType}/index.html`;
     
     try {
       const htmlObject = await s3.getObject({
@@ -51,7 +58,7 @@ export default async function handler(req, res) {
       const htmlContent = htmlObject.Body.toString();
 
       // Fetch CSS content from S3
-      const cssKey = `portfolios/${username}/${templateType}/styles.css`;
+      const cssKey = `portfolios/${actualUsername}/${templateType}/styles.css`;
       let cssContent = '';
       
       try {
@@ -139,7 +146,7 @@ export default async function handler(req, res) {
 <body>
     <div class="container">
         <h1>Portfolio Not Found</h1>
-        <p>The portfolio for <strong>${username}</strong> doesn't exist yet or hasn't been published.</p>
+        <p>The portfolio for <strong>${actualUsername}</strong> doesn't exist yet or hasn't been published.</p>
         <a href="/" class="btn">← Back to Gradfolio</a>
     </div>
 </body>

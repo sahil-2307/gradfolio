@@ -8,12 +8,8 @@
       "destination": "/api/$1"
     },
     {
-      "source": "/u/([^/]+)/?$",
+      "source": "/u/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
-    },
-    {
-      "source": "/u/([^/]+)/([^/]+)/?$", 
-      "destination": "/api/portfolio-serve?username=$1&template=$2"
     }
   ],
   "redirects": [
