@@ -130,6 +130,41 @@ function saveDataToStorage() {
     localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
 }
 
+// Collect current portfolio data from forms
+function collectPortfolioData() {
+    // Update portfolioData with current form values
+    updatePortfolioDataFromForms();
+    return portfolioData;
+}
+
+// Get current form data (alias for collectPortfolioData)
+function getCurrentFormData() {
+    return collectPortfolioData();
+}
+
+// Update portfolioData object with current form values
+function updatePortfolioDataFromForms() {
+    // Personal information
+    portfolioData.personal.fullName = document.getElementById('full-name')?.value || portfolioData.personal.fullName;
+    portfolioData.personal.designation = document.getElementById('designation')?.value || portfolioData.personal.designation;
+    portfolioData.personal.heroDescription = document.getElementById('hero-description')?.value || portfolioData.personal.heroDescription;
+    portfolioData.personal.profilePhoto = document.getElementById('profile-photo-url')?.value || portfolioData.personal.profilePhoto;
+    portfolioData.personal.resumeUrl = document.getElementById('resume-url')?.value || portfolioData.personal.resumeUrl;
+    
+    // About section
+    portfolioData.about.paragraph1 = document.getElementById('about-paragraph-1')?.value || portfolioData.about.paragraph1;
+    portfolioData.about.paragraph2 = document.getElementById('about-paragraph-2')?.value || portfolioData.about.paragraph2;
+    portfolioData.about.stats.projects.number = parseInt(document.getElementById('stat1-number')?.value) || portfolioData.about.stats.projects.number;
+    portfolioData.about.stats.gpa.number = parseFloat(document.getElementById('stat2-number')?.value) || portfolioData.about.stats.gpa.number;
+    portfolioData.about.stats.internships.number = parseInt(document.getElementById('stat3-number')?.value) || portfolioData.about.stats.internships.number;
+    
+    // Contact information
+    portfolioData.contact.description = document.getElementById('contact-description')?.value || portfolioData.contact.description;
+    portfolioData.contact.email = document.getElementById('email')?.value || portfolioData.contact.email;
+    portfolioData.contact.phone = document.getElementById('phone')?.value || portfolioData.contact.phone;
+    portfolioData.contact.location = document.getElementById('location')?.value || portfolioData.contact.location;
+}
+
 // Initialize Admin Panel
 function initializeAdminPanel() {
     // Navigation menu functionality
