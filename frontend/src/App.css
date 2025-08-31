@@ -14,4 +14,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F4F8FB;
+  transition: background-color 0.3s ease;
+}
+
+/* Dark mode body background */
+html.dark-theme body {
+  background-color: #1a1a2e !important;
 }
