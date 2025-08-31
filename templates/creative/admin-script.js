@@ -1248,9 +1248,7 @@ function copyPortfolioUrl() {
     if (input) {
         input.select();
         document.execCommand('copy');
-        if (adminInstance) {
-            adminInstance.showNotification('Portfolio URL copied to clipboard!', 'success');
-        }
+        showMessage('Portfolio URL copied to clipboard!', 'success');
     }
 }
 
@@ -1312,9 +1310,7 @@ async function generateLivePortfolio() {
         // Generate personalized HTML using the admin instance data
         const htmlContent = generateCreativePortfolioHTML(adminInstance.data);
         
-        if (adminInstance) {
-            adminInstance.showNotification('Generating your live portfolio...', 'info');
-        }
+        showMessage('Generating your live portfolio...', 'info');
         
         // Get CSS content
         const cssResponse = await fetch('styles.css');
@@ -1348,9 +1344,7 @@ async function generateLivePortfolio() {
         }
         
         if (result.success) {
-            if (adminInstance) {
-                adminInstance.showNotification(`Portfolio generated successfully!`, 'success');
-            }
+            showMessage(`Portfolio generated successfully!`, 'success');
             showLivePortfolioModal(result.portfolioUrl);
         } else {
             throw new Error(result.error || 'Unknown error occurred');
@@ -1358,9 +1352,7 @@ async function generateLivePortfolio() {
         
     } catch (error) {
         console.error('Error generating live portfolio:', error);
-        if (adminInstance) {
-            adminInstance.showNotification(`Error: ${error.message}`, 'error');
-        }
+        showMessage(`Error: ${error.message}`, 'error');
     }
 }
 
@@ -1483,9 +1475,7 @@ function copyLivePortfolioUrl() {
         tempInput.select();
         document.execCommand('copy');
         document.body.removeChild(tempInput);
-        if (adminInstance) {
-            adminInstance.showNotification('Portfolio URL copied to clipboard!', 'success');
-        }
+        showMessage('Portfolio URL copied to clipboard!', 'success');
     }
 }
 
@@ -1495,6 +1485,51 @@ function closePortfolioModal() {
     if (modal) {
         modal.style.display = 'none';
     }
+}
+
+// Show message function for creative template
+function showMessage(message, type = 'info') {
+    const container = document.getElementById('message-container');
+    if (!container) return;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message message-${type}`;
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 10001;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+        max-width: 300px;
+        word-wrap: break-word;
+    `;
+    messageDiv.textContent = message;
+
+    container.appendChild(messageDiv);
+
+    // Animate in
+    setTimeout(() => {
+        messageDiv.style.opacity = '1';
+        messageDiv.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, 300);
+    }, 4000);
 }
 
 // Initialize admin panel
