@@ -1660,7 +1660,7 @@ function showLivePortfolioModal(url) {
     const modal = document.getElementById('portfolio-modal');
     const modalContent = document.getElementById('modal-content');
     
-    modalContent.innerHTML = \`
+    modalContent.innerHTML = `
         <h3>
             <i class="fas fa-check-circle" style="color: var(--admin-success);"></i>
             Live Portfolio Generated!
@@ -1668,12 +1668,12 @@ function showLivePortfolioModal(url) {
         <p>Your personalized portfolio is now live and accessible at:</p>
         
         <div class="portfolio-url-container">
-            <div class="portfolio-url" id="live-portfolio-url">\${url}</div>
+            <div class="portfolio-url" id="live-portfolio-url">${url}</div>
             <div class="url-actions">
                 <button class="btn btn-secondary" onclick="copyLivePortfolioUrl()">
                     <i class="fas fa-copy"></i> Copy URL
                 </button>
-                <button class="btn btn-success" onclick="window.open('\${url}', '_blank')">
+                <button class="btn btn-success" onclick="window.open('${url}', '_blank')">
                     <i class="fas fa-eye"></i> View Portfolio
                 </button>
                 <button class="btn btn-primary" onclick="closePortfolioModal()">
@@ -1681,7 +1681,7 @@ function showLivePortfolioModal(url) {
                 </button>
             </div>
         </div>
-    \`;
+    `;
     
     modal.style.display = 'block';
 }
