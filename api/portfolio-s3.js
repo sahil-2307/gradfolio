@@ -79,16 +79,19 @@ export default async function handler(req, res) {
       console.log('CSS uploaded successfully');
     }
 
-    // Generate custom URL instead of direct S3 URL  
-    const customUrl = `https://${req.headers.host}/u/${username}`;
+    // Generate clean custom URL without /u/ prefix
+    const cleanUrl = `https://${req.headers.host}/${username}`;
+    const fallbackUrl = `https://${req.headers.host}/u/${username}`;
     const s3Url = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/${templateType}/index.html`;
     
     console.log('Portfolio uploaded to S3:', s3Url);
-    console.log('Custom URL:', customUrl);
+    console.log('Clean custom URL:', cleanUrl);
+    console.log('Fallback URL:', fallbackUrl);
 
     res.status(200).json({
       success: true,
-      portfolioUrl: customUrl,
+      portfolioUrl: cleanUrl, // Show the clean URL to users
+      fallbackUrl: fallbackUrl, // Keep /u/ version working
       s3Url: s3Url // Keep S3 URL for debugging
     });
 

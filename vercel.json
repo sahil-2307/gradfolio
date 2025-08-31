@@ -8,7 +8,19 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/(templates|profile|checkout|login|dashboard|register)/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(templates|login|dashboard|register)/?$",
+      "destination": "/index.html"
+    },
+    {
       "source": "/u/(.*)",
+      "destination": "/api/portfolio-serve?username=$1"
+    },
+    {
+      "source": "/([a-zA-Z0-9_-]+)/?$",
       "destination": "/api/portfolio-serve?username=$1"
     }
   ],
