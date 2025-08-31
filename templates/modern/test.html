@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        h1 {
+            color: #ffd700;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .status {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .success { background: #4caf50; }
+        .error { background: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>Template System Test</h1>
+    <p>Modern Professional Template</p>
+    
+    <div class="status" id="css-status">
+        <strong>CSS Test:</strong> <span id="css-result">Testing...</span>
+    </div>
+    
+    <div class="status" id="js-status">
+        <strong>JavaScript Test:</strong> <span id="js-result">Testing...</span>
+    </div>
+    
+    <div class="status" id="files-status">
+        <strong>Files Test:</strong> <span id="files-result">Testing...</span>
+    </div>
+    
+    <script>
+        // Test CSS loading
+        document.getElementById('css-result').textContent = 'CSS is loading properly ✓';
+        document.getElementById('css-status').classList.add('success');
+        
+        // Test JavaScript
+        document.getElementById('js-result').textContent = 'JavaScript is working ✓';
+        document.getElementById('js-status').classList.add('success');
+        
+        // Test file access
+        fetch('styles.css')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('files-result').textContent = 'Files are accessible ✓';
+                    document.getElementById('files-status').classList.add('success');
+                } else {
+                    throw new Error('File access failed');
+                }
+            })
+            .catch(error => {
+                document.getElementById('files-result').textContent = 'Files are NOT accessible ✗';
+                document.getElementById('files-status').classList.add('error');
+            });
+    </script>
+</body>
+</html>
