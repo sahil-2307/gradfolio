@@ -1899,15 +1899,26 @@ function injectDataIntoHTML(htmlContent, data) {
     // Add essential inline JavaScript to ensure full page functionality
     const inlineScript = `
     <script>
+    // Immediately make the page visible to prevent blank screen
+    document.body.style.opacity = '1';
+    document.body.classList.add('loaded');
+    
+    // Remove loading overlay immediately
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Remove loading overlay
-        setTimeout(function() {
-            document.body.classList.add('loaded');
-            const overlay = document.getElementById('loading-overlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-            }
-        }, 500);
+        // Ensure page is visible
+        document.body.style.opacity = '1';
+        document.body.classList.add('loaded');
+        
+        // Hide loading overlay
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
         
         // Mobile Navigation Toggle
         const hamburger = document.querySelector('.hamburger');
@@ -1954,7 +1965,30 @@ function injectDataIntoHTML(htmlContent, data) {
     });
     </script>`;
     
-    // Add the inline script before the closing body tag
+    // Add CSS override to ensure content is visible even if JavaScript fails
+    const cssOverride = `
+    <style>
+    /* Ensure page is visible even without JavaScript */
+    body {
+        opacity: 1 !important;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    /* Hide loading overlay by default */
+    .loading-overlay {
+        display: none !important;
+    }
+    
+    /* Ensure all sections are visible */
+    section {
+        display: block !important;
+        visibility: visible !important;
+    }
+    </style>`;
+    
+    // Add the CSS override and inline script before the closing head and body tags
+    htmlContent = htmlContent.replace('</head>', cssOverride + '</head>');
     htmlContent = htmlContent.replace('</body>', inlineScript + '</body>');
     
     // Replace profile photo
