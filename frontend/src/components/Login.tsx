@@ -47,9 +47,31 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     });
   };
 
+  const handleBackClick = () => {
+    window.history.back();
+  };
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      setError('Please enter your email address first');
+      return;
+    }
+    
+    try {
+      // Add forgot password logic here when authService supports it
+      setError('Password reset link sent to your email (feature coming soon)');
+    } catch (error) {
+      setError('Failed to send password reset email');
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
+        <button onClick={handleBackClick} className="back-button" aria-label="Go back">
+          ← Back
+        </button>
+        
         <div className="login-header">
           <h1>Welcome to Gradfolio</h1>
           <p>Create and manage your professional portfolio</p>
@@ -111,6 +133,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               placeholder="Enter your password"
               required
             />
+            {isLogin && (
+              <button 
+                type="button" 
+                className="forgot-password-link"
+                onClick={handleForgotPassword}
+              >
+                Forgot password?
+              </button>
+            )}
           </div>
 
           {error && <div className="error-message">{error}</div>}

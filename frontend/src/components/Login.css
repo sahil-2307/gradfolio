@@ -36,6 +36,29 @@
   z-index: 1;
 }
 
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.5);
+  transform: translateX(-2px);
+}
+
 .login-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -189,6 +212,24 @@
 
 .link-btn:hover {
   color: #ffed4e;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: rgba(255, 215, 0, 0.8);
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  align-self: flex-end;
+  margin-top: 0.5rem;
+  padding: 0;
+}
+
+.forgot-password-link:hover {
+  color: #ffd700;
+  text-decoration: underline;
 }
 
 /* Responsive Design */
