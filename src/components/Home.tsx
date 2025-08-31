@@ -128,11 +128,6 @@ const Home: React.FC = () => {
               <p>Generate your portfolio online in minutes with our AI-powered process</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">💻</div>
-              <h3>Export Codebase</h3>
-              <p>Download the full HTML, CSS, and assets of your portfolio to customize and host anywhere</p>
-            </div>
-            <div className="feature-card">
               <div className="feature-icon">🧩</div>
               <h3>Custom Sections</h3>
               <p>Add personalized sections like blogs, certifications, or volunteer work to make your portfolio stand out</p>
