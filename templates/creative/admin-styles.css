@@ -960,6 +960,17 @@ input[type="radio"]:checked::after {
     color: white;
 }
 
+.btn-update {
+    background: linear-gradient(135deg, #00bfa6, #00acc1);
+    color: white;
+    font-weight: 600;
+}
+
+.btn-update:hover {
+    background: linear-gradient(135deg, #00acc1, #0097a7);
+    transform: translateY(-1px);
+}
+
 /* Portfolio Generation Modal */
 .portfolio-modal {
     display: none;

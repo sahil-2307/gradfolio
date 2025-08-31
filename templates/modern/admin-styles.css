@@ -288,6 +288,17 @@ body {
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
+.btn-update {
+    background: linear-gradient(135deg, #00bfa6, #00acc1);
+    color: white;
+    font-weight: 600;
+}
+
+.btn-update:hover {
+    background: linear-gradient(135deg, #00acc1, #0097a7);
+    transform: translateY(-1px);
+}
+
 .btn-import {
     background: var(--admin-secondary);
     color: white;

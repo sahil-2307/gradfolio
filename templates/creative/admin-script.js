@@ -1397,6 +1397,15 @@ function injectCreativeDataIntoHTML(htmlContent, data) {
     htmlContent = htmlContent.replace(/Full Stack Developer/g, data.personal.designation);
     htmlContent = htmlContent.replace(/Passionate about creating innovative digital solutions that blend creativity with cutting-edge technology\. I transform ideas into immersive experiences\./g, data.personal.heroDescription);
     
+    // Replace profile photo if provided
+    if (data.personal.profilePhoto) {
+        // Find and replace any profile image placeholder or default avatar
+        htmlContent = htmlContent.replace(/<div class="profile-image">[\s\S]*?<\/div>/, 
+            `<div class="profile-image"><img src="${data.personal.profilePhoto}" alt="${data.personal.fullName}"></div>`);
+        htmlContent = htmlContent.replace(/<i class="fas fa-user.*?><\/i>/, 
+            `<img src="${data.personal.profilePhoto}" alt="${data.personal.fullName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`);
+    }
+    
     // Replace about section
     htmlContent = htmlContent.replace(/Creative Developer & Problem Solver/g, data.about.title);
     htmlContent = htmlContent.replace(/I'm a passionate full-stack developer with over 3 years of experience creating digital experiences that make a difference\. My journey began with curiosity about how things work, and it has evolved into a deep love for crafting elegant solutions to complex problems\./g, data.about.description);
@@ -1472,6 +1481,17 @@ function copyLivePortfolioUrl() {
     }
 }
 
+// Update existing live portfolio (same as generate but different messaging)
+async function updateLivePortfolio() {
+    try {
+        showMessage('Updating your live portfolio...', 'info');
+        await generateLivePortfolio();
+    } catch (error) {
+        console.error('Error updating portfolio:', error);
+        showMessage(`Error updating portfolio: ${error.message}`, 'error');
+    }
+}
+
 // Close portfolio modal
 function closePortfolioModal() {
     const modal = document.getElementById('portfolio-modal');
@@ -1485,7 +1505,16 @@ async function previewSite() {
     try {
         // Load the preview template and inject current form data
         const templateResponse = await fetch('preview.html');
-        const templateContent = await templateResponse.text();
+        let templateContent = await templateResponse.text();
+        
+        // Load CSS content and inject it inline for proper preview
+        const cssResponse = await fetch('styles.css');
+        const cssContent = await cssResponse.text();
+        
+        // Inject CSS inline to ensure styling works in blob URL
+        templateContent = templateContent.replace('<link rel="stylesheet" href="styles.css">', 
+            `<style>${cssContent}</style>`);
+        
         const htmlContent = injectCreativeDataIntoHTML(templateContent, adminInstance.data);
         
         // Create a blob URL for preview

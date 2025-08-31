@@ -970,7 +970,16 @@ async function previewPortfolio() {
         
         // Load the preview template and inject current form data
         const templateResponse = await fetch('preview.html');
-        const templateContent = await templateResponse.text();
+        let templateContent = await templateResponse.text();
+        
+        // Load CSS content and inject it inline for proper preview
+        const cssResponse = await fetch('styles.css');
+        const cssContent = await cssResponse.text();
+        
+        // Inject CSS inline to ensure styling works in blob URL
+        templateContent = templateContent.replace('<link rel="stylesheet" href="styles.css">', 
+            `<style>${cssContent}</style>`);
+        
         const htmlContent = injectDataIntoHTML(templateContent, portfolioData);
         
         // Create a blob URL for preview
@@ -1860,12 +1869,24 @@ function copyLivePortfolioUrl() {
 
 // Inject current form data directly into HTML
 function injectDataIntoHTML(htmlContent, data) {
+    // Replace title
+    htmlContent = htmlContent.replace(/<title>.*?<\/title>/, `<title>${data.personal.fullName} - ${data.personal.designation}</title>`);
+    
     // Replace placeholder content with actual data
     htmlContent = htmlContent.replace(/Hello, I'm <span class="highlight">.*?<\/span>/, 
         `Hello, I'm <span class="highlight">${data.personal.fullName}</span>`);
     
     htmlContent = htmlContent.replace(/<h2>Computer Science Graduate<\/h2>/, 
         `<h2>${data.personal.designation}</h2>`);
+    
+    htmlContent = htmlContent.replace(/Passionate about creating innovative solutions through code\. Ready to make an impact in the tech industry\./, 
+        data.personal.heroDescription);
+    
+    // Replace profile photo
+    if (data.personal.profilePhoto) {
+        htmlContent = htmlContent.replace(/<div class="profile-circle">\s*<i class="fas fa-user-graduate"><\/i>\s*<\/div>/, 
+            `<div class="profile-circle"><img src="${data.personal.profilePhoto}" alt="${data.personal.fullName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>`);
+    }
     
     // Replace about paragraphs
     const aboutRegex = /<div class="about-text">\s*<p>.*?<\/p>\s*<p>.*?<\/p>\s*<\/div>/s;
@@ -1892,6 +1913,17 @@ function injectDataIntoHTML(htmlContent, data) {
     }
     
     return htmlContent;
+}
+
+// Update existing live portfolio (same as generate but different messaging)
+async function updateLivePortfolio() {
+    try {
+        showMessage('Updating your live portfolio...', 'info');
+        await generateLivePortfolio();
+    } catch (error) {
+        console.error('Error updating portfolio:', error);
+        showMessage(`Error updating portfolio: ${error.message}`, 'error');
+    }
 }
 
 // Close portfolio modal function
