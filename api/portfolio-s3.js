@@ -79,12 +79,17 @@ export default async function handler(req, res) {
       console.log('CSS uploaded successfully');
     }
 
-    const portfolioUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/${templateType}/index.html`;
-    console.log('Portfolio URL:', portfolioUrl);
+    // Generate custom URL instead of direct S3 URL  
+    const customUrl = `https://${req.headers.host}/u/${username}`;
+    const s3Url = `https://${BUCKET_NAME}.s3.amazonaws.com/portfolios/${username}/${templateType}/index.html`;
+    
+    console.log('Portfolio uploaded to S3:', s3Url);
+    console.log('Custom URL:', customUrl);
 
     res.status(200).json({
       success: true,
-      portfolioUrl: portfolioUrl
+      portfolioUrl: customUrl,
+      s3Url: s3Url // Keep S3 URL for debugging
     });
 
   } catch (error) {
