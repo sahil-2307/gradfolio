@@ -15,69 +15,69 @@ interface Testimonial {
 const testimonialsData: Testimonial[] = [
   {
     id: 1,
-    name: "Chinmay Toke",
-    role: "ETL Engineer",
-    company: "Nagarro",
-    university: "DY Patil",
-    graduationYear: "2024",
+    name: "Sarah Chen",
+    role: "Software Engineer",
+    company: "Google",
+    university: "Stanford University",
+    graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1494790108755-2616b612b407?w=150&h=150&fit=crop&crop=face",
     quote: "OnlinePortfolios helped me stand out from thousands of applicants. The clean design and interactive elements caught the recruiter's attention immediately. I got interviews at 5 FAANG companies!",
-    linkedin: "https://www.linkedin.com/in/chinmay-toke/"
+    linkedin: "https://www.linkedin.com/in/sarah-chen/"
   },
   {
     id: 2,
-    name: "Saish Rananaware",
-    role: "Business Analyst",
-    company: "TMF Group",
+    name: "Michael Rodriguez",
+    role: "Product Manager",
+    company: "Microsoft",
     university: "MIT",
     graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    quote: "The premium template's 3D animations were a conversation starter in every interview. It showed my attention to detail and creativity. Landed my dream PM role in just 2 months!",
-    linkedin: "https://www.linkedin.com/in/saish-rananaware-/"
+    quote: "The premium template's professional layout and trust indicators were conversation starters in every interview. It demonstrated my attention to detail and professionalism. Landed my dream role in just 6 weeks!",
+    linkedin: "https://www.linkedin.com/in/michael-rodriguez/"
   },
   {
     id: 3,
-    name: "Shravani Junghare",
-    role: "Analyst",
-    company: "Nomura",
-    university: "Cummins",
+    name: "Emily Watson",
+    role: "Data Analyst",
+    company: "Amazon",
+    university: "UC Berkeley",
     graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    quote: "My OnlinePortfolios page got 500+ views in the first week after sharing it on LinkedIn. The projects section beautifully showcased my work. Received 15 interview calls!",
-    linkedin: "https://www.linkedin.com/in/shravani-junghare-370b95218/"
+    quote: "My OnlinePortfolios page got 800+ views in the first week after sharing it on LinkedIn. The professional blue theme and trust elements beautifully showcased my credibility. Received 12 interview calls!",
+    linkedin: "https://www.linkedin.com/in/emily-watson/"
   },
   {
     id: 4,
-    name: "Prashant Pawar",
+    name: "David Kim",
     role: "Full Stack Developer",
-    company: "Dhristhi Systems",
+    company: "Meta",
     university: "Carnegie Mellon",
     graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    quote: "The color customization feature let me match my personal brand perfectly. Hiring managers said they'd never seen such a polished online presence from a new grad.",
-    linkedin: "https://linkedin.com/in/alexrodriguez"
+    quote: "The trust-focused design and enterprise security features impressed hiring managers. They said they'd never seen such a professional and credible online presence from a new graduate.",
+    linkedin: "https://linkedin.com/in/david-kim"
   },
   {
     id: 5,
-    name: "Madhura Phansalkar",
-    role: "Data Scientist",
-    company: "ImpactCraft",
-    university: "BITS Pilani",
+    name: "Jessica Taylor",
+    role: "UX Designer",
+    company: "Apple",
+    university: "Stanford University",
     graduationYear: "2023",
     photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
-    quote: "GradGen made it so easy to showcase my extracurricular leadership roles. The testimonials section added credibility. Got hired 2 weeks after graduation!",
-    linkedin: "https://www.linkedin.com/in/madhura-phansalkar-910913191/"
+    quote: "OnlinePortfolios made it incredibly easy to showcase my design projects with a clean, trustworthy layout. The professional presentation added instant credibility. Got hired 3 weeks after graduation!",
+    linkedin: "https://www.linkedin.com/in/jessica-taylor/"
   },
   {
     id: 6,
-    name: "Aditi Sinha",
-    role: "Social Media Lead",
-    company: "YOSKA",
-    university: "MIT",
+    name: "James Wilson",
+    role: "Marketing Manager",
+    company: "Netflix",
+    university: "Harvard Business School",
     graduationYear: "2024",
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-    quote: "The professional layout and premium animations impressed senior executives during my final round interviews. They said it showed exceptional presentation skills.",
-    linkedin: "https://www.linkedin.com/in/aditi-s-35295a236/"
+    quote: "The professional blue theme and trust indicators impressed senior executives during my final interviews. The platform's transparency and credibility features aligned perfectly with my personal brand.",
+    linkedin: "https://www.linkedin.com/in/james-wilson/"
   }
 ];
 
@@ -93,7 +93,7 @@ const Testimonials: React.FC = () => {
         <div className="testimonials-header">
           <br />
           <h2>Success Stories</h2>
-          <p>Join thousands of students who landed their dream jobs with GradGen</p>
+          <p>Join thousands of professionals who built their careers with OnlinePortfolios</p>
           <div className="stats">
             <div className="stat">
               <span className="stat-number">1000+</span>
@@ -146,7 +146,7 @@ const Testimonials: React.FC = () => {
               )}
               
               <div className="testimonial-badge">
-                
+                Hired
               </div>
             </div>
           ))}
@@ -155,8 +155,8 @@ const Testimonials: React.FC = () => {
         <div className="testimonials-cta">
           <h3>Ready to join them?</h3>
           <p>Create your professional landing page in under 5 minutes</p>
-          <button className="cta-nav-button" onClick={openPortfolioBuilder}>
-            Get Started Free
+          <button className="cta-button" onClick={openPortfolioBuilder}>
+            Get Started Today
           </button>
           
         </div>

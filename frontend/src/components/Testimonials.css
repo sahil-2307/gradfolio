@@ -2,6 +2,7 @@
   padding: 5rem 2rem;
   background: var(--white);
   position: relative;
+  transition: background-color 0.3s ease;
 }
 
 .testimonials-section .container {
@@ -197,6 +198,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .testimonials-cta::before {

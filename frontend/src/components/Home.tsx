@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Testimonials from './Testimonials';
 import ThreeBackground from './ThreeBackground';
 import './Home.css';
 
 const Home: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark-theme');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark-theme');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+
   const openPortfolioBuilder = () => {
     // Navigate to template selector
     window.location.href = '/templates';
@@ -23,6 +47,9 @@ const Home: React.FC = () => {
           <div className="nav-links">
             <a href="#about">About</a>
             <a href="#testimonials">Success Stories</a>
+            <button className="dark-mode-toggle" onClick={toggleDarkMode} aria-label="Toggle dark mode">
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
             <a href="/login" className="login-link">Login</a>
             <button className="cta-nav-button" onClick={openPortfolioBuilder}>
               Create Portfolio
