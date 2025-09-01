@@ -32,7 +32,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
     },
     {
     id: 'power',
-    title: 'Unlock Your Power',
+    title: 'Showcase You',
     subtitle: 'More Than Just a Portfolio',
     content: 'Turn your passion into a masterpiece'
     },
@@ -173,7 +173,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
 
             {section.id === 'power' && (
               <div className="power-features">
-                {['✨ AI-Powered', '🚀 Instant Setup', '🎨 Beautiful Design', '📱 Mobile First'].map((feature, i) => (
+                {['AI-Powered', 'Instant Setup', 'Beautiful Design', 'No Hosting Hassle'].map((feature, i) => (
                   <div 
                     key={i} 
                     className="feature-badge" 
@@ -205,7 +205,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
                 className="mobile-cta-button"
                 onClick={openPortfolioBuilder}
               >
-                <span>🚀</span>
+                <span> </span>
                 <span>Create Your Portfolio</span>
                 <span>→</span>
               </button>
