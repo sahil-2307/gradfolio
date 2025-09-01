@@ -296,6 +296,22 @@ const MobileTestimonials: React.FC = () => {
         <span>→</span>
       </button>
 
+      {/* Bottom Navigation */}
+      <div className="mobile-bottom-nav">
+        <button className="tab-button" onClick={() => window.location.href = '/'}>
+          <span className="tab-icon">🏠</span>
+          <span className="tab-label">Home</span>
+        </button>
+        <button className="tab-button" onClick={() => window.location.href = '/templates'}>
+          <span className="tab-icon">📝</span>
+          <span className="tab-label">Create</span>
+        </button>
+        <button className="tab-button" onClick={() => window.location.href = '/login'}>
+          <span className="tab-icon">👤</span>
+          <span className="tab-label">Account</span>
+        </button>
+      </div>
+
       {/* Swipe Indicator */}
       <div className="swipe-hint">
         <div className="swipe-line" />
