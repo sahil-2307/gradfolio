@@ -235,10 +235,10 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
           <span className="tab-icon">📝</span>
           <span className="tab-label">Create</span>
         </button>
-        <button className="tab-button" onClick={() => window.location.href = '/browse-profiles'}>
+        {/* <button className="tab-button" onClick={() => window.location.href = '/browse-profiles'}>
           <span className="tab-icon">👥</span>
           <span className="tab-label">Browse</span>
-        </button>
+        </button> */}
         <button className="tab-button" onClick={() => window.location.href = '/login'}>
           <span className="tab-icon">👤</span>
           <span className="tab-label">Account</span>
