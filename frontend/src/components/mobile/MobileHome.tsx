@@ -25,28 +25,28 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
   
   const sections = [
     {
-      id: 'hero',
-      title: 'Create Magic',
-      subtitle: 'Your Portfolio Journey Begins',
-      content: 'Swipe up to discover the extraordinary'
+    id: 'hero',
+    title: 'Make Magic',
+    subtitle: 'Start Your Portfolio Journey',
+    content: 'Swipe up — your future starts here'
     },
     {
-      id: 'power',
-      title: 'Unleash Potential',
-      subtitle: 'Beyond Ordinary Portfolios',
-      content: 'Transform your story into visual poetry'
+    id: 'power',
+    title: 'Unlock Your Power',
+    subtitle: 'More Than Just a Portfolio',
+    content: 'Turn your passion into a masterpiece'
     },
     {
-      id: 'stories',
-      title: 'Success Stories',
-      subtitle: 'Dreams Made Reality',
-      content: 'Join thousands who found their calling'
+    id: 'stories',
+    title: 'Real Stories',
+    subtitle: 'From Dreamers to Doers',
+    content: 'Be inspired. Be next.'
     },
     {
-      id: 'create',
-      title: 'Create Now',
-      subtitle: 'Your Moment Awaits',
-      content: 'Begin your transformation'
+    id: 'create',
+    title: 'Start Creating',
+    subtitle: 'It’s Your Time',
+    content: 'Launch your portfolio in minutes'
     }
   ];
 
