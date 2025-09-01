@@ -87,6 +87,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
   };
 
   return (
+    <>
     <div className="mobile-home" ref={containerRef}>
       {/* Floating Navigation Dots */}
       <div className="mobile-nav-dots">
@@ -223,7 +224,9 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
       ))}
 
       {/* Bottom Tab Navigation */}
-      <div className="mobile-bottom-nav">
+      
+    </div>
+    <div className="mobile-bottom-nav">
         <button className="tab-button active">
           <span className="tab-icon">🏠</span>
           <span className="tab-label">Home</span>
@@ -241,7 +244,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
           <span className="tab-label">Account</span>
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
