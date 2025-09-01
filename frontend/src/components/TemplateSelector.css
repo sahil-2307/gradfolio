@@ -22,9 +22,9 @@
 }
 
 .back-button {
-  background: var(--brand-blue);
-  border: 1px solid var(--brand-blue);
-  color: var(--white);
+  background: #1E73BE;
+  border: 1px solid #1E73BE;
+  color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 25px;
   cursor: pointer;
@@ -39,11 +39,11 @@
 }
 
 .back-button:hover {
-  background: var(--button-hover);
-  border-color: var(--button-hover);
+  background: #155A96;
+  border-color: #155A96;
   transform: translateX(-5px) translateY(-2px);
   box-shadow: 0 8px 25px rgba(30, 115, 190, 0.3);
-  color: var(--white);
+  color: white;
 }
 
 .header-content {
