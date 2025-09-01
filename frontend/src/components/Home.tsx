@@ -1,11 +1,15 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import ThreeBackground from './ThreeBackground';
+import { useMobileDetection } from '../hooks/useMobileDetection';
 import './Home.css';
 
 const Testimonials = lazy(() => import('./Testimonials'));
+const MobileHome = lazy(() => import('./mobile/MobileHome'));
+const MobileTestimonials = lazy(() => import('./mobile/MobileTestimonials'));
 
 const Home: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isMobile } = useMobileDetection();
 
   useEffect(() => {
     // Check for saved theme preference or default to light mode
@@ -33,6 +37,30 @@ const Home: React.FC = () => {
     // Navigate to template selector
     window.location.href = '/templates';
   };
+
+  // Render mobile-specific experience
+  if (isMobile) {
+    return (
+      <Suspense fallback={
+        <div style={{ 
+          height: '100vh', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          fontSize: '1.2rem'
+        }}>
+          Loading your experience...
+        </div>
+      }>
+        <MobileHome 
+          isDarkMode={isDarkMode} 
+          toggleDarkMode={toggleDarkMode}
+        />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="home">

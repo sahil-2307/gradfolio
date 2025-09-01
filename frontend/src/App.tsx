@@ -8,6 +8,7 @@ import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import BrowseProfiles from './components/BrowseProfiles';
+const MobileTestimonials = React.lazy(() => import('./components/mobile/MobileTestimonials'));
 import { AuthService } from './services/authService';
 import type { User } from './config/supabase';
 import './App.css';
@@ -82,6 +83,26 @@ function App() {
           <Route path="/checkout/:username" element={<StripeCheckout />} />
           <Route path="/browse-profiles" element={<BrowseProfiles />} />
           <Route path="/featured-profiles" element={<BrowseProfiles />} />
+          <Route 
+            path="/mobile-testimonials" 
+            element={
+              <React.Suspense fallback={
+                <div style={{ 
+                  height: '100vh', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  fontSize: '1.2rem'
+                }}>
+                  Loading testimonials...
+                </div>
+              }>
+                <MobileTestimonials />
+              </React.Suspense>
+            } 
+          />
           
           {/* Authentication Routes */}
           <Route 
