@@ -230,7 +230,7 @@ body:not(.dark-theme) .nav-dot {
 
 .section-text {
   font-size: 1rem;
-  margin: 20px 0;
+  margin: 10px 0;
   animation: fadeInUp 1s ease-out 0.7s forwards;
   opacity: 0;
   color: var(--text-dark);
@@ -291,7 +291,7 @@ body:not(.dark-theme) .nav-dot {
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 20px;
   max-width: 300px;
 }
 
@@ -317,7 +317,7 @@ body:not(.dark-theme) .nav-dot {
 
 /* Success Preview */
 .success-preview {
-  margin-top: 40px;
+  margin-top: 20px;
   animation: fadeInUp 1s ease-out 1s forwards;
   opacity: 0;
 }

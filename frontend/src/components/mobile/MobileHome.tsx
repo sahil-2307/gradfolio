@@ -69,9 +69,14 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         // Create floating effect
         setIsFloating(scrollY % sectionHeight > sectionHeight * 0.3);
         
-        // Show toggle button when user reaches the last section
-        const isLastSection = newSection >= sections.length - 1;
-        setShowNavToggle(isLastSection);
+        // Show toggle button when user reaches the 4th section (index 3)
+        const isOnFourthPage = newSection >= 3;
+        setShowNavToggle(isOnFourthPage);
+        
+        // If user scrolls away from 4th page, hide the bottom nav
+        if (newSection < 3 && showBottomNav) {
+          setShowBottomNav(false);
+        }
       }
     };
 
