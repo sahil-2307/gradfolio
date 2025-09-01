@@ -9,7 +9,6 @@ interface MobileHomeProps {
 const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [isFloating, setIsFloating] = useState(false);
-  const sectionsRef = useRef<HTMLDivElement[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const sections = [

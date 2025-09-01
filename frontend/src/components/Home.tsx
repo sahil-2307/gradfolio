@@ -5,7 +5,6 @@ import './Home.css';
 
 const Testimonials = lazy(() => import('./Testimonials'));
 const MobileHome = lazy(() => import('./mobile/MobileHome'));
-const MobileTestimonials = lazy(() => import('./mobile/MobileTestimonials'));
 
 const Home: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);

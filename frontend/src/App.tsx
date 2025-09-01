@@ -8,10 +8,11 @@ import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import BrowseProfiles from './components/BrowseProfiles';
-const MobileTestimonials = React.lazy(() => import('./components/mobile/MobileTestimonials'));
 import { AuthService } from './services/authService';
 import type { User } from './config/supabase';
 import './App.css';
+
+const MobileTestimonials = React.lazy(() => import('./components/mobile/MobileTestimonials'));
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

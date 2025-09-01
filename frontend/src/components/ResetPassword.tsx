@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AuthService } from '../services/authService';
 import './Login.css'; // Reuse the login styles
 
