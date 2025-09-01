@@ -102,6 +102,11 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         ))}
       </div>
 
+      {/* Brand Logo */}
+      <div className="mobile-brand">
+        OnlinePortfolios
+      </div>
+
       {/* Dark Mode Toggle */}
       <button 
         className={`mobile-dark-toggle ${isDarkMode ? 'dark' : ''}`}

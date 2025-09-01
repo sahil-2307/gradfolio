@@ -102,6 +102,22 @@
   box-shadow: 0 0 20px currentColor;
 }
 
+/* Mobile Brand */
+.mobile-brand {
+  position: fixed;
+  top: 50px;
+  left: 20px;
+  z-index: 1000;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-blue);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Dark Mode Toggle */
 .mobile-dark-toggle {
   position: fixed;
