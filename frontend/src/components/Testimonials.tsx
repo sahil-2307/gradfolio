@@ -112,6 +112,7 @@ const Testimonials: React.FC = () => {
   
   return (
     <section 
+      id='testimonials'
       className="testimonials-section"
       style={{ 
         backgroundColor: isDarkMode ? '#1a1a2e' : '#F4F8FB',
