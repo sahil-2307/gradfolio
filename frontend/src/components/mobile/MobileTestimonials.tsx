@@ -125,6 +125,20 @@ const MobileTestimonials: React.FC = () => {
       onTouchEnd={handleTouchEnd}
       ref={containerRef}
     >
+      {/* Brand Logo */}
+      <div className="mobile-brand" style={{ color: primaryColor }}>
+        OnlinePortfolios
+      </div>
+
+      {/* Back Button */}
+      <button 
+        className="testimonials-back-button"
+        onClick={() => window.history.back()}
+        style={{ borderColor: primaryColor, color: primaryColor }}
+      >
+        ← Back
+      </button>
+
       {/* Header */}
       <div className="mobile-testimonials-header">
         <h2>Success Stories</h2>

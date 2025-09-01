@@ -368,6 +368,27 @@ body:not(.dark-theme) .nav-dot {
   50% { opacity: 1; }
 }
 
+/* Testimonials Navigation Button */
+.testimonials-nav-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin-top: 20px;
+  border: 2px solid;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.testimonials-nav-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
 /* CTA Button */
 .mobile-cta-button {
   background: var(--brand-blue);

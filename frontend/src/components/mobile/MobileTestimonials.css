@@ -8,6 +8,43 @@
   transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Mobile Brand for Testimonials */
+.mobile-testimonials .mobile-brand {
+  position: fixed;
+  top: 50px;
+  left: 20px;
+  z-index: 1001;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Back Button */
+.testimonials-back-button {
+  position: fixed;
+  top: 50px;
+  right: 20px;
+  z-index: 1001;
+  padding: 8px 16px;
+  border: 2px solid;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.testimonials-back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
 /* Header */
 .mobile-testimonials-header {
   text-align: center;

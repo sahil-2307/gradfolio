@@ -208,6 +208,21 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
                   <div className="mini-author">- Sarah Chen</div>
                   <div className="tap-hint">Tap to explore →</div>
                 </div>
+                
+                {/* Testimonials Navigation Button */}
+                <button 
+                  className="testimonials-nav-button"
+                  onClick={() => window.location.href = '/mobile-testimonials'}
+                  style={{ 
+                    borderColor: primaryColor, 
+                    color: primaryColor,
+                    background: `${primaryColor}10`
+                  }}
+                >
+                  <span>📚</span>
+                  <span>View All Stories</span>
+                  <span>→</span>
+                </button>
               </div>
             )}
 
@@ -227,18 +242,22 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
                   className={`nav-toggle-button-inline ${showBottomNav ? 'active' : ''}`}
                   onClick={() => {
                     setShowBottomNav(!showBottomNav);
-                    // Small delay to ensure nav appears smoothly
+                    // When showing nav, scroll up more to ensure full visibility
                     if (!showBottomNav) {
                       setTimeout(() => {
-                        // Scroll slightly to ensure nav is visible
                         if (containerRef.current) {
                           const currentScroll = containerRef.current.scrollTop;
+                          const scrollHeight = containerRef.current.scrollHeight;
+                          const clientHeight = containerRef.current.clientHeight;
+                          
+                          // Scroll up enough to show the nav bar completely
+                          const targetScroll = Math.min(currentScroll, scrollHeight - clientHeight - 100);
                           containerRef.current.scrollTo({
-                            top: currentScroll - 50,
+                            top: targetScroll,
                             behavior: 'smooth'
                           });
                         }
-                      }, 100);
+                      }, 150);
                     }
                   }}
                   style={{ borderColor: primaryColor, color: primaryColor }}
