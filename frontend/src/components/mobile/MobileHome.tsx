@@ -225,7 +225,22 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
                 {/* Navigation Toggle Button - hardcoded in 4th section */}
                 <button 
                   className={`nav-toggle-button-inline ${showBottomNav ? 'active' : ''}`}
-                  onClick={() => setShowBottomNav(!showBottomNav)}
+                  onClick={() => {
+                    setShowBottomNav(!showBottomNav);
+                    // Small delay to ensure nav appears smoothly
+                    if (!showBottomNav) {
+                      setTimeout(() => {
+                        // Scroll slightly to ensure nav is visible
+                        if (containerRef.current) {
+                          const currentScroll = containerRef.current.scrollTop;
+                          containerRef.current.scrollTo({
+                            top: currentScroll - 50,
+                            behavior: 'smooth'
+                          });
+                        }
+                      }, 100);
+                    }
+                  }}
                   style={{ borderColor: primaryColor, color: primaryColor }}
                 >
                   {showBottomNav ? '↓' : '↑'}
