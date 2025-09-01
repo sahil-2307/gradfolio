@@ -237,33 +237,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
                   <span>→</span>
                 </button>
                 
-                {/* Navigation Toggle Button - hardcoded in 4th section */}
-                <button 
-                  className={`nav-toggle-button-inline ${showBottomNav ? 'active' : ''}`}
-                  onClick={() => {
-                    setShowBottomNav(!showBottomNav);
-                    // When showing nav, scroll up more to ensure full visibility
-                    if (!showBottomNav) {
-                      setTimeout(() => {
-                        if (containerRef.current) {
-                          const currentScroll = containerRef.current.scrollTop;
-                          const scrollHeight = containerRef.current.scrollHeight;
-                          const clientHeight = containerRef.current.clientHeight;
-                          
-                          // Scroll up enough to show the nav bar completely
-                          const targetScroll = Math.min(currentScroll, scrollHeight - clientHeight - 100);
-                          containerRef.current.scrollTo({
-                            top: targetScroll,
-                            behavior: 'smooth'
-                          });
-                        }
-                      }, 150);
-                    }
-                  }}
-                  style={{ borderColor: primaryColor, color: primaryColor }}
-                >
-                  {showBottomNav ? '↓' : '↑'}
-                </button>
+                
               </>
             )}
           </div>
@@ -274,7 +248,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
       
     </div>
     
-    {/* Bottom Tab Navigation */}
+    {/* Bottom Tab Navigation
     <div className={`mobile-bottom-nav ${showBottomNav ? 'visible' : 'hidden'}`}>
       <button className="tab-button active">
         <span className="tab-icon">🏠</span>
@@ -288,7 +262,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         <span className="tab-icon">👤</span>
         <span className="tab-label">Account</span>
       </button>
-    </div>
+    </div> */}
     </>
   );
 };
