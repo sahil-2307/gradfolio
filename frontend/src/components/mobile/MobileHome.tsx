@@ -9,6 +9,8 @@ interface MobileHomeProps {
 const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [isFloating, setIsFloating] = useState(false);
+  const [showBottomNav, setShowBottomNav] = useState(false);
+  const [showNavToggle, setShowNavToggle] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Update CSS variables when dark mode changes
@@ -54,7 +56,10 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
     const handleScroll = () => {
       if (containerRef.current) {
         const scrollY = containerRef.current.scrollTop;
+        const scrollHeight = containerRef.current.scrollHeight;
+        const clientHeight = containerRef.current.clientHeight;
         const sectionHeight = window.innerHeight;
+        
         const newSection = Math.min(
           Math.floor(scrollY / sectionHeight),
           sections.length - 1
@@ -63,6 +68,11 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         
         // Create floating effect
         setIsFloating(scrollY % sectionHeight > sectionHeight * 0.3);
+        
+        // Show toggle button when user reaches the last section or bottom 80%
+        const isNearBottom = scrollY + clientHeight >= scrollHeight * 0.8;
+        const isLastSection = newSection >= sections.length - 1;
+        setShowNavToggle(isNearBottom || isLastSection);
       }
     };
 
@@ -223,27 +233,34 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         </div>
       ))}
 
-      {/* Bottom Tab Navigation */}
+      {/* Navigation Toggle Button */}
+      {showNavToggle && (
+        <button 
+          className={`nav-toggle-button ${showBottomNav ? 'active' : ''}`}
+          onClick={() => setShowBottomNav(!showBottomNav)}
+          style={{ borderColor: primaryColor, color: primaryColor }}
+        >
+          {showBottomNav ? '↓' : '↑'}
+        </button>
+      )}
       
     </div>
-    <div className="mobile-bottom-nav">
-        <button className="tab-button active">
-          <span className="tab-icon">🏠</span>
-          <span className="tab-label">Home</span>
-        </button>
-        <button className="tab-button" onClick={() => window.location.href = '/templates'}>
-          <span className="tab-icon">📝</span>
-          <span className="tab-label">Create</span>
-        </button>
-        {/* <button className="tab-button" onClick={() => window.location.href = '/browse-profiles'}>
-          <span className="tab-icon">👥</span>
-          <span className="tab-label">Browse</span>
-        </button> */}
-        <button className="tab-button" onClick={() => window.location.href = '/login'}>
-          <span className="tab-icon">👤</span>
-          <span className="tab-label">Account</span>
-        </button>
-      </div>
+    
+    {/* Bottom Tab Navigation */}
+    <div className={`mobile-bottom-nav ${showBottomNav ? 'visible' : 'hidden'}`}>
+      <button className="tab-button active">
+        <span className="tab-icon">🏠</span>
+        <span className="tab-label">Home</span>
+      </button>
+      <button className="tab-button" onClick={() => window.location.href = '/templates'}>
+        <span className="tab-icon">📝</span>
+        <span className="tab-label">Create</span>
+      </button>
+      <button className="tab-button" onClick={() => window.location.href = '/login'}>
+        <span className="tab-icon">👤</span>
+        <span className="tab-label">Account</span>
+      </button>
+    </div>
     </>
   );
 };
