@@ -51,6 +51,25 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
     content: 'Launch your portfolio in minutes'
     }
   ];
+  const testimonials = [
+    { avatar: "👩‍💼", text: '"Got hired at Google!"', author: "- Sarah Chen" },
+    { avatar: "👨‍💻", text: '"Built my dream portfolio."', author: "- Raj Mehta" },
+    { avatar: "👩‍🎓", text: '"Landed a scholarship abroad!"', author: "- Aisha Khan" },
+    { avatar: "👨‍🎨", text: '"Showcased my art to thousands."', author: "- Daniel Lee" },
+    { avatar: "👩‍🔬", text: '"Helped me get into research."', author: "- Priya Patel" },
+    { avatar: "👨‍🚀", text: '"Got shortlisted at ISRO."', author: "- Arjun Rao" },
+    { avatar: "👩‍💻", text: '"From fresher to frontend dev!"', author: "- Maria Gomez" },
+  ];
+
+const [testimonialIndex, setTestimonialIndex] = useState(0);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+  }, 3000);
+  return () => clearInterval(interval);
+}, []);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -201,30 +220,31 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
             )}
 
             {section.id === 'stories' && (
-              <div className="success-preview">
-                <div className="mini-testimonial" onClick={() => window.location.href = '/mobile-testimonials'}>
-                  <div className="mini-avatar">👩‍💼</div>
-                  <div className="mini-text">"Got hired at Google!"</div>
-                  <div className="mini-author">- Sarah Chen</div>
-                  <div className="tap-hint">Tap to explore →</div>
-                </div>
-                
-                {/* Testimonials Navigation Button */}
-                <button 
-                  className="testimonials-nav-button"
-                  onClick={() => window.location.href = '/mobile-testimonials'}
-                  style={{ 
-                    borderColor: primaryColor, 
-                    color: primaryColor,
-                    background: `${primaryColor}10`
-                  }}
-                >
-                  <span>📚</span>
-                  <span>View All Stories</span>
-                  <span>→</span>
-                </button>
+            <div className="success-preview">
+              {/* Auto-rotating testimonial */}
+              <div className="mini-testimonial fade-in">
+                  <div className="mini-avatar">{testimonials[testimonialIndex].avatar}</div>
+                  <div className="mini-text">{testimonials[testimonialIndex].text}</div>
+                  <div className="mini-author">{testimonials[testimonialIndex].author}</div>
               </div>
-            )}
+
+              {/* Testimonials Navigation Button */}
+              {/* <button 
+                className="testimonials-nav-button"
+                onClick={() => window.location.href = '/mobile-testimonials'}
+                style={{ 
+                  borderColor: primaryColor, 
+                  color: primaryColor,
+                  background: `${primaryColor}10`
+                }}
+              >
+                <span>📚</span>
+                <span>View All Stories</span>
+                <span>→</span>
+              </button> */}
+            </div>
+          )}
+
 
             {section.id === 'create' && (
               <>
