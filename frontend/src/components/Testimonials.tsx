@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './Testimonials.css';
 interface Testimonial {
   id: number;
@@ -81,21 +81,18 @@ const testimonialsData: Testimonial[] = [
   }
 ];
 
-const Testimonials: React.FC = () => {
+const Testimonials: React.FC = React.memo(() => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const checkTheme = useCallback(() => {
+    setIsDarkMode(document.documentElement.classList.contains('dark-theme'));
+  }, []);
+
   useEffect(() => {
-    // Check initial theme
-    const checkTheme = () => {
-      setIsDarkMode(document.documentElement.classList.contains('dark-theme'));
-    };
-    
     checkTheme();
     
     // Listen for theme changes
-    const observer = new MutationObserver(() => {
-      checkTheme();
-    });
+    const observer = new MutationObserver(checkTheme);
     
     observer.observe(document.documentElement, {
       attributes: true,
@@ -103,21 +100,22 @@ const Testimonials: React.FC = () => {
     });
     
     return () => observer.disconnect();
+  }, [checkTheme]);
+
+  const openPortfolioBuilder = useCallback(() => {
+    window.location.href = '/templates';
   }, []);
 
-  const openPortfolioBuilder = () => {
-    // Navigate to template selector
-    window.location.href = '/templates';
-  };
+  const sectionStyle = useMemo(() => ({
+    backgroundColor: isDarkMode ? '#1a1a2e' : '#F4F8FB',
+    background: isDarkMode ? '#1a1a2e' : '#F4F8FB'
+  }), [isDarkMode]);
   
   return (
     <section 
       id='testimonials'
       className="testimonials-section"
-      style={{ 
-        backgroundColor: isDarkMode ? '#1a1a2e' : '#F4F8FB',
-        background: isDarkMode ? '#1a1a2e' : '#F4F8FB'
-      }}
+      style={sectionStyle}
     >
       <div className="container">
         <div className="testimonials-header">
@@ -195,6 +193,6 @@ const Testimonials: React.FC = () => {
       <br />
     </section>
   );
-};
+});
 
 export default Testimonials;

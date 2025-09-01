@@ -1,11 +1,16 @@
 .App {
   min-height: 100vh;
+  contain: layout style paint;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -16,6 +21,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #F4F8FB;
   transition: background-color 0.3s ease;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Dark mode body background */

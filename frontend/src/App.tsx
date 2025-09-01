@@ -18,6 +18,12 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Ensure proper mobile viewport handling
+    const metaViewport = document.querySelector('meta[name="viewport"]');
+    if (metaViewport) {
+      metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+    }
+
     // Check if user is already authenticated with Supabase
     const checkAuth = async () => {
       try {

@@ -309,15 +309,30 @@ html.dark-theme section.testimonials-section,
   
   .testimonials-header h2 {
     font-size: 2.2rem;
+    line-height: 1.3;
   }
   
   .testimonials-header p {
     font-size: 1.1rem;
+    line-height: 1.4;
   }
   
   .stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 1rem;
+    max-width: 600px;
+  }
+  
+  .stat {
+    padding: 1.5rem 1rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+  }
+  
+  .stat-label {
+    font-size: 0.9rem;
   }
   
   .testimonials-grid {
@@ -327,12 +342,36 @@ html.dark-theme section.testimonials-section,
   
   .testimonial-card {
     padding: 2rem;
+    border-radius: 16px;
   }
   
   .testimonial-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
+    flex-direction: row;
+    text-align: left;
+    gap: 1rem;
+  }
+  
+  .testimonial-avatar {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+  }
+  
+  .testimonial-info h4 {
+    font-size: 1rem;
+  }
+  
+  .testimonial-info .role {
+    font-size: 0.85rem;
+  }
+  
+  .testimonial-info .education {
+    font-size: 0.8rem;
+  }
+  
+  .testimonial-quote {
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
   
   .testimonials-cta {
@@ -341,5 +380,81 @@ html.dark-theme section.testimonials-section,
   
   .testimonials-cta h3 {
     font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .testimonials-cta p {
+    font-size: 1rem;
+  }
+  
+  .cta-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonials-section {
+    padding: 2rem 0.75rem;
+  }
+  
+  .testimonials-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .testimonials-header p {
+    font-size: 1rem;
+  }
+  
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 300px;
+  }
+  
+  .stat {
+    padding: 1.2rem 1rem;
+  }
+  
+  .stat-number {
+    font-size: 1.8rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+  
+  .testimonial-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.8rem;
+  }
+  
+  .testimonial-avatar {
+    align-self: center;
+    width: 60px;
+    height: 60px;
+  }
+  
+  .testimonial-quote {
+    font-size: 0.9rem;
+    padding-left: 0.8rem;
+  }
+  
+  .testimonials-cta {
+    padding: 1.5rem;
+  }
+  
+  .testimonials-cta h3 {
+    font-size: 1.3rem;
+  }
+  
+  .testimonials-cta p {
+    font-size: 0.95rem;
+  }
+  
+  .cta-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
   }
 }

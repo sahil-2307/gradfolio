@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import Testimonials from './Testimonials';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import ThreeBackground from './ThreeBackground';
 import './Home.css';
+
+const Testimonials = lazy(() => import('./Testimonials'));
 
 const Home: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -173,7 +174,18 @@ const Home: React.FC = () => {
       </section>
 
       {/* Testimonials moved below */}
-      <Testimonials />
+      <Suspense fallback={
+        <div style={{ 
+          padding: '4rem 2rem', 
+          textAlign: 'center', 
+          color: 'var(--text-body)',
+          background: 'var(--bg-primary)'
+        }}>
+          Loading testimonials...
+        </div>
+      }>
+        <Testimonials />
+      </Suspense>
 
       {/* Contact Section */}
       <section id = 'contact'  className="contact-section">
