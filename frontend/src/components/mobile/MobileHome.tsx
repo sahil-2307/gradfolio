@@ -104,12 +104,10 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
 
       {/* Dark Mode Toggle */}
       <button 
-        className="mobile-dark-toggle"
+        className={`mobile-dark-toggle ${isDarkMode ? 'dark' : ''}`}
         onClick={toggleDarkMode}
-        style={{ color: primaryColor }}
-      >
-        {isDarkMode ? '🌞' : '🌙'}
-      </button>
+        aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      />
 
       {/* Sections */}
       {sections.map((section, index) => (
