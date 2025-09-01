@@ -11,12 +11,10 @@ const Home: React.FC = () => {
   const { isMobile } = useMobileDetection();
 
   useEffect(() => {
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark-theme');
-    }
+    // Always start in light mode
+    setIsDarkMode(false);
+    document.documentElement.classList.remove('dark-theme');
+    localStorage.setItem('theme', 'light');
   }, []);
 
   const toggleDarkMode = () => {

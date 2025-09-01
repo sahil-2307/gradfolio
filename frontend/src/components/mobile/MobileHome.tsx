@@ -69,10 +69,9 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         // Create floating effect
         setIsFloating(scrollY % sectionHeight > sectionHeight * 0.3);
         
-        // Show toggle button when user reaches the last section or bottom 80%
-        const isNearBottom = scrollY + clientHeight >= scrollHeight * 0.8;
+        // Show toggle button when user reaches the last section
         const isLastSection = newSection >= sections.length - 1;
-        setShowNavToggle(isNearBottom || isLastSection);
+        setShowNavToggle(isLastSection);
       }
     };
 
@@ -223,13 +222,6 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
             )}
           </div>
 
-          {/* Swipe Indicator */}
-          {index < sections.length - 1 && (
-            <div className="swipe-indicator">
-              <div className="swipe-text">Swipe up</div>
-              <div className="swipe-arrow">↑</div>
-            </div>
-          )}
         </div>
       ))}
 

@@ -93,10 +93,20 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
+}
+
+/* Dark theme nav dots */
+.dark-theme .nav-dot {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Light theme nav dots - darker border */
+body:not(.dark-theme) .nav-dot {
+  border-color: rgba(30, 115, 190, 0.6);
 }
 
 .nav-dot.active {
@@ -187,7 +197,7 @@
 .section-title {
   font-size: 3rem;
   font-weight: 800;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
   line-height: 1.1;
   overflow: visible;
   padding-bottom: 5px;
@@ -210,7 +220,7 @@
 .section-subtitle {
   font-size: 1.2rem;
   font-weight: 300;
-  margin: 15px 0;
+  margin: 5px 0 15px 0;
   animation: fadeInUp 1s ease-out 0.5s forwards;
   opacity: 0;
   color: var(--text-dark);
