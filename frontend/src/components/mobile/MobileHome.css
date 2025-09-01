@@ -457,13 +457,8 @@ body:not(.dark-theme) .nav-dot {
   50% { transform: translateY(-10px); }
 }
 
-/* Navigation Toggle Button */
-.nav-toggle-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1001;
+/* Navigation Toggle Button - Inline in 4th section */
+.nav-toggle-button-inline {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -478,15 +473,16 @@ body:not(.dark-theme) .nav-dot {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
 }
 
-.nav-toggle-button:hover {
+.nav-toggle-button-inline:hover {
   background: white;
-  transform: translateX(-50%) scale(1.1);
+  transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.nav-toggle-button.active {
+.nav-toggle-button-inline.active {
   background: var(--brand-blue);
   color: white !important;
   border-color: var(--brand-blue);

@@ -69,10 +69,6 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
         // Create floating effect
         setIsFloating(scrollY % sectionHeight > sectionHeight * 0.3);
         
-        // Show toggle button when user reaches the 4th section (index 3)
-        const isOnFourthPage = newSection >= 3;
-        setShowNavToggle(isOnFourthPage);
-        
         // If user scrolls away from 4th page, hide the bottom nav
         if (newSection < 3 && showBottomNav) {
           setShowBottomNav(false);
@@ -216,30 +212,31 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
             )}
 
             {section.id === 'create' && (
-              <button 
-                className="mobile-cta-button"
-                onClick={openPortfolioBuilder}
-              >
-                <span> </span>
-                <span>Create Your Portfolio</span>
-                <span>→</span>
-              </button>
+              <>
+                <button 
+                  className="mobile-cta-button"
+                  onClick={openPortfolioBuilder}
+                >
+                  <span> </span>
+                  <span>Create Your Portfolio</span>
+                  <span>→</span>
+                </button>
+                
+                {/* Navigation Toggle Button - hardcoded in 4th section */}
+                <button 
+                  className={`nav-toggle-button-inline ${showBottomNav ? 'active' : ''}`}
+                  onClick={() => setShowBottomNav(!showBottomNav)}
+                  style={{ borderColor: primaryColor, color: primaryColor }}
+                >
+                  {showBottomNav ? '↓' : '↑'}
+                </button>
+              </>
             )}
           </div>
 
         </div>
       ))}
 
-      {/* Navigation Toggle Button */}
-      {showNavToggle && (
-        <button 
-          className={`nav-toggle-button ${showBottomNav ? 'active' : ''}`}
-          onClick={() => setShowBottomNav(!showBottomNav)}
-          style={{ borderColor: primaryColor, color: primaryColor }}
-        >
-          {showBottomNav ? '↓' : '↑'}
-        </button>
-      )}
       
     </div>
     
