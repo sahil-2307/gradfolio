@@ -214,22 +214,42 @@ const MobileTestimonials: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Dots */}
-      <div className="testimonial-dots">
-        {testimonialsData.map((_, index) => (
-          <button
-            key={index}
-            className={`testimonial-dot ${index === currentIndex ? 'active' : ''}`}
-            style={{
-              background: index === currentIndex ? primaryColor : 'rgba(255,255,255,0.3)'
-            }}
-            onClick={() => {
-              setIsAnimating(true);
-              setCurrentIndex(index);
-              setTimeout(() => setIsAnimating(false), 600);
-            }}
-          />
-        ))}
+      {/* Navigation Controls */}
+      <div className="testimonial-navigation">
+        <button
+          className="nav-arrow prev"
+          onClick={prevTestimonial}
+          style={{ borderColor: primaryColor, color: primaryColor }}
+          disabled={isAnimating}
+        >
+          ←
+        </button>
+        
+        <div className="testimonial-dots">
+          {testimonialsData.map((_, index) => (
+            <button
+              key={index}
+              className={`testimonial-dot ${index === currentIndex ? 'active' : ''}`}
+              style={{
+                background: index === currentIndex ? primaryColor : 'rgba(255,255,255,0.3)'
+              }}
+              onClick={() => {
+                setIsAnimating(true);
+                setCurrentIndex(index);
+                setTimeout(() => setIsAnimating(false), 600);
+              }}
+            />
+          ))}
+        </div>
+
+        <button
+          className="nav-arrow next"
+          onClick={nextTestimonial}
+          style={{ borderColor: primaryColor, color: primaryColor }}
+          disabled={isAnimating}
+        >
+          →
+        </button>
       </div>
 
       {/* Stats Section */}

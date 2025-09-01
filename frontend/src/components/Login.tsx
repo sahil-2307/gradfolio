@@ -84,7 +84,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </button>
         
         <div className="login-header">
-          <h1>Welcome to Gradfolio</h1>
+          <h1>Welcome to OnlinePortfolios</h1>
           <p>Create and manage your professional portfolio</p>
         </div>
 
