@@ -105,8 +105,8 @@
 /* Dark Mode Toggle */
 .mobile-dark-toggle {
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 50px;
+  right: 20px;
   z-index: 1000;
   width: 40px;
   height: 22px;
