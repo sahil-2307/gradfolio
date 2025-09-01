@@ -119,6 +119,8 @@ const TemplateSelector: React.FC = () => {
   }
 
   return (
+    <>
+
     <div className="template-selector">
       <div className="template-selector-container">
         <div className="template-header">
@@ -126,6 +128,7 @@ const TemplateSelector: React.FC = () => {
             <i className="fas fa-arrow-left"></i>
             Back to Home
           </button>
+          <br />
           <div className="header-content">
             <h1>Choose Your Portfolio Template</h1>
             <p>Select a template that best represents your professional style and showcase your work beautifully</p>
@@ -311,6 +314,7 @@ const TemplateSelector: React.FC = () => {
         </div>
       </div>
     </div>
+        </>
   );
 };
 
