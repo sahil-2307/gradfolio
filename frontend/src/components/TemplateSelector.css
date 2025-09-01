@@ -621,6 +621,200 @@
   background: var(--bg-primary);
 }
 
+/* Resume Upload Section */
+.resume-upload-section {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 3rem;
+  margin-top: 5rem;
+  border: 1px solid var(--bg-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.resume-upload-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  font-family: var(--font-primary);
+}
+
+.resume-upload-section > p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-body);
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.resume-upload-area {
+  border: 2px dashed #1E73BE;
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  background: rgba(30, 115, 190, 0.02);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.resume-upload-area:hover {
+  border-color: #155A96;
+  background: rgba(30, 115, 190, 0.05);
+  transform: translateY(-2px);
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: #1E73BE;
+  margin-bottom: 1rem;
+}
+
+.upload-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.upload-content p {
+  font-size: 1rem;
+  color: var(--text-body);
+  margin: 0;
+}
+
+.upload-button {
+  background: #1E73BE;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.upload-button:hover {
+  background: #155A96;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(30, 115, 190, 0.3);
+}
+
+.upload-info {
+  font-size: 0.9rem;
+  color: var(--text-body);
+  opacity: 0.7;
+}
+
+.uploaded-file {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.uploaded-file i {
+  color: #22c55e;
+  font-size: 1.2rem;
+}
+
+.uploaded-file span {
+  color: var(--text-dark);
+  font-weight: 500;
+  flex: 1;
+}
+
+.uploaded-file button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.uploaded-file button:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.parsing-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(30, 115, 190, 0.05);
+  border: 1px solid rgba(30, 115, 190, 0.2);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(30, 115, 190, 0.3);
+  border-top: 2px solid #1E73BE;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.parsing-status p {
+  color: var(--text-dark);
+  font-weight: 500;
+  margin: 0;
+}
+
+.parsed-data-section {
+  margin-top: 2rem;
+}
+
+.parsed-data-section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.json-display {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.json-display pre {
+  margin: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #334155;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 /* Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -690,6 +884,23 @@
   .comparison-table th,
   .comparison-table td {
     padding: 0.8rem;
+  }
+  
+  .resume-upload-section {
+    padding: 2rem 1.5rem;
+    margin-top: 3rem;
+  }
+  
+  .resume-upload-section h2 {
+    font-size: 2rem;
+  }
+  
+  .resume-upload-area {
+    padding: 2rem;
+  }
+  
+  .upload-icon {
+    font-size: 2.5rem;
   }
 }
 
@@ -792,5 +1003,31 @@
   .comparison-table th,
   .comparison-table td {
     padding: 0.6rem;
+  }
+  
+  .resume-upload-section {
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
+  }
+  
+  .resume-upload-section h2 {
+    font-size: 1.8rem;
+  }
+  
+  .resume-upload-area {
+    padding: 1.5rem;
+  }
+  
+  .upload-icon {
+    font-size: 2rem;
+  }
+  
+  .upload-content h3 {
+    font-size: 1.3rem;
+  }
+  
+  .json-display {
+    padding: 1rem;
+    font-size: 0.8rem;
   }
 }

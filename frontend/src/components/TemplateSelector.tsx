@@ -69,6 +69,9 @@ const templates: Template[] = [
 const TemplateSelector: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [showPayment, setShowPayment] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [parsedData, setParsedData] = useState<any>(null);
+  const [isParsingLoading, setIsParsingLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -111,6 +114,105 @@ const TemplateSelector: React.FC = () => {
     }
     // Open preview in new tab
     window.open(previewUrl, '_blank');
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+      setUploadedFile(file);
+      parseResume(file);
+    } else {
+      alert('Please upload a PDF or Word document');
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file && (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+      setUploadedFile(file);
+      parseResume(file);
+    } else {
+      alert('Please upload a PDF or Word document');
+    }
+  };
+
+  const parseResume = async (file: File) => {
+    setIsParsingLoading(true);
+    try {
+      // For now, we'll create mock parsed data
+      // In a real implementation, you'd send the file to a backend service
+      setTimeout(() => {
+        const mockParsedData = {
+          personalInfo: {
+            name: "John Doe",
+            email: "john.doe@email.com",
+            phone: "+1 (555) 123-4567",
+            location: "San Francisco, CA",
+            linkedin: "linkedin.com/in/johndoe",
+            github: "github.com/johndoe"
+          },
+          summary: "Experienced software developer with 5+ years in full-stack development, specializing in React, Node.js, and cloud technologies.",
+          experience: [
+            {
+              title: "Senior Software Developer",
+              company: "Tech Corp",
+              location: "San Francisco, CA",
+              duration: "2021 - Present",
+              description: "Led development of customer-facing web applications using React and Node.js"
+            },
+            {
+              title: "Software Developer",
+              company: "StartupXYZ",
+              location: "San Francisco, CA", 
+              duration: "2019 - 2021",
+              description: "Built and maintained REST APIs and database systems"
+            }
+          ],
+          education: [
+            {
+              degree: "Bachelor of Science in Computer Science",
+              institution: "University of California, Berkeley",
+              year: "2019",
+              gpa: "3.8"
+            }
+          ],
+          skills: {
+            technical: ["JavaScript", "React", "Node.js", "Python", "AWS", "Docker", "MongoDB", "PostgreSQL"],
+            soft: ["Leadership", "Problem Solving", "Team Collaboration", "Project Management"]
+          },
+          projects: [
+            {
+              name: "E-commerce Platform",
+              description: "Built a full-stack e-commerce platform with React, Node.js, and MongoDB",
+              technologies: ["React", "Node.js", "MongoDB", "Stripe API"],
+              link: "github.com/johndoe/ecommerce"
+            },
+            {
+              name: "Task Management App",
+              description: "Developed a collaborative task management application",
+              technologies: ["Vue.js", "Express", "PostgreSQL"],
+              link: "github.com/johndoe/taskapp"
+            }
+          ],
+          certifications: [
+            "AWS Certified Solutions Architect",
+            "Google Cloud Professional Developer"
+          ]
+        };
+        
+        setParsedData(mockParsedData);
+        setIsParsingLoading(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error parsing resume:', error);
+      setIsParsingLoading(false);
+      alert('Error parsing resume. Please try again.');
+    }
   };
 
   // Show payment page if template is selected
@@ -311,6 +413,61 @@ const TemplateSelector: React.FC = () => {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Resume Upload Section */}
+        <div className="resume-upload-section">
+          <h2>Quick Start: Upload Your Resume</h2>
+          <p>Upload your resume and we'll automatically extract your information to populate your portfolio template</p>
+          
+          <div 
+            className="resume-upload-area"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
+            <div className="upload-content">
+              <i className="fas fa-cloud-upload-alt upload-icon"></i>
+              <h3>Drag & Drop Your Resume Here</h3>
+              <p>or</p>
+              <label htmlFor="resume-upload" className="upload-button">
+                Choose File
+                <input
+                  id="resume-upload"
+                  type="file"
+                  accept=".pdf,.docx"
+                  onChange={handleFileUpload}
+                  style={{ display: 'none' }}
+                />
+              </label>
+              <p className="upload-info">Supports PDF and Word documents (max 10MB)</p>
+            </div>
+          </div>
+
+          {uploadedFile && (
+            <div className="uploaded-file">
+              <i className="fas fa-file-alt"></i>
+              <span>{uploadedFile.name}</span>
+              <button onClick={() => {setUploadedFile(null); setParsedData(null);}}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+          )}
+
+          {isParsingLoading && (
+            <div className="parsing-status">
+              <div className="loading-spinner"></div>
+              <p>Parsing your resume...</p>
+            </div>
+          )}
+
+          {parsedData && (
+            <div className="parsed-data-section">
+              <h3>Extracted Data</h3>
+              <div className="json-display">
+                <pre>{JSON.stringify(parsedData, null, 2)}</pre>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
