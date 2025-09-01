@@ -144,74 +144,31 @@ const TemplateSelector: React.FC = () => {
   const parseResume = async (file: File) => {
     setIsParsingLoading(true);
     try {
-      // For now, we'll create mock parsed data
-      // In a real implementation, you'd send the file to a backend service
-      setTimeout(() => {
-        const mockParsedData = {
-          personalInfo: {
-            name: "John Doe",
-            email: "john.doe@email.com",
-            phone: "+1 (555) 123-4567",
-            location: "San Francisco, CA",
-            linkedin: "linkedin.com/in/johndoe",
-            github: "github.com/johndoe"
-          },
-          summary: "Experienced software developer with 5+ years in full-stack development, specializing in React, Node.js, and cloud technologies.",
-          experience: [
-            {
-              title: "Senior Software Developer",
-              company: "Tech Corp",
-              location: "San Francisco, CA",
-              duration: "2021 - Present",
-              description: "Led development of customer-facing web applications using React and Node.js"
-            },
-            {
-              title: "Software Developer",
-              company: "StartupXYZ",
-              location: "San Francisco, CA", 
-              duration: "2019 - 2021",
-              description: "Built and maintained REST APIs and database systems"
-            }
-          ],
-          education: [
-            {
-              degree: "Bachelor of Science in Computer Science",
-              institution: "University of California, Berkeley",
-              year: "2019",
-              gpa: "3.8"
-            }
-          ],
-          skills: {
-            technical: ["JavaScript", "React", "Node.js", "Python", "AWS", "Docker", "MongoDB", "PostgreSQL"],
-            soft: ["Leadership", "Problem Solving", "Team Collaboration", "Project Management"]
-          },
-          projects: [
-            {
-              name: "E-commerce Platform",
-              description: "Built a full-stack e-commerce platform with React, Node.js, and MongoDB",
-              technologies: ["React", "Node.js", "MongoDB", "Stripe API"],
-              link: "github.com/johndoe/ecommerce"
-            },
-            {
-              name: "Task Management App",
-              description: "Developed a collaborative task management application",
-              technologies: ["Vue.js", "Express", "PostgreSQL"],
-              link: "github.com/johndoe/taskapp"
-            }
-          ],
-          certifications: [
-            "AWS Certified Solutions Architect",
-            "Google Cloud Professional Developer"
-          ]
-        };
-        
-        setParsedData(mockParsedData);
-        setIsParsingLoading(false);
-      }, 2000);
+      // Create FormData to send file to backend
+      const formData = new FormData();
+      formData.append('resume', file);
+
+      // Send request to backend API
+      const response = await fetch('http://localhost:5001/api/parse-resume', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setParsedData(result.data.parsedData);
+        console.log('Successfully parsed resume:', result.data);
+      } else {
+        throw new Error(result.error || 'Failed to parse resume');
+      }
+      
+      setIsParsingLoading(false);
     } catch (error) {
       console.error('Error parsing resume:', error);
       setIsParsingLoading(false);
-      alert('Error parsing resume. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Error parsing resume: ${errorMessage}. Make sure the backend server is running on port 5001.`);
     }
   };
 
@@ -221,8 +178,6 @@ const TemplateSelector: React.FC = () => {
   }
 
   return (
-    <>
-
     <div className="template-selector">
       <div className="template-selector-container">
         <div className="template-header">
@@ -471,7 +426,6 @@ const TemplateSelector: React.FC = () => {
         </div>
       </div>
     </div>
-        </>
   );
 };
 
