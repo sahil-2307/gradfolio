@@ -612,3 +612,18 @@ body:not(.dark-theme) .nav-dot {
     font-size: 1rem;
   }
 }
+/* Smooth fade transition for rotating testimonial */
+.fade-in {
+  animation: fadeSlide 0.8s ease-in-out;
+}
+
+@keyframes fadeSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
