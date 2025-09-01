@@ -55,9 +55,18 @@ const testimonialsData = [
 const MobileTestimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark-theme'));
+    };
+    checkTheme();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -102,12 +111,14 @@ const MobileTestimonials: React.FC = () => {
   };
 
   const currentTestimonial = testimonialsData[currentIndex];
+  const primaryColor = isDarkMode ? '#4A9EFF' : '#1E73BE';
+  const bgColor = isDarkMode ? '#1a1a2e' : '#F4F8FB';
 
   return (
     <div 
       className="mobile-testimonials"
       style={{
-        background: `linear-gradient(135deg, ${currentTestimonial.color}20 0%, ${currentTestimonial.color}40 100%)`
+        background: bgColor
       }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -125,20 +136,20 @@ const MobileTestimonials: React.FC = () => {
         <div 
           className={`main-testimonial-card ${isAnimating ? 'animating' : ''}`}
           style={{
-            borderColor: currentTestimonial.color,
-            boxShadow: `0 20px 60px ${currentTestimonial.color}30`
+            borderColor: primaryColor,
+            boxShadow: `0 20px 60px ${primaryColor}30`
           }}
         >
           {/* Animated Background */}
           <div 
             className="card-bg-animation"
-            style={{ background: `linear-gradient(45deg, ${currentTestimonial.color}10, ${currentTestimonial.color}20)` }}
+            style={{ background: `linear-gradient(45deg, ${primaryColor}10, ${primaryColor}20)` }}
           />
 
           {/* Company Badge */}
           <div 
             className="company-badge"
-            style={{ background: currentTestimonial.color }}
+            style={{ background: primaryColor }}
           >
             {currentTestimonial.company}
           </div>
@@ -147,7 +158,7 @@ const MobileTestimonials: React.FC = () => {
           <div className="profile-section">
             <div 
               className="profile-avatar"
-              style={{ borderColor: currentTestimonial.color }}
+              style={{ borderColor: primaryColor }}
             >
               <img 
                 src={currentTestimonial.photo} 
@@ -158,7 +169,7 @@ const MobileTestimonials: React.FC = () => {
               />
               <div 
                 className="avatar-ring"
-                style={{ borderColor: currentTestimonial.color }}
+                style={{ borderColor: primaryColor }}
               />
             </div>
 
@@ -174,7 +185,7 @@ const MobileTestimonials: React.FC = () => {
           {/* Achievement Badge */}
           <div 
             className="achievement-badge"
-            style={{ background: `${currentTestimonial.color}15` }}
+            style={{ background: `${primaryColor}15` }}
           >
             ⭐ {currentTestimonial.achievement}
           </div>
@@ -189,15 +200,15 @@ const MobileTestimonials: React.FC = () => {
           <div className="floating-elements">
             <div 
               className="floating-dot dot-1"
-              style={{ background: currentTestimonial.color }}
+              style={{ background: primaryColor }}
             />
             <div 
               className="floating-dot dot-2"
-              style={{ background: currentTestimonial.color }}
+              style={{ background: primaryColor }}
             />
             <div 
               className="floating-dot dot-3"
-              style={{ background: currentTestimonial.color }}
+              style={{ background: primaryColor }}
             />
           </div>
         </div>
@@ -210,7 +221,7 @@ const MobileTestimonials: React.FC = () => {
             key={index}
             className={`testimonial-dot ${index === currentIndex ? 'active' : ''}`}
             style={{
-              background: index === currentIndex ? currentTestimonial.color : 'rgba(255,255,255,0.3)'
+              background: index === currentIndex ? primaryColor : 'rgba(255,255,255,0.3)'
             }}
             onClick={() => {
               setIsAnimating(true);
@@ -241,8 +252,8 @@ const MobileTestimonials: React.FC = () => {
       <button 
         className="testimonials-cta"
         style={{ 
-          background: `linear-gradient(135deg, ${currentTestimonial.color}, ${currentTestimonial.color}dd)`,
-          boxShadow: `0 10px 30px ${currentTestimonial.color}40`
+          background: `linear-gradient(135deg, ${primaryColor}, ${primaryColor}dd)`,
+          boxShadow: `0 10px 30px ${primaryColor}40`
         }}
         onClick={() => window.location.href = '/templates'}
       >

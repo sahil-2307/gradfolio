@@ -10,39 +10,43 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
   const [currentSection, setCurrentSection] = useState(0);
   const [isFloating, setIsFloating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Update CSS variables when dark mode changes
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+    }
+  }, [isDarkMode]);
 
+  const primaryColor = isDarkMode ? '#4A9EFF' : '#1E73BE';
+  const bgColor = isDarkMode ? '#1a1a2e' : '#F4F8FB';
+  
   const sections = [
     {
       id: 'hero',
       title: 'Create Magic',
       subtitle: 'Your Portfolio Journey Begins',
-      content: 'Swipe up to discover the extraordinary',
-      color: '#667eea',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      content: 'Swipe up to discover the extraordinary'
     },
     {
       id: 'power',
       title: 'Unleash Potential',
       subtitle: 'Beyond Ordinary Portfolios',
-      content: 'Transform your story into visual poetry',
-      color: '#f093fb',
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+      content: 'Transform your story into visual poetry'
     },
     {
       id: 'stories',
       title: 'Success Stories',
       subtitle: 'Dreams Made Reality',
-      content: 'Join thousands who found their calling',
-      color: '#4facfe',
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+      content: 'Join thousands who found their calling'
     },
     {
       id: 'create',
       title: 'Create Now',
       subtitle: 'Your Moment Awaits',
-      content: 'Begin your transformation',
-      color: '#43e97b',
-      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+      content: 'Begin your transformation'
     }
   ];
 
@@ -92,7 +96,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
             className={`nav-dot ${index === currentSection ? 'active' : ''}`}
             onClick={() => scrollToSection(index)}
             style={{
-              background: index === currentSection ? sections[currentSection].color : 'rgba(255,255,255,0.3)'
+              background: index === currentSection ? primaryColor : 'rgba(255,255,255,0.3)'
             }}
           />
         ))}
@@ -102,7 +106,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
       <button 
         className="mobile-dark-toggle"
         onClick={toggleDarkMode}
-        style={{ color: sections[currentSection].color }}
+        style={{ color: primaryColor }}
       >
         {isDarkMode ? '🌞' : '🌙'}
       </button>
@@ -113,7 +117,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
           key={section.id}
           className={`mobile-section ${index === currentSection ? 'active' : ''} ${isFloating ? 'floating' : ''}`}
           style={{
-            background: section.gradient,
+            background: bgColor,
             transform: `translateY(${index === currentSection ? (isFloating ? '-20px' : '0') : '0'})`
           }}
         >
@@ -125,7 +129,7 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
                 className="particle"
                 style={{
                   animationDelay: `${i * 0.1}s`,
-                  backgroundColor: 'rgba(255,255,255,0.1)'
+                  backgroundColor: isDarkMode ? 'rgba(74, 158, 255, 0.1)' : 'rgba(30, 115, 190, 0.1)'
                 }}
               />
             ))}
@@ -167,7 +171,15 @@ const MobileHome: React.FC<MobileHomeProps> = ({ isDarkMode, toggleDarkMode }) =
             {section.id === 'power' && (
               <div className="power-features">
                 {['✨ AI-Powered', '🚀 Instant Setup', '🎨 Beautiful Design', '📱 Mobile First'].map((feature, i) => (
-                  <div key={i} className="feature-badge" style={{ animationDelay: `${i * 0.2}s` }}>
+                  <div 
+                    key={i} 
+                    className="feature-badge" 
+                    style={{ 
+                      animationDelay: `${i * 0.2}s`,
+                      borderColor: primaryColor,
+                      color: primaryColor
+                    }}
+                  >
                     {feature}
                   </div>
                 ))}
