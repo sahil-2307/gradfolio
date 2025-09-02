@@ -1,3 +1,17 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Important pages for SEO
+Allow: /templates
+Allow: /browse-profiles
+Allow: /featured-profiles
+
+# Disallow private pages
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+Disallow: /payment-success
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://onlineportfolios.in/sitemap.xml

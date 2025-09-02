@@ -1,0 +1,27 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E73BE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bgGradient)" rx="64"/>
+  
+  <!-- Portfolio Icon -->
+  <g transform="translate(128, 128)">
+    <!-- Folder/Portfolio Shape -->
+    <path d="M32 64 L224 64 L256 96 L224 128 L32 128 Z" fill="white" fill-opacity="0.9"/>
+    <rect x="32" y="96" width="224" height="160" fill="white" fill-opacity="0.9" rx="8"/>
+    
+    <!-- Document Lines -->
+    <rect x="64" y="128" width="160" height="8" fill="#1E73BE" rx="4"/>
+    <rect x="64" y="152" width="120" height="8" fill="#1E73BE" rx="4"/>
+    <rect x="64" y="176" width="140" height="8" fill="#1E73BE" rx="4"/>
+    <rect x="64" y="200" width="100" height="8" fill="#1E73BE" rx="4"/>
+  </g>
+  
+  <!-- "OP" Text -->
+  <text x="256" y="420" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" text-anchor="middle" fill="white">OP</text>
+</svg>
