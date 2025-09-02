@@ -37,14 +37,14 @@ export default async function handler(req, res) {
         : null,
     });
 
-    // Create order with Cashfree - using correct header case
+    // Create order with Cashfree - using correct headers per 2024 docs
     const cfRes = await fetch(baseUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Client-Id": process.env.CASHFREE_APP_ID,
-        "X-Client-Secret": process.env.CASHFREE_SECRET_KEY,
-        "X-API-Version": "2022-09-01",
+        "x-client-id": process.env.CASHFREE_APP_ID,
+        "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+        "x-api-version": "2025-01-01",
       },
       body: JSON.stringify({
         order_id: `order_${Date.now()}`,
