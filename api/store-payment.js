@@ -26,13 +26,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Import Supabase client
-    const { createClient } = require('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
-
     // Add debug logging
     console.log('Store payment request:', {
       userId,
@@ -43,63 +36,87 @@ export default async function handler(req, res) {
       orderId
     });
 
-    // Store payment record
-    const { data, error } = await supabase
-      .from('user_payments')
-      .insert([
-        {
-          user_id: userId,
-          template_id: templateId,
-          plan_type: planType, // 'basic' or 'premium'
-          amount: amount,
-          payment_id: paymentId,
-          order_id: orderId,
-          status: 'completed',
-          created_at: new Date().toISOString()
-        }
-      ])
-      .select()
-      .single();
+    // Use direct HTTP calls to Supabase REST API
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-    if (error) {
-      console.error('Database error:', error);
-      
-      // If table doesn't exist, provide helpful error message
-      if (error.code === 'PGRST116' || error.message.includes('user_payments')) {
-        return res.status(500).json({
-          success: false,
-          message: 'Database table user_payments does not exist. Please create it in Supabase.',
-          error: error.message,
-          createTable: true
-        });
-      }
-      
+    if (!supabaseUrl || !supabaseKey) {
       return res.status(500).json({
         success: false,
-        message: 'Failed to store payment record',
-        error: error.message
+        message: 'Supabase configuration missing'
       });
     }
 
-    // Update user's subscription status
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ 
-        subscription_plan: planType,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', userId);
+    const paymentData = {
+      user_id: userId,
+      template_id: templateId,
+      plan_type: planType === 'free' ? 'basic' : planType,
+      amount: amount,
+      payment_id: paymentId,
+      order_id: orderId,
+      status: 'completed',
+      created_at: new Date().toISOString()
+    };
 
-    if (updateError) {
-      console.error('User update error:', updateError);
-      // Don't fail the request, payment is already stored
-    }
+    try {
+      // Store payment record using direct HTTP call
+      const response = await fetch(`${supabaseUrl}/rest/v1/user_payments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(paymentData)
+      });
 
-    res.status(200).json({
-      success: true,
-      message: 'Payment stored successfully',
-      data: data
-    });
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Supabase error:', errorData);
+        
+        if (errorData.includes('user_payments') || response.status === 404) {
+          return res.status(500).json({
+            success: false,
+            message: 'Database table user_payments does not exist. Please create it in Supabase.',
+            error: errorData,
+            createTable: true
+          });
+        }
+        
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to store payment record',
+          error: errorData
+        });
+      }
+
+      const data = await response.json();
+      
+      // Update user's subscription status
+      try {
+        await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          },
+          body: JSON.stringify({
+            subscription_plan: planType === 'free' ? 'basic' : planType,
+            updated_at: new Date().toISOString()
+          })
+        });
+      } catch (updateError) {
+        console.error('User update error:', updateError);
+        // Don't fail the request, payment is already stored
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Payment stored successfully',
+        data: data
+      });
 
   } catch (error) {
     console.error('Store payment error:', error);
