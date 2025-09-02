@@ -18,19 +18,46 @@ const PaymentSuccess: React.FC = () => {
         const orderId = searchParams.get('order_id');
         const paymentId = searchParams.get('payment_id');
 
+        // Debug logging
+        console.log('Payment Success URL Parameters:', {
+          templateId,
+          planType,
+          amount,
+          orderId,
+          paymentId,
+          fullUrl: window.location.href,
+          searchParams: Object.fromEntries(searchParams)
+        });
+
         if (!templateId || !planType || !amount) {
+          console.error('Missing required parameters:', { templateId, planType, amount });
           setStatus('error');
-          setMessage('Missing payment information');
+          setMessage(`Missing payment information: template=${templateId}, plan=${planType}, amount=${amount}`);
           return;
         }
 
         // Get current user
         const user = await AuthService.getCurrentUser();
+        console.log('Current user:', user);
+        
         if (!user) {
+          console.error('User not authenticated');
           setStatus('error');
           setMessage('User not authenticated');
           return;
         }
+
+        // Prepare API request data
+        const apiData = {
+          userId: user.id,
+          templateId: parseInt(templateId),
+          planType: planType === 'free' ? 'basic' : planType,
+          amount: parseFloat(amount),
+          paymentId: paymentId,
+          orderId: orderId
+        };
+
+        console.log('Sending to API:', apiData);
 
         // Store payment in database
         const response = await fetch('/api/store-payment', {
@@ -38,17 +65,14 @@ const PaymentSuccess: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            userId: user.id,
-            templateId: parseInt(templateId),
-            planType: planType === 'free' ? 'basic' : planType,
-            amount: parseFloat(amount),
-            paymentId: paymentId,
-            orderId: orderId
-          }),
+          body: JSON.stringify(apiData),
         });
 
+        console.log('API Response status:', response.status);
+        console.log('API Response headers:', Object.fromEntries(response.headers.entries()));
+
         const result = await response.json();
+        console.log('API Response data:', result);
         
         if (result.success) {
           setStatus('success');
@@ -88,8 +112,13 @@ const PaymentSuccess: React.FC = () => {
 
       } catch (error) {
         console.error('Payment processing error:', error);
+        console.error('Error details:', {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : 'No stack trace',
+          error
+        });
         setStatus('error');
-        setMessage('An error occurred while processing your payment');
+        setMessage(`An error occurred while processing your payment: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     };
 
