@@ -18,7 +18,7 @@ interface Template {
 const templates: Template[] = [
   {
     id: 1,
-    name: "Modern Professional",
+    name: "Basic",
     description: "Clean, minimalist design perfect for developers and tech professionals",
     features: [
       "Dark theme with gold accents",
@@ -34,7 +34,7 @@ const templates: Template[] = [
   },
   {
     id: 2,
-    name: "Creative Portfolio",
+    name: "Plus",
     description: "Vibrant and creative design for designers and creative professionals",
     features: [
       "Colorful gradient themes",
@@ -50,18 +50,34 @@ const templates: Template[] = [
   },
   {
     id: 3,
-    name: "Corporate Elite",
-    description: "Professional business-style template for corporate professionals",
+    name: "Pro",
+    description: "Advanced professional template with premium features and customization",
     features: [
-      "Corporate blue theme",
-      "Executive layout design",
-      "Achievement highlights",
-      "Professional timeline",
-      "Business card integration"
+      "Advanced customization options",
+      "Premium animations and effects",
+      "Multi-language support",
+      "Advanced SEO optimization",
+      "Priority customer support"
     ],
     image: "/landing_3/preview.png",
     adminUrl: "/landing_3/admin.html",
     previewUrl: "/landing_3/index.html",
+    badge: "Coming Soon"
+  },
+  {
+    id: 4,
+    name: "Executive",
+    description: "Elite business template for C-level executives and senior professionals",
+    features: [
+      "Executive dashboard layout",
+      "Premium business themes",
+      "Advanced analytics integration",
+      "Custom branding options",
+      "White-label solutions"
+    ],
+    image: "/landing_4/preview.png",
+    adminUrl: "/landing_4/admin.html",
+    previewUrl: "/landing_4/index.html",
     badge: "Coming Soon"
   }
 ];
@@ -76,7 +92,7 @@ const TemplateSelector: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTemplateSelect = async (template: Template) => {
-    if (template.id === 3) {
+    if (template.id === 3 || template.id === 4) {
       alert('This template is coming soon! Please choose another template.');
       return;
     }
@@ -101,7 +117,7 @@ const TemplateSelector: React.FC = () => {
 
   const handlePreview = (template: Template, event: React.MouseEvent) => {
     event.stopPropagation();
-    if (template.id === 3) {
+    if (template.id === 3 || template.id === 4) {
       alert('This template is coming soon!');
       return;
     }
@@ -196,7 +212,7 @@ const TemplateSelector: React.FC = () => {
           {templates.map((template) => (
             <div 
               key={template.id} 
-              className={`template-card ${template.id === 3 ? 'coming-soon' : ''}`}
+              className={`template-card ${template.id === 3 || template.id === 4 ? 'coming-soon' : ''}`}
               onClick={() => handleTemplateSelect(template)}
             >
               {template.badge && (
@@ -265,7 +281,7 @@ const TemplateSelector: React.FC = () => {
                       </div>
                       <div className="preview-header">
                         <div className="corporate-nav">
-                          <div className="nav-brand">Corporate</div>
+                          <div className="nav-brand">Pro</div>
                           <div className="nav-links">
                             <span></span><span></span><span></span>
                           </div>
@@ -273,11 +289,41 @@ const TemplateSelector: React.FC = () => {
                       </div>
                       <div className="preview-content">
                         <div className="corporate-hero">
-                          <div className="corporate-title">Professional Business</div>
+                          <div className="corporate-title">Advanced Professional</div>
                           <div className="corporate-stats">
                             <div className="stat"></div>
                             <div className="stat"></div>
                             <div className="stat"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {template.id === 4 && (
+                    <div className="preview-mockup executive-preview">
+                      <div className="coming-soon-overlay">
+                        <div className="coming-soon-text">
+                          <h3>Coming Soon</h3>
+                          <p>This template is under development</p>
+                        </div>
+                      </div>
+                      <div className="preview-header">
+                        <div className="executive-nav">
+                          <div className="nav-brand">Executive</div>
+                          <div className="nav-links">
+                            <span></span><span></span><span></span><span></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="preview-content">
+                        <div className="executive-hero">
+                          <div className="executive-title">Elite Business</div>
+                          <div className="executive-features">
+                            <div className="feature"></div>
+                            <div className="feature"></div>
+                            <div className="feature"></div>
+                            <div className="feature"></div>
                           </div>
                         </div>
                       </div>
@@ -292,9 +338,9 @@ const TemplateSelector: React.FC = () => {
                   <button 
                     className="preview-btn"
                     onClick={(e) => handlePreview(template, e)}
-                    disabled={template.id === 3}
+                    disabled={template.id === 3 || template.id === 4}
                   >
-                    {template.id === 3 ? 'Soon' : 'Preview'}
+                    {template.id === 3 || template.id === 4 ? 'Soon' : 'Preview'}
                   </button>
                 </div>
                 
@@ -311,10 +357,10 @@ const TemplateSelector: React.FC = () => {
                 
                 <div className="template-actions">
                   <button 
-                    className={`select-btn ${template.id === 3 ? 'disabled' : ''}`}
-                    disabled={template.id === 3}
+                    className={`select-btn ${template.id === 3 || template.id === 4 ? 'disabled' : ''}`}
+                    disabled={template.id === 3 || template.id === 4}
                   >
-                    {template.id === 3 ? 'Coming Soon' : 'Choose This Template'}
+                    {template.id === 3 || template.id === 4 ? 'Coming Soon' : 'Choose This Template'}
                   </button>
                 </div>
               </div>
@@ -329,9 +375,10 @@ const TemplateSelector: React.FC = () => {
               <thead>
                 <tr>
                   <th>Feature</th>
-                  <th>Modern Professional</th>
-                  <th>Creative Portfolio</th>
-                  <th>Corporate Elite</th>
+                  <th>Basic</th>
+                  <th>Plus</th>
+                  <th>Pro</th>
+                  <th>Executive</th>
                 </tr>
               </thead>
               <tbody>
@@ -339,31 +386,43 @@ const TemplateSelector: React.FC = () => {
                   <td>Theme Style</td>
                   <td>Dark + Gold</td>
                   <td>Colorful Gradients</td>
-                  <td>Corporate Blue</td>
+                  <td>Advanced Professional</td>
+                  <td>Premium Business</td>
                 </tr>
                 <tr>
                   <td>Best For</td>
                   <td>Developers, Tech</td>
                   <td>Designers, Creative</td>
-                  <td>Business, Corporate</td>
+                  <td>Advanced Professionals</td>
+                  <td>C-Level Executives</td>
                 </tr>
                 <tr>
                   <td>Animations</td>
                   <td>Particle Effects</td>
                   <td>Creative Transitions</td>
-                  <td>Subtle Professional</td>
+                  <td>Premium Effects</td>
+                  <td>Elite Animations</td>
                 </tr>
                 <tr>
                   <td>Customization</td>
                   <td>High</td>
                   <td>High</td>
-                  <td>High</td>
+                  <td>Advanced</td>
+                  <td>White-label</td>
                 </tr>
                 <tr>
                   <td>Mobile Responsive</td>
                   <td>✓</td>
                   <td>✓</td>
                   <td>✓</td>
+                  <td>✓</td>
+                </tr>
+                <tr>
+                  <td>Support</td>
+                  <td>Standard</td>
+                  <td>Standard</td>
+                  <td>Priority</td>
+                  <td>Dedicated</td>
                 </tr>
               </tbody>
             </table>

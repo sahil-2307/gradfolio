@@ -421,6 +421,67 @@
   border-radius: 6px;
 }
 
+/* Executive Preview */
+.executive-preview {
+  background: linear-gradient(135deg, #0F4C81 0%, #1E73BE 100%);
+  position: relative;
+}
+
+.executive-preview .preview-header {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.executive-preview .executive-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.executive-preview .nav-brand {
+  color: white;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+.executive-preview .nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.executive-preview .nav-links span {
+  width: 35px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1px;
+}
+
+.executive-preview .executive-hero {
+  padding: 2rem 1rem;
+}
+
+.executive-preview .executive-title {
+  color: white;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.3px;
+}
+
+.executive-preview .executive-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.executive-preview .feature {
+  height: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Template Info */
 .template-info {
   padding: 1rem 0;
