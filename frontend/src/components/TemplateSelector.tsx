@@ -227,7 +227,7 @@ const TemplateSelector: React.FC = () => {
                     <div className="preview-mockup modern-preview">
                       <div className="preview-header">
                         <div className="preview-nav">
-                          <div className="nav-logo">Portfolio</div>
+                          <div className="nav-logo">Basic</div>
                           <div className="nav-links">
                             <span></span><span></span><span></span>
                           </div>
@@ -235,7 +235,7 @@ const TemplateSelector: React.FC = () => {
                       </div>
                       <div className="preview-content">
                         <div className="hero-section">
-                          <div className="hero-title">Create Your Professional</div>
+                          <div className="hero-title">Clean & Professional</div>
                           <div className="hero-subtitle">Portfolio</div>
                           <div className="hero-particles">
                             <div className="particle"></div>
@@ -251,7 +251,7 @@ const TemplateSelector: React.FC = () => {
                     <div className="preview-mockup creative-preview">
                       <div className="preview-header">
                         <div className="creative-nav">
-                          <div className="nav-brand">Creative</div>
+                          <div className="nav-brand">Plus</div>
                           <div className="nav-menu">
                             <span></span><span></span>
                           </div>
@@ -259,7 +259,7 @@ const TemplateSelector: React.FC = () => {
                       </div>
                       <div className="preview-content">
                         <div className="creative-hero">
-                          <div className="creative-title">Creative Portfolio</div>
+                          <div className="creative-title">Creative Plus</div>
                           <div className="creative-grid">
                             <div className="grid-item"></div>
                             <div className="grid-item"></div>
@@ -289,7 +289,7 @@ const TemplateSelector: React.FC = () => {
                       </div>
                       <div className="preview-content">
                         <div className="corporate-hero">
-                          <div className="corporate-title">Advanced Professional</div>
+                          <div className="corporate-title">Pro Business</div>
                           <div className="corporate-stats">
                             <div className="stat"></div>
                             <div className="stat"></div>
