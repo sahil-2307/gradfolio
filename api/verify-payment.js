@@ -1,13 +1,13 @@
-const { Cashfree } = require('cashfree-pg-sdk-nodejs');
-
-// Initialize Cashfree
-Cashfree.XClientId = process.env.CASHFREE_APP_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
-Cashfree.XEnvironment = process.env.CASHFREE_ENVIRONMENT === 'production' 
-  ? Cashfree.Environment.PRODUCTION 
-  : Cashfree.Environment.SANDBOX;
-
 export default async function handler(req, res) {
+  // Dynamic import for Cashfree SDK
+  const { Cashfree } = await import('cashfree-pg-sdk-nodejs');
+  
+  // Initialize Cashfree
+  Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+  Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+  Cashfree.XEnvironment = process.env.CASHFREE_ENVIRONMENT === 'production' 
+    ? Cashfree.Environment.PRODUCTION 
+    : Cashfree.Environment.SANDBOX;
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');

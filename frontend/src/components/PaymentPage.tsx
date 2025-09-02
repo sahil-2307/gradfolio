@@ -29,7 +29,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
       setPaymentLoading(true);
       setError('');
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/create-payment-order`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/test-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
