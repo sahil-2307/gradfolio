@@ -19,22 +19,22 @@ export default async function handler(req, res) {
   try {
     const { templateId, templateName, amount } = req.body;
 
-    // Debug logs for env vars
-    console.log("Cashfree Config:", {
-      environment: process.env.CASHFREE_ENVIRONMENT,
-      hasAppId: !!process.env.CASHFREE_APP_ID,
-      hasSecretKey: !!process.env.CASHFREE_SECRET_KEY,
-      appIdPreview: process.env.CASHFREE_APP_ID
-        ? process.env.CASHFREE_APP_ID.slice(0, 4) + "..."
-        : null,
-    });
-
     // Select sandbox or production
     const environment = process.env.CASHFREE_ENVIRONMENT || "sandbox";
     const baseUrl =
       environment === "production"
         ? "https://api.cashfree.com/pg/orders"
         : "https://sandbox.cashfree.com/pg/orders";
+
+    // 🔍 Debug log (will appear in Vercel logs)
+    console.log("Cashfree Config:", {
+      environment,
+      hasAppId: !!process.env.CASHFREE_APP_ID,
+      hasSecretKey: !!process.env.CASHFREE_SECRET_KEY,
+      appIdPreview: process.env.CASHFREE_APP_ID
+        ? process.env.CASHFREE_APP_ID.substring(0, 6) + "..."
+        : null,
+    });
 
     // Create order with Cashfree
     const cfRes = await fetch(baseUrl, {
@@ -58,16 +58,17 @@ export default async function handler(req, res) {
       }),
     });
 
-    const rawText = await cfRes.text(); // log raw response
-    console.log("Cashfree API status:", cfRes.status);
-    console.log("Cashfree API raw response:", rawText);
-
+    // Capture raw response for debugging
+    const rawText = await cfRes.text();
     let data;
     try {
       data = JSON.parse(rawText);
     } catch {
-      data = { message: rawText };
+      data = { raw: rawText };
     }
+
+    console.log("Cashfree API status:", cfRes.status);
+    console.log("Cashfree API raw response:", rawText);
 
     if (!cfRes.ok) {
       return res.status(400).json({
@@ -76,7 +77,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // ✅ Match frontend expectation
     return res.status(200).json({
       success: true,
       paymentOrder: {
