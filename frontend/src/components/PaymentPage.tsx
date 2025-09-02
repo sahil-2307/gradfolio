@@ -49,7 +49,8 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
       }
     } catch (error) {
       console.error('Payment order creation failed:', error);
-      setError('Failed to initiate payment. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setError(`Failed to initiate payment: ${errorMessage}`);
       return null;
     } finally {
       setPaymentLoading(false);
@@ -74,7 +75,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
         redirectTarget: '_modal',
       };
 
-      cashfree.checkout(checkoutOptions).then((result: any) => {
+      cashfree.checkout(checkoutOptions).then((result) => {
         if (result.error) {
           console.error('Payment failed:', result.error);
           setError('Payment failed. Please try again.');
@@ -87,7 +88,8 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
 
     } catch (error) {
       console.error('Payment error:', error);
-      setError('Payment failed. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setError(`Payment failed: ${errorMessage}`);
     } finally {
       setPaymentLoading(false);
     }
