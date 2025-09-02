@@ -116,7 +116,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 placeholder="Choose a username"
                 required
               />
-              <small>This will be your portfolio URL: gradfolio.netlify.app/u/username</small>
+              <small>This will be your portfolio URL: onlineportfolios.in./username</small>
             </div>
           )}
 

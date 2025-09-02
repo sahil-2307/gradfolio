@@ -104,8 +104,26 @@ const TemplateSelector: React.FC = () => {
       navigate('/login');
       return;
     }
+
+    // Check if user has already paid for this template
+    const user = await AuthService.getCurrentUser();
+    if (user) {
+      try {
+        const response = await fetch(`/api/check-access?userId=${user.id}&templateId=${template.id}`);
+        const accessData = await response.json();
+        
+        if (accessData.success && accessData.hasTemplateAccess) {
+          // User has already paid for this template, redirect directly to admin
+          window.location.href = template.adminUrl;
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking access:', error);
+        // Continue to payment page if check fails
+      }
+    }
     
-    // Show payment page instead of directly going to admin
+    // Show payment page for new purchase
     setSelectedTemplate(template);
     setShowPayment(true);
   };

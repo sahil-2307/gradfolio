@@ -8,6 +8,7 @@ import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import BrowseProfiles from './components/BrowseProfiles';
+import PaymentSuccess from './components/PaymentSuccess';
 import { AuthService } from './services/authService';
 import type { User } from './config/supabase';
 import './App.css';
@@ -80,6 +81,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/templates" element={<TemplateSelector />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/profile/:username" element={<LandingPage />} />
           <Route path="/checkout/:username" element={<StripeCheckout />} />
           <Route path="/browse-profiles" element={<BrowseProfiles />} />

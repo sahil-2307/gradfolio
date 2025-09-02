@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AuthService } from '../services/authService';
 import './PaymentPage.css';
 
 interface Template {
@@ -72,7 +73,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
         // Start hosted checkout
         cashfree.checkout({
           paymentSessionId: paymentOrder.payment_session_id,
-          returnUrl: template.adminUrl,
+          returnUrl: `${window.location.origin}/payment-success?template=${template.id}&plan=${selectedPlan}&amount=${getDiscountedPrice()}`,
         }).then((result: any) => {
           if (result.error) {
             console.error('Payment failed:', result.error);

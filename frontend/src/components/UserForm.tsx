@@ -291,7 +291,7 @@ const UserForm: React.FC = () => {
                   placeholder="your-unique-username"
                   required
                 />
-                <small>This will be your public URL: gradfolio.com/{formData.username}</small>
+                <small>This will be your public URL: onlineportfolios.in/{formData.username}</small>
               </div>
               
               <div className="form-group">
