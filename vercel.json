@@ -32,6 +32,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/payment-success",
+      "destination": "/index.html"
+    },
+    {
       "source": "/u/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
     },
