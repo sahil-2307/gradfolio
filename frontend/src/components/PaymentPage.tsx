@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { load } from '@cashfreepayments/cashfree-js';
 import './PaymentPage.css';
 
 interface Template {
@@ -65,26 +64,31 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
       const paymentOrder = await createPaymentOrder();
       if (!paymentOrder) return;
 
-      // Initialize Cashfree
-      const cashfree = await load({
-        mode: process.env.REACT_APP_CASHFREE_ENVIRONMENT as 'sandbox' | 'production'
-      });
+      // Load Cashfree v3 SDK dynamically
+      const script = document.createElement('script');
+      script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+      script.onload = () => {
+        // Initialize Cashfree v3
+        const cashfree = (window as any).Cashfree({
+          mode: process.env.REACT_APP_CASHFREE_ENVIRONMENT || 'sandbox'
+        });
 
-      const checkoutOptions = {
-        paymentSessionId: paymentOrder.payment_session_id,
-        redirectTarget: '_modal' as const,
-      };
-
-      cashfree.checkout(checkoutOptions).then((result) => {
-        if (result.error) {
-          console.error('Payment failed:', result.error);
+        // Start hosted checkout
+        cashfree.checkout({
+          paymentSessionId: paymentOrder.payment_session_id,
+          returnUrl: `${window.location.origin}/payment-success?template=${template.id}`,
+        }).then((result: any) => {
+          if (result.error) {
+            console.error('Payment failed:', result.error);
+            setError('Payment failed. Please try again.');
+          }
+        }).catch((error: any) => {
+          console.error('Payment error:', error);
           setError('Payment failed. Please try again.');
-        } else if (result.redirect) {
-          console.log('Payment successful, redirecting...');
-          // Redirect to admin panel after successful payment
-          window.location.href = template.adminUrl;
-        }
-      });
+        });
+      };
+      
+      document.head.appendChild(script);
 
     } catch (error) {
       console.error('Payment error:', error);
