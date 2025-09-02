@@ -65,8 +65,25 @@ const PaymentSuccess: React.FC = () => {
             window.location.href = templates[templateId as keyof typeof templates] || '/dashboard';
           }, 2000);
         } else {
-          setStatus('error');
-          setMessage(result.message || 'Failed to process payment');
+          // If table doesn't exist, still redirect but show message
+          if (result.createTable) {
+            console.log('Database table missing, but payment was successful');
+            setStatus('success');
+            setMessage('Payment successful! Redirecting to your template... (Note: Database setup needed)');
+            
+            setTimeout(() => {
+              const templates = {
+                '1': '/landing_1/admin.html',
+                '2': '/landing_2/admin.html',
+                '3': '/landing_3/admin.html',
+                '4': '/landing_4/admin.html'
+              };
+              window.location.href = templates[templateId as keyof typeof templates] || '/dashboard';
+            }, 3000);
+          } else {
+            setStatus('error');
+            setMessage(result.message || 'Failed to process payment');
+          }
         }
 
       } catch (error) {

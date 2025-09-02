@@ -33,6 +33,16 @@ export default async function handler(req, res) {
       process.env.SUPABASE_ANON_KEY
     );
 
+    // Add debug logging
+    console.log('Store payment request:', {
+      userId,
+      templateId,
+      planType,
+      amount,
+      paymentId,
+      orderId
+    });
+
     // Store payment record
     const { data, error } = await supabase
       .from('user_payments')
@@ -53,6 +63,17 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('Database error:', error);
+      
+      // If table doesn't exist, provide helpful error message
+      if (error.code === 'PGRST116' || error.message.includes('user_payments')) {
+        return res.status(500).json({
+          success: false,
+          message: 'Database table user_payments does not exist. Please create it in Supabase.',
+          error: error.message,
+          createTable: true
+        });
+      }
+      
       return res.status(500).json({
         success: false,
         message: 'Failed to store payment record',
