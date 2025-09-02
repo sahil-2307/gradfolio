@@ -15,9 +15,9 @@
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(102, 126, 234, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(118, 75, 162, 0.02) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(30, 115, 190, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(21, 90, 150, 0.02) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -52,10 +52,10 @@
 }
 
 .back-btn:hover {
-  background: rgba(255, 215, 0, 0.2);
-  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(30, 115, 190, 0.2);
+  border-color: rgba(30, 115, 190, 0.4);
   transform: translateX(-5px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(30, 115, 190, 0.15);
 }
 
 .selected-template h2 {
@@ -66,7 +66,7 @@
 }
 
 .template-name {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  background: linear-gradient(135deg, #1E73BE 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -92,24 +92,28 @@
 }
 
 .pricing-cards {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
   margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pricing-card {
   background: rgba(26, 26, 46, 0.7);
-  border: 2px solid rgba(255, 215, 0, 0.3);
+  border: 2px solid rgba(30, 115, 190, 0.3);
   border-radius: 20px;
   padding: 2rem;
   transition: all 0.3s ease;
   position: relative;
   backdrop-filter: blur(8px);
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(30, 115, 190, 0.15);
   height: fit-content;
-  max-width: 400px;
   width: 100%;
+  cursor: pointer;
 }
 
 .pricing-card::before {
@@ -119,7 +123,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.02) 0%, rgba(102, 126, 234, 0.02) 100%);
+  background: linear-gradient(135deg, rgba(30, 115, 190, 0.02) 0%, rgba(59, 130, 246, 0.02) 100%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
@@ -133,28 +137,28 @@
 .pricing-card:hover,
 .pricing-card.selected {
   transform: translateY(-5px);
-  border-color: rgba(255, 215, 0, 0.4);
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.15);
+  border-color: rgba(30, 115, 190, 0.4);
+  box-shadow: 0 8px 20px rgba(30, 115, 190, 0.15);
 }
 
 .pricing-card.premium {
-  border-color: rgba(255, 215, 0, 0.3);
-  background: rgba(255, 215, 0, 0.05);
+  border-color: rgba(30, 115, 190, 0.4);
+  background: rgba(30, 115, 190, 0.05);
 }
 
 .plan-badge {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  color: #1a1a2e;
+  background: linear-gradient(135deg, #1E73BE 0%, #3b82f6 100%);
+  color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(30, 115, 190, 0.3);
 }
 
 .plan-header h4 {
@@ -167,7 +171,7 @@
 .price {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #ffd700;
+  color: #1E73BE;
   margin-bottom: 2rem;
 }
 
@@ -476,5 +480,145 @@
     right: 1rem;
     padding: 0.4rem 0.8rem;
     font-size: 0.7rem;
+  }
+}
+
+/* New Payment Components */
+.original-price {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+  margin-left: 0.5rem;
+}
+
+.feature-limitation {
+  padding: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+}
+
+.action-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #1E73BE 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 25px rgba(30, 115, 190, 0.3);
+  min-width: 250px;
+  justify-content: center;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #155A96 0%, #1E73BE 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(30, 115, 190, 0.4);
+}
+
+.action-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.action-btn.free {
+  background: rgba(30, 115, 190, 0.15);
+  border: 2px solid rgba(30, 115, 190, 0.3);
+  color: #1E73BE;
+}
+
+.action-btn.free:hover:not(:disabled) {
+  background: rgba(30, 115, 190, 0.25);
+  border-color: rgba(30, 115, 190, 0.5);
+  color: white;
+}
+
+.premium-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.payment-info {
+  text-align: center;
+}
+
+.payment-info p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.error-message {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #ff6b6b;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive Updates */
+@media (max-width: 768px) {
+  .pricing-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 100%;
+  }
+  
+  .action-btn {
+    min-width: 200px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .premium-actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-btn {
+    min-width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .price {
+    font-size: 2rem;
+  }
+  
+  .original-price {
+    font-size: 1rem;
   }
 }

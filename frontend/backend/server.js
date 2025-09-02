@@ -1,8 +1,17 @@
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const ResumeParser = require('./resumeParser');
+const { Cashfree } = require('cashfree-pg-sdk-nodejs');
+
+// Initialize Cashfree
+Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+Cashfree.XEnvironment = process.env.CASHFREE_ENVIRONMENT === 'production' 
+  ? Cashfree.Environment.PRODUCTION 
+  : Cashfree.Environment.SANDBOX;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,7 +20,19 @@ const PORT = process.env.PORT || 5000;
 const resumeParser = new ResumeParser();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://onlineportfolios.vercel.app',
+    'https://onlineportfolios.in',
+    'https://*.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Configure multer for file uploads
@@ -196,6 +217,153 @@ function getLayoutByTemplate(templateId) {
   
   return layouts[templateId] || layouts[1];
 }
+
+// Payment endpoint - Create payment order
+app.post('/api/create-payment-order', async (req, res) => {
+  try {
+    const { templateId, templateName, amount } = req.body;
+
+    if (!templateId || !templateName || !amount) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: templateId, templateName, amount'
+      });
+    }
+
+    // Generate unique order ID
+    const orderId = `order_${Date.now()}_${templateId}`;
+    const customerId = `customer_${Date.now()}`;
+
+    // Create customer
+    const customerDetails = {
+      customer_id: customerId,
+      customer_name: 'Portfolio Customer',
+      customer_email: 'customer@onlineportfolios.in',
+      customer_phone: '+919999999999',
+    };
+
+    // Create order
+    const orderDetails = {
+      order_id: orderId,
+      order_amount: amount,
+      order_currency: 'INR',
+      order_note: `Payment for ${templateName} template`,
+      customer_details: customerDetails,
+      order_meta: {
+        template_id: templateId,
+        template_name: templateName,
+      },
+      order_expiry_time: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes
+    };
+
+    // Create payment session
+    const response = await Cashfree.PGCreateOrder('2022-09-01', orderDetails);
+
+    if (response.data && response.data.payment_session_id) {
+      res.json({
+        success: true,
+        paymentOrder: {
+          payment_session_id: response.data.payment_session_id,
+          order_id: orderId,
+          order_amount: amount,
+        }
+      });
+    } else {
+      throw new Error('Failed to create payment session');
+    }
+
+  } catch (error) {
+    console.error('Payment order creation failed:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to create payment order'
+    });
+  }
+});
+
+// Payment verification endpoint
+app.post('/api/verify-payment', async (req, res) => {
+  try {
+    const { orderId } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Order ID is required'
+      });
+    }
+
+    // Verify payment with Cashfree
+    const response = await Cashfree.PGOrderFetchPayments('2022-09-01', orderId);
+
+    if (response.data && response.data.length > 0) {
+      const payment = response.data[0];
+      
+      if (payment.payment_status === 'SUCCESS') {
+        // Payment successful
+        res.json({
+          success: true,
+          paymentStatus: 'SUCCESS',
+          paymentDetails: {
+            orderId: orderId,
+            paymentId: payment.cf_payment_id,
+            amount: payment.payment_amount,
+            method: payment.payment_method,
+            time: payment.payment_time
+          }
+        });
+      } else {
+        res.json({
+          success: false,
+          paymentStatus: payment.payment_status,
+          message: 'Payment not successful'
+        });
+      }
+    } else {
+      res.json({
+        success: false,
+        message: 'Payment not found'
+      });
+    }
+
+  } catch (error) {
+    console.error('Payment verification failed:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to verify payment'
+    });
+  }
+});
+
+// Webhook endpoint for payment status updates
+app.post('/api/webhook/cashfree', express.raw({ type: 'application/json' }), (req, res) => {
+  try {
+    const payload = req.body;
+    
+    // In production, verify the webhook signature here
+    console.log('Webhook received:', payload);
+    
+    // Process webhook data
+    const webhookData = JSON.parse(payload.toString());
+    
+    if (webhookData.type === 'PAYMENT_SUCCESS_WEBHOOK') {
+      const { order_id, payment_amount, payment_status } = webhookData.data;
+      
+      console.log(`Payment successful for order ${order_id}: ₹${payment_amount}`);
+      
+      // Here you would typically:
+      // 1. Update database with payment status
+      // 2. Grant user access to template
+      // 3. Send confirmation email
+    }
+    
+    res.status(200).json({ status: 'success' });
+    
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
+});
 
 // Error handling middleware
 app.use((error, req, res, next) => {
