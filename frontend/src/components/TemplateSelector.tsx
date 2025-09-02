@@ -201,7 +201,19 @@ const TemplateSelector: React.FC = () => {
             <i className="fas fa-arrow-left"></i>
             Back to Home
           </button>
-          <br />
+          
+          <div className="sale-ribbon">
+            <div className="ribbon-content">
+              <div className="ribbon-icon">🎯</div>
+              <div className="ribbon-text">
+                <div className="ribbon-title">50% OFF for Fresh Graduates!</div>
+                <div className="ribbon-subtitle">Launch Your Career with Style • Limited Time Offer</div>
+              </div>
+              <div className="ribbon-badge">50% OFF</div>
+            </div>
+            <div className="ribbon-shine"></div>
+          </div>
+          
           <div className="header-content">
             <h1>Choose Your Portfolio Template</h1>
             <p>Select a template that best represents your professional style and showcase your work beautifully</p>
