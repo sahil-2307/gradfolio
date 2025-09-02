@@ -26,16 +26,6 @@ export default async function handler(req, res) {
         ? "https://api.cashfree.com/pg/orders"
         : "https://sandbox.cashfree.com/pg/orders";
 
-    // 🔍 Debug log (will appear in Vercel logs)
-    console.log("Cashfree Config:", {
-      environment,
-      baseUrl,
-      hasAppId: !!process.env.CASHFREE_APP_ID,
-      hasSecretKey: !!process.env.CASHFREE_SECRET_KEY,
-      appIdPreview: process.env.CASHFREE_APP_ID
-        ? process.env.CASHFREE_APP_ID.substring(0, 6) + "..."
-        : null,
-    });
 
     // Create order with Cashfree - using correct headers per 2024 docs
     const cfRes = await fetch(baseUrl, {
@@ -68,30 +58,11 @@ export default async function handler(req, res) {
       data = { raw: rawText };
     }
 
-    console.log("Cashfree API status:", cfRes.status);
-    console.log("Cashfree API raw response:", rawText);
-    console.log("Request body sent:", JSON.stringify({
-      order_id: `order_${Date.now()}`,
-      order_amount: amount,
-      order_currency: "INR",
-      customer_details: {
-        customer_id: `cust_${templateId}_${Date.now()}`,
-        customer_email: "test@onlineportfolios.in",
-        customer_phone: "+919999999999",
-      },
-      order_note: `Payment for template: ${templateName}`,
-    }));
 
     if (!cfRes.ok) {
       return res.status(400).json({
         success: false,
-        message: data.message || "Failed to create Cashfree order",
-        debug: {
-          status: cfRes.status,
-          response: data,
-          environment,
-          baseUrl
-        }
+        message: data.message || "Failed to create Cashfree order"
       });
     }
 

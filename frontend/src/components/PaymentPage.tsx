@@ -72,7 +72,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
         // Start hosted checkout
         cashfree.checkout({
           paymentSessionId: paymentOrder.payment_session_id,
-          returnUrl: `${window.location.origin}/payment-success?template=${template.id}`,
+          returnUrl: template.adminUrl,
         }).then((result: any) => {
           if (result.error) {
             console.error('Payment failed:', result.error);
