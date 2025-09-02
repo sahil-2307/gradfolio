@@ -72,7 +72,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
 
       const checkoutOptions = {
         paymentSessionId: paymentOrder.payment_session_id,
-        redirectTarget: '_modal',
+        redirectTarget: '_modal' as const,
       };
 
       cashfree.checkout(checkoutOptions).then((result) => {
