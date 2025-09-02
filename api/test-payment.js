@@ -19,6 +19,16 @@ export default async function handler(req, res) {
   try {
     const { templateId, templateName, amount } = req.body;
 
+    // Debug logs for env vars
+    console.log("Cashfree Config:", {
+      environment: process.env.CASHFREE_ENVIRONMENT,
+      hasAppId: !!process.env.CASHFREE_APP_ID,
+      hasSecretKey: !!process.env.CASHFREE_SECRET_KEY,
+      appIdPreview: process.env.CASHFREE_APP_ID
+        ? process.env.CASHFREE_APP_ID.slice(0, 4) + "..."
+        : null,
+    });
+
     // Select sandbox or production
     const environment = process.env.CASHFREE_ENVIRONMENT || "sandbox";
     const baseUrl =
@@ -48,7 +58,16 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await cfRes.json();
+    const rawText = await cfRes.text(); // log raw response
+    console.log("Cashfree API status:", cfRes.status);
+    console.log("Cashfree API raw response:", rawText);
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      data = { message: rawText };
+    }
 
     if (!cfRes.ok) {
       return res.status(400).json({
