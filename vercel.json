@@ -4,10 +4,6 @@
   "installCommand": "cd frontend && npm install",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
       "source": "/templates/(.*)",
       "destination": "/index.html"
     },
@@ -40,7 +36,7 @@
       "destination": "/api/portfolio-serve?username=$1"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/api/portfolio-serve?username=$1"
     }
   ],
