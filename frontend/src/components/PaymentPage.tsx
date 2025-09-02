@@ -18,10 +18,6 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleFreePlan = () => {
-    // Redirect directly to admin panel for free plan
-    window.location.href = template.adminUrl;
-  };
 
   const createPaymentOrder = async () => {
     try {
@@ -100,18 +96,12 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
   };
 
   const getOriginalPrice = () => {
-    // Define pricing based on template
-    const pricing = {
-      1: 999, // Basic
-      2: 1499, // Plus  
-      3: 2499, // Pro
-      4: 3999, // Executive
-    };
-    return pricing[template.id as keyof typeof pricing] || 999;
+    // Simple pricing: ₹10 for basic, ₹99 for premium
+    return selectedPlan === 'free' ? 10 : 99;
   };
 
   const getDiscountedPrice = () => {
-    return Math.round(getOriginalPrice() * 0.5); // 50% off
+    return getOriginalPrice(); // No discount, direct pricing
   };
 
   return (
@@ -133,11 +123,11 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
             <h3>Choose Your Plan</h3>
             
             <div className="pricing-cards">
-              {/* Free Plan */}
+              {/* Basic Plan */}
               <div className={`pricing-card ${selectedPlan === 'free' ? 'selected' : ''}`}>
                 <div className="plan-header">
-                  <h4>Free Plan</h4>
-                  <div className="price">₹0<span>/forever</span></div>
+                  <h4>Basic Plan</h4>
+                  <div className="price">₹10<span>/lifetime</span></div>
                 </div>
                 <div className="plan-features">
                   <div className="feature">✓ Basic template access</div>
@@ -151,19 +141,17 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
                   className={`plan-btn ${selectedPlan === 'free' ? 'selected' : ''}`}
                   onClick={() => setSelectedPlan('free')}
                 >
-                  Select Free Plan
+                  Select Basic Plan
                 </button>
               </div>
 
               {/* Premium Plan */}
               <div className={`pricing-card premium ${selectedPlan === 'premium' ? 'selected' : ''}`}>
-                <div className="plan-badge">50% OFF - Fresh Grad Special!</div>
+                <div className="plan-badge">Best Value!</div>
                 <div className="plan-header">
                   <h4>Premium Plan</h4>
                   <div className="price">
-                    ₹{getDiscountedPrice()}
-                    <span className="original-price">₹{getOriginalPrice()}</span>
-                    <span>/lifetime</span>
+                    ₹99<span>/lifetime</span>
                   </div>
                 </div>
                 <div className="plan-features">
@@ -189,37 +177,46 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ template, onCancel }) => {
             <div className="action-section">
               {selectedPlan === 'free' ? (
                 <button 
-                  className="action-btn free"
-                  onClick={handleFreePlan}
+                  className="action-btn premium"
+                  onClick={handleUPIPayment}
                   disabled={paymentLoading}
                 >
-                  Get Started Free
+                  {paymentLoading ? (
+                    <>
+                      <div className="loading-spinner"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-mobile-alt"></i>
+                      Pay ₹10 - Basic Plan
+                    </>
+                  )}
                 </button>
               ) : (
-                <div className="premium-actions">
-                  <button 
-                    className="action-btn premium"
-                    onClick={handleUPIPayment}
-                    disabled={paymentLoading}
-                  >
-                    {paymentLoading ? (
-                      <>
-                        <div className="loading-spinner"></div>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <i className="fas fa-mobile-alt"></i>
-                        Pay with UPI - ₹{getDiscountedPrice()}
-                      </>
-                    )}
-                  </button>
-                  <div className="payment-info">
-                    <p>Secure payment via UPI (GPay, PhonePe, Paytm, etc.)</p>
-                    <p>✓ Instant access after payment</p>
-                  </div>
-                </div>
+                <button 
+                  className="action-btn premium"
+                  onClick={handleUPIPayment}
+                  disabled={paymentLoading}
+                >
+                  {paymentLoading ? (
+                    <>
+                      <div className="loading-spinner"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-mobile-alt"></i>
+                      Pay ₹99 - Premium Plan
+                    </>
+                  )}
+                </button>
               )}
+
+              <div className="payment-info">
+                <p>Secure payment via UPI (GPay, PhonePe, Paytm, etc.)</p>
+                <p>✓ Instant access after payment</p>
+              </div>
 
               {error && <div className="error-message">{error}</div>}
             </div>
