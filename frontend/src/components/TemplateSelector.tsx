@@ -201,13 +201,18 @@ const TemplateSelector: React.FC = () => {
             <i className="fas fa-arrow-left"></i>
             Back to Home
           </button>
-          
+          <br />
           <div className="sale-ribbon">
             <div className="ribbon-content">
               <div className="ribbon-icon">🎯</div>
               <div className="ribbon-text">
-                <div className="ribbon-title">50% OFF for Fresh Graduates!</div>
-                <div className="ribbon-subtitle">Launch Your Career with Style • Limited Time Offer</div>
+                <div className="ribbon-title">
+                  <span className="rotating-text">Stand Out for Half the Price.</span>
+                  <span className="rotating-text">Launch Your Portfolio — 50% Off!</span>
+                  <span className="rotating-text">50% Off. 100% Hireable.</span>
+                  <span className="rotating-text">Fresh Grad? Fresh Deal!</span>
+                  <span className="rotating-text">Career Launch Sale — 50% Off!</span>
+                </div>
               </div>
               <div className="ribbon-badge">50% OFF</div>
             </div>
