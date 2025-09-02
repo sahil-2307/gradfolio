@@ -29,6 +29,7 @@ export default async function handler(req, res) {
     // 🔍 Debug log (will appear in Vercel logs)
     console.log("Cashfree Config:", {
       environment,
+      baseUrl,
       hasAppId: !!process.env.CASHFREE_APP_ID,
       hasSecretKey: !!process.env.CASHFREE_SECRET_KEY,
       appIdPreview: process.env.CASHFREE_APP_ID
@@ -36,14 +37,14 @@ export default async function handler(req, res) {
         : null,
     });
 
-    // Create order with Cashfree
+    // Create order with Cashfree - using correct header case
     const cfRes = await fetch(baseUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-client-id": process.env.CASHFREE_APP_ID,
-        "x-client-secret": process.env.CASHFREE_SECRET_KEY,
-        "x-api-version": "2022-09-01", // required
+        "X-Client-Id": process.env.CASHFREE_APP_ID,
+        "X-Client-Secret": process.env.CASHFREE_SECRET_KEY,
+        "X-API-Version": "2022-09-01",
       },
       body: JSON.stringify({
         order_id: `order_${Date.now()}`,
@@ -51,8 +52,8 @@ export default async function handler(req, res) {
         order_currency: "INR",
         customer_details: {
           customer_id: `cust_${templateId}_${Date.now()}`,
-          customer_email: "test@example.com", // replace with real user email
-          customer_phone: "9999999999", // replace with real user phone
+          customer_email: "test@onlineportfolios.in",
+          customer_phone: "+919999999999",
         },
         order_note: `Payment for template: ${templateName}`,
       }),
