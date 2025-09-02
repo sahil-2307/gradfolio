@@ -204,7 +204,7 @@ const TemplateSelector: React.FC = () => {
           <br />
           <div className="sale-ribbon">
             <div className="ribbon-content">
-              <div className="ribbon-icon">🎯</div>
+              <div className="ribbon-icon"></div>
               <div className="ribbon-text">
                 <div className="ribbon-title">
                   <span className="rotating-text">Stand Out for Half the Price.</span>
@@ -445,6 +445,7 @@ const TemplateSelector: React.FC = () => {
             </table>
           </div>
         </div>
+        <br />
 
         {/* Resume Upload Section */}
         <div className="resume-upload-section">
