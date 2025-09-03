@@ -1,0 +1,98 @@
+.linkedin-callback-container {
+  min-height: 100vh;
+  background: #F4F8FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #123C63;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.linkedin-callback-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E9F1FA;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #E9F1FA;
+  border-top: 4px solid #1E73BE;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 2rem;
+}
+
+.status-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  font-size: 30px;
+  color: white;
+}
+
+.status-icon.success {
+  background: #4caf50;
+}
+
+.status-icon.error {
+  background: #ef4444;
+}
+
+.linkedin-callback-title {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.linkedin-callback-title.processing {
+  color: #1E73BE;
+}
+
+.linkedin-callback-title.success {
+  color: #4caf50;
+}
+
+.linkedin-callback-title.error {
+  color: #ef4444;
+}
+
+.linkedin-callback-message {
+  color: #4A4A4A;
+}
+
+.linkedin-callback-message.with-button {
+  margin-bottom: 2rem;
+}
+
+.linkedin-callback-button {
+  background: #1E73BE;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.linkedin-callback-button:hover {
+  background: #155A96;
+  transform: translateY(-2px);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

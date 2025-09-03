@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import './LinkedInCallback.css';
 
 const LinkedInCallback: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -44,109 +45,42 @@ const LinkedInCallback: React.FC = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#F4F8FB',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#123C63',
-      padding: '2rem',
-      fontFamily: 'Poppins, sans-serif'
-    }}>
-      <div style={{
-        background: '#FFFFFF',
-        borderRadius: '16px',
-        padding: '3rem',
-        textAlign: 'center',
-        maxWidth: '500px',
-        width: '100%',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        border: '1px solid #E9F1FA'
-      }}>
+    <div className="linkedin-callback-container">
+      <div className="linkedin-callback-card">
         {status === 'processing' && (
           <div>
-            <div style={{
-              width: '50px',
-              height: '50px',
-              border: '4px solid #E9F1FA',
-              borderTop: '4px solid #1E73BE',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 2rem'
-            }}></div>
-            <h2 style={{ marginBottom: '1rem', color: '#1E73BE' }}>Processing LinkedIn Data</h2>
-            <p style={{ color: '#4A4A4A' }}>{message}</p>
+            <div className="loading-spinner"></div>
+            <h2 className="linkedin-callback-title processing">Processing LinkedIn Data</h2>
+            <p className="linkedin-callback-message">{message}</p>
           </div>
         )}
 
         {status === 'success' && (
           <div>
-            <div style={{
-              width: '60px',
-              height: '60px',
-              background: '#4caf50',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 2rem',
-              fontSize: '30px',
-              color: 'white'
-            }}>
+            <div className="status-icon success">
               ✓
             </div>
-            <h2 style={{ marginBottom: '1rem', color: '#4caf50' }}>LinkedIn Import Successful!</h2>
-            <p style={{ color: '#4A4A4A' }}>{message}</p>
+            <h2 className="linkedin-callback-title success">LinkedIn Import Successful!</h2>
+            <p className="linkedin-callback-message">{message}</p>
           </div>
         )}
 
         {status === 'error' && (
           <div>
-            <div style={{
-              width: '60px',
-              height: '60px',
-              background: '#ef4444',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 2rem',
-              fontSize: '30px',
-              color: 'white'
-            }}>
+            <div className="status-icon error">
               ✕
             </div>
-            <h2 style={{ marginBottom: '1rem', color: '#ef4444' }}>LinkedIn Import Failed</h2>
-            <p style={{ color: '#4A4A4A', marginBottom: '2rem' }}>{message}</p>
+            <h2 className="linkedin-callback-title error">LinkedIn Import Failed</h2>
+            <p className="linkedin-callback-message with-button">{message}</p>
             <button
               onClick={() => navigate('/dashboard')}
-              style={{
-                background: '#1E73BE',
-                color: 'white',
-                border: 'none',
-                padding: '1rem 2rem',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                fontWeight: '600',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.background = '#155A96'}
-              onMouseOut={(e) => e.currentTarget.style.background = '#1E73BE'}
+              className="linkedin-callback-button"
             >
               Back to Dashboard
             </button>
           </div>
         )}
       </div>
-      
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };
