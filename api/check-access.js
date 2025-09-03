@@ -30,22 +30,10 @@ export default async function handler(req, res) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-    console.log('Check access debug:', {
-      userId,
-      templateId,
-      hasSupabaseUrl: !!supabaseUrl,
-      hasSupabaseKey: !!supabaseKey,
-      supabaseUrlPrefix: supabaseUrl?.substring(0, 20)
-    });
-
     if (!supabaseUrl || !supabaseKey) {
       return res.status(500).json({
         success: false,
-        message: 'Supabase configuration missing',
-        debug: {
-          hasSupabaseUrl: !!supabaseUrl,
-          hasSupabaseKey: !!supabaseKey
-        }
+        message: 'Supabase configuration missing'
       });
     }
 
@@ -132,20 +120,10 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Check access error:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name,
-      cause: error.cause
-    });
-    
+    console.error('Check access error:', error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to check access',
-      debug: {
-        errorName: error.name,
-        errorMessage: error.message
-      }
+      message: error.message || 'Failed to check access'
     });
   }
 }
