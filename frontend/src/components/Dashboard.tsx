@@ -47,6 +47,84 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     }
   };
 
+  const handleResumeUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage('File size too large. Please upload a file smaller than 10MB.');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    setLoading(true);
+    setMessage('Processing your resume...');
+
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      formData.append('userId', user.id);
+      formData.append('username', user.username);
+
+      const response = await fetch('/api/parse-resume', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMessage('Resume processed successfully! Creating your portfolio...');
+        // Redirect to template admin with pre-filled data
+        const adminUrl = `/landing_1/admin.html?auth=true&username=${user.username}&resumeData=${encodeURIComponent(JSON.stringify(result.data))}`;
+        setTimeout(() => {
+          window.location.href = adminUrl;
+        }, 1500);
+      } else {
+        setMessage(result.message || 'Failed to process resume. Please try again.');
+        setTimeout(() => setMessage(''), 5000);
+      }
+    } catch (error) {
+      console.error('Resume upload error:', error);
+      setMessage('Failed to upload resume. Please try again.');
+      setTimeout(() => setMessage(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLinkedInLogin = async () => {
+    setLoading(true);
+    setMessage('Connecting to LinkedIn...');
+
+    try {
+      // Create LinkedIn OAuth URL
+      const clientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
+      const redirectUri = encodeURIComponent(`${window.location.origin}/dashboard/linkedin-callback`);
+      const scope = encodeURIComponent('r_liteprofile r_emailaddress');
+      const state = encodeURIComponent(JSON.stringify({ userId: user.id, username: user.username }));
+
+      if (!clientId) {
+        setMessage('LinkedIn integration not configured. Please contact support.');
+        setTimeout(() => setMessage(''), 5000);
+        return;
+      }
+
+      const linkedinUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
+      
+      // Redirect to LinkedIn OAuth
+      window.location.href = linkedinUrl;
+      
+    } catch (error) {
+      console.error('LinkedIn login error:', error);
+      setMessage('Failed to connect to LinkedIn. Please try again.');
+      setTimeout(() => setMessage(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -90,13 +168,49 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
             </div>
           </div>
         ) : (
-          <div className="portfolio-status">
-            <div className="status-card inactive">
-              <div className="status-icon">
-                <i className="fas fa-plus-circle"></i>
+          <div className="portfolio-creation">
+            <div className="creation-header">
+              <h2>Quick Portfolio Creation</h2>
+              <p>Get started instantly with one of these easy options</p>
+            </div>
+            
+            <div className="creation-options">
+              <div className="creation-card">
+                <div className="creation-icon">
+                  <i className="fas fa-file-upload"></i>
+                </div>
+                <h3>Upload Resume</h3>
+                <p>Upload your resume and we'll automatically create your portfolio</p>
+                <input
+                  type="file"
+                  id="resume-upload"
+                  accept=".pdf,.doc,.docx"
+                  style={{ display: 'none' }}
+                  onChange={handleResumeUpload}
+                />
+                <button 
+                  onClick={() => document.getElementById('resume-upload')?.click()}
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? 'Processing...' : 'Upload Resume'}
+                </button>
               </div>
-              <h3>Create Your Portfolio</h3>
-              <p>Choose a template to get started</p>
+
+              <div className="creation-card">
+                <div className="creation-icon">
+                  <i className="fab fa-linkedin"></i>
+                </div>
+                <h3>Import from LinkedIn</h3>
+                <p>Connect your LinkedIn profile to auto-fill your portfolio</p>
+                <button 
+                  onClick={handleLinkedInLogin}
+                  className="btn btn-secondary"
+                  disabled={loading}
+                >
+                  Connect LinkedIn
+                </button>
+              </div>
             </div>
           </div>
         )}

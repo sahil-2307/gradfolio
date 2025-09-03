@@ -7,6 +7,7 @@ import TemplateSelector from './components/TemplateSelector';
 import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
+import LinkedInCallback from './components/LinkedInCallback';
 import BrowseProfiles from './components/BrowseProfiles';
 import PaymentSuccess from './components/PaymentSuccess';
 import { AuthService } from './services/authService';
@@ -128,6 +129,10 @@ function App() {
                 <Dashboard user={user} onLogout={handleLogout} /> : 
                 <Navigate to="/login" replace />
             } 
+          />
+          <Route 
+            path="/dashboard/linkedin-callback" 
+            element={<LinkedInCallback />}
           />
           
           {/* Catch-all route for user portfolios */}
