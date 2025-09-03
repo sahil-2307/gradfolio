@@ -102,7 +102,10 @@ export default async function handler(req, res) {
     }
 
     const profileData = await profileResponse.json();
-    console.log('LinkedIn profile fetched:', { id: profileData.id });
+    console.log('LinkedIn profile fetched:', { 
+      id: profileData.id,
+      fullProfileData: JSON.stringify(profileData, null, 2)
+    });
 
     // Fetch email address
     const emailResponse = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
@@ -116,12 +119,16 @@ export default async function handler(req, res) {
     if (emailResponse.ok) {
       const emailData = await emailResponse.json();
       email = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
+      console.log('LinkedIn email fetched:', email);
+    } else {
+      console.log('LinkedIn email fetch failed:', emailResponse.status, await emailResponse.text());
     }
 
     // Transform LinkedIn data to our portfolio format
     const portfolioData = transformLinkedInData(profileData, email);
 
     console.log('LinkedIn data transformed for user:', username);
+    console.log('Transformed portfolio data:', JSON.stringify(portfolioData, null, 2));
 
     // Redirect to template admin with pre-filled data
     const adminUrl = `/landing_1/admin.html?auth=true&username=${username}&linkedinData=${encodeURIComponent(JSON.stringify(portfolioData))}`;

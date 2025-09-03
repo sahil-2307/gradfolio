@@ -18,12 +18,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   const checkExistingPortfolio = async () => {
     try {
+      console.log('Checking existing portfolio for user:', user.username);
+      
       // Check if user has an existing portfolio by trying to access it
       const response = await fetch(`/u/${user.username}`, { method: 'HEAD' });
+      
+      console.log('Portfolio check response:', {
+        status: response.status,
+        ok: response.ok,
+        url: `/u/${user.username}`
+      });
+      
       if (response.ok) {
-        setPortfolioUrl(`${window.location.origin}/u/${user.username}`);
+        const portfolioUrl = `${window.location.origin}/u/${user.username}`;
+        console.log('Portfolio found, setting URL:', portfolioUrl);
+        setPortfolioUrl(portfolioUrl);
+      } else {
+        console.log('No portfolio found for user:', user.username);
       }
     } catch (error) {
+      console.log('Error checking portfolio:', error);
       console.log('No existing portfolio found');
     }
   };

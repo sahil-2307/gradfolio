@@ -10,10 +10,15 @@ const LinkedInCallback: React.FC = () => {
 
   useEffect(() => {
     const processLinkedInCallback = async () => {
+      console.log('LinkedIn callback triggered');
+      console.log('Search params:', Object.fromEntries(searchParams.entries()));
+      console.log('Current URL:', window.location.href);
+      
       const error = searchParams.get('error');
       const errorMessage = searchParams.get('message');
 
       if (error) {
+        console.log('LinkedIn callback error:', error, errorMessage);
         setStatus('error');
         setMessage(getErrorMessage(error, errorMessage));
         setTimeout(() => navigate('/dashboard'), 5000);
@@ -21,6 +26,7 @@ const LinkedInCallback: React.FC = () => {
       }
 
       // If no error, show success and redirect
+      console.log('LinkedIn callback successful, redirecting to dashboard');
       setStatus('success');
       setMessage('LinkedIn data imported successfully! Redirecting to portfolio creation...');
       setTimeout(() => navigate('/dashboard'), 2000);
