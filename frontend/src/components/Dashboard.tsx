@@ -21,7 +21,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       console.log('Checking existing portfolio for user:', user.username);
       
       // Check if user has an existing portfolio by trying to access it
-      const response = await fetch(`/u/${user.username}`, { method: 'HEAD' });
+      const response = await fetch(`/u/${user.username}`);
       
       console.log('Portfolio check response:', {
         status: response.status,
@@ -30,9 +30,23 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       });
       
       if (response.ok) {
-        const portfolioUrl = `${window.location.origin}/u/${user.username}`;
-        console.log('Portfolio found, setting URL:', portfolioUrl);
-        setPortfolioUrl(portfolioUrl);
+        // Check if the response actually contains a portfolio or just an error page
+        const responseText = await response.text();
+        console.log('Portfolio response preview:', responseText.substring(0, 200));
+        
+        // Check if the response contains "Portfolio Not Found" or similar error messages
+        const isErrorPage = responseText.includes('Portfolio Not Found') || 
+                           responseText.includes("doesn't exist") ||
+                           responseText.includes('portfolio for') ||
+                           responseText.includes('No portfolio found');
+        
+        if (!isErrorPage && responseText.trim().length > 0) {
+          const portfolioUrl = `${window.location.origin}/u/${user.username}`;
+          console.log('Valid portfolio found, setting URL:', portfolioUrl);
+          setPortfolioUrl(portfolioUrl);
+        } else {
+          console.log('Portfolio URL returns error page, no valid portfolio found');
+        }
       } else {
         console.log('No portfolio found for user:', user.username);
       }
