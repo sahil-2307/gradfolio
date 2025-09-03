@@ -9,6 +9,7 @@ import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import LinkedInCallback from './components/LinkedInCallback';
 import BrowseProfiles from './components/BrowseProfiles';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import PaymentSuccess from './components/PaymentSuccess';
 import { AuthService } from './services/authService';
 import type { User } from './config/supabase';
@@ -133,6 +134,10 @@ function App() {
           <Route 
             path="/dashboard/linkedin-callback" 
             element={<LinkedInCallback />}
+          />
+          <Route 
+            path="/privacy" 
+            element={<PrivacyPolicy />}
           />
           
           {/* Catch-all route for user portfolios */}

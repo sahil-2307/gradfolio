@@ -44,6 +44,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/privacy",
+      "destination": "/index.html"
+    },
+    {
       "source": "/u/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
     },

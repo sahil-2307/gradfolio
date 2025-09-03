@@ -1,0 +1,140 @@
+.privacy-policy-container {
+  min-height: 100vh;
+  background-color: #F4F8FB;
+  padding: 2rem 1rem;
+  font-family: 'Open Sans', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.privacy-policy-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E9F1FA;
+  line-height: 1.6;
+}
+
+.privacy-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #E9F1FA;
+}
+
+.privacy-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #123C63;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', 'Open Sans', sans-serif;
+}
+
+.last-updated {
+  color: #4A4A4A;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.privacy-section {
+  margin-bottom: 2.5rem;
+}
+
+.privacy-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #123C63;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', 'Open Sans', sans-serif;
+}
+
+.privacy-section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1E73BE;
+  margin: 1.5rem 0 0.75rem 0;
+  font-family: 'Poppins', 'Open Sans', sans-serif;
+}
+
+.privacy-section p {
+  color: #4A4A4A;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.privacy-section ul {
+  margin: 1rem 0 1rem 1.5rem;
+  color: #4A4A4A;
+}
+
+.privacy-section li {
+  margin-bottom: 0.5rem;
+}
+
+.contact-info {
+  background: #E9F1FA;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.contact-info p {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #123C63;
+}
+
+.privacy-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #E9F1FA;
+  text-align: center;
+}
+
+.privacy-footer p {
+  color: #4A4A4A;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .privacy-policy-container {
+    padding: 1rem;
+  }
+  
+  .privacy-policy-content {
+    padding: 2rem;
+  }
+  
+  .privacy-header h1 {
+    font-size: 2rem;
+  }
+  
+  .privacy-section h2 {
+    font-size: 1.3rem;
+  }
+  
+  .privacy-section h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-policy-content {
+    padding: 1.5rem;
+  }
+  
+  .privacy-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .privacy-section h2 {
+    font-size: 1.2rem;
+  }
+  
+  .privacy-section ul {
+    margin-left: 1rem;
+  }
+}
