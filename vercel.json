@@ -36,6 +36,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/reset-password",
+      "destination": "/index.html"
+    },
+    {
       "source": "/u/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
     },
