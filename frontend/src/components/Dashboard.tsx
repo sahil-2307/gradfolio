@@ -18,7 +18,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   const checkExistingPortfolio = async () => {
     try {
-      const response = await fetch(`/.netlify/functions/portfolio/${user.username}`);
+      // Check if user has an existing portfolio by trying to access it
+      const response = await fetch(`/u/${user.username}`, { method: 'HEAD' });
       if (response.ok) {
         setPortfolioUrl(`${window.location.origin}/u/${user.username}`);
       }
@@ -95,23 +96,35 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   };
 
   const handleLinkedInLogin = async () => {
+    console.log('LinkedIn Connect clicked');
     setLoading(true);
     setMessage('Connecting to LinkedIn...');
 
     try {
       // Create LinkedIn OAuth URL
       const clientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
-      const redirectUri = encodeURIComponent(`${window.location.origin}/dashboard/linkedin-callback`);
+      console.log('LinkedIn Client ID configured:', !!clientId);
+      
+      const redirectUri = encodeURIComponent(`${window.location.origin}/api/linkedin-callback`);
       const scope = encodeURIComponent('r_liteprofile r_emailaddress');
       const state = encodeURIComponent(JSON.stringify({ userId: user.id, username: user.username }));
 
+      console.log('LinkedIn OAuth config:', {
+        clientId: clientId ? 'configured' : 'missing',
+        redirectUri: decodeURIComponent(redirectUri),
+        scope: decodeURIComponent(scope)
+      });
+
       if (!clientId) {
-        setMessage('LinkedIn integration not configured. Please contact support.');
+        setMessage('LinkedIn integration not configured. Please add REACT_APP_LINKEDIN_CLIENT_ID to environment variables.');
         setTimeout(() => setMessage(''), 5000);
+        setLoading(false);
         return;
       }
 
       const linkedinUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
+      
+      console.log('Redirecting to LinkedIn:', linkedinUrl.substring(0, 100) + '...');
       
       // Redirect to LinkedIn OAuth
       window.location.href = linkedinUrl;
@@ -120,7 +133,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       console.error('LinkedIn login error:', error);
       setMessage('Failed to connect to LinkedIn. Please try again.');
       setTimeout(() => setMessage(''), 5000);
-    } finally {
       setLoading(false);
     }
   };
