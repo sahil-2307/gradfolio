@@ -59,6 +59,15 @@ export default async function handler(req, res) {
     };
 
     // Store payment record using direct HTTP call
+    console.log('Making request to:', `${supabaseUrl}/rest/v1/user_payments`);
+    console.log('Request headers:', {
+      'Content-Type': 'application/json',
+      'apikey': supabaseKey ? 'present' : 'missing',
+      'Authorization': supabaseKey ? 'present' : 'missing',
+      'Prefer': 'return=representation'
+    });
+    console.log('Request body:', JSON.stringify(paymentData));
+
     const response = await fetch(`${supabaseUrl}/rest/v1/user_payments`, {
       method: 'POST',
       headers: {
@@ -70,9 +79,12 @@ export default async function handler(req, res) {
       body: JSON.stringify(paymentData)
     });
 
+    console.log('Supabase response status:', response.status);
+    console.log('Supabase response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Supabase error:', errorData);
+      console.error('Supabase error response:', errorData);
       
       if (errorData.includes('user_payments') || response.status === 404) {
         return res.status(500).json({
@@ -91,6 +103,7 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
+    console.log('Supabase success response:', data);
     
     // Update user's subscription status
     try {
