@@ -331,6 +331,18 @@
   cursor: not-allowed;
 }
 
+.linkedin-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.linkedin-buttons .btn {
+  width: 100%;
+  max-width: 250px;
+}
+
 .linkedin-actions {
   display: flex;
   gap: 1rem;
@@ -729,6 +741,14 @@
   
   .skill-tags-preview {
     justify-content: center;
+  }
+  
+  .linkedin-buttons {
+    width: 100%;
+  }
+  
+  .linkedin-buttons .btn {
+    max-width: none;
   }
   .dashboard-header {
     flex-direction: column;

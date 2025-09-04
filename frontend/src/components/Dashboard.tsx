@@ -43,7 +43,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       console.log('Checking existing portfolio for user:', user.username);
       
       // Check if user has an existing portfolio by trying to access it
-      const response = await fetch(`/u/${user.username}`);
+      const response = await fetch(`/u/${user.username}`, {
+        method: 'HEAD' // Use HEAD to avoid downloading full HTML
+      });
       
       console.log('Portfolio check response:', {
         status: response.status,
@@ -52,23 +54,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       });
       
       if (response.ok) {
-        // Check if the response actually contains a portfolio or just an error page
-        const responseText = await response.text();
-        console.log('Portfolio response preview:', responseText.substring(0, 200));
-        
-        // Check if the response contains "Portfolio Not Found" or similar error messages
-        const isErrorPage = responseText.includes('Portfolio Not Found') || 
-                           responseText.includes("doesn't exist") ||
-                           responseText.includes('portfolio for') ||
-                           responseText.includes('No portfolio found');
-        
-        if (!isErrorPage && responseText.trim().length > 0) {
-          const portfolioUrl = `${window.location.origin}/u/${user.username}`;
-          console.log('Valid portfolio found, setting URL:', portfolioUrl);
-          setPortfolioUrl(portfolioUrl);
-        } else {
-          console.log('Portfolio URL returns error page, no valid portfolio found');
-        }
+        // If HEAD request succeeds, portfolio likely exists
+        const portfolioUrl = `${window.location.origin}/u/${user.username}`;
+        console.log('Valid portfolio found, setting URL:', portfolioUrl);
+        setPortfolioUrl(portfolioUrl);
       } else {
         console.log('No portfolio found for user:', user.username);
       }
@@ -192,6 +181,77 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     navigate('/templates?source=linkedin');
   };
 
+  // Test function to add sample LinkedIn data
+  const addTestLinkedInData = async () => {
+    const testData = {
+      personal: {
+        fullName: "Sahil Bhujbal",
+        email: "sahil@example.com",
+        phone: "+1234567890",
+        linkedin: "https://linkedin.com/in/sahilbhujbal",
+        github: "https://github.com/sahil-2307",
+        website: "https://sahilbhujbal.dev"
+      },
+      about: {
+        paragraph1: "Passionate Computer Science graduate with expertise in full-stack development and AI/ML technologies.",
+        paragraph2: "Experienced in building scalable web applications and working with modern frameworks."
+      },
+      experience: [
+        {
+          position: "Software Engineer",
+          company: "Tech Corp",
+          duration: "2023 - Present",
+          description: "Developing scalable web applications using React and Node.js"
+        },
+        {
+          position: "Frontend Developer Intern",
+          company: "StartupXYZ",
+          duration: "2022 - 2023",
+          description: "Built responsive user interfaces and improved user experience"
+        }
+      ],
+      education: [
+        {
+          degree: "Bachelor of Computer Science",
+          institution: "University of Technology",
+          year: "2023",
+          description: "Graduated with honors, specialized in software engineering"
+        }
+      ],
+      skills: {
+        technical: ["JavaScript", "React", "Node.js", "Python", "MongoDB", "AWS", "Docker", "Git"],
+        soft: ["Leadership", "Communication", "Problem Solving", "Team Collaboration"]
+      },
+      projects: [
+        {
+          title: "E-commerce Platform",
+          description: "Full-stack e-commerce solution with payment integration",
+          technologies: ["React", "Node.js", "MongoDB", "Stripe"],
+          link: "https://github.com/sahil-2307/ecommerce"
+        },
+        {
+          title: "Portfolio Builder",
+          description: "Automated portfolio generation tool for students",
+          technologies: ["React", "TypeScript", "Supabase"],
+          link: "https://github.com/sahil-2307/gradfolio"
+        }
+      ],
+      achievements: [
+        "Dean's List for Academic Excellence",
+        "Winner of University Hackathon 2022",
+        "Published research paper on AI applications"
+      ]
+    };
+
+    const result = await LinkedInService.storeLinkedInData(user.username, testData);
+    if (result.success) {
+      setHasLinkedInData(true);
+      setLinkedInData(testData);
+      setMessage('Test LinkedIn data added successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -299,9 +359,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
               </div>
               <h3>Import from LinkedIn</h3>
               <p>Connect your LinkedIn profile to automatically populate your portfolio with professional data</p>
-              <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
-                <i className="fab fa-linkedin"></i> Connect LinkedIn
-              </button>
+              <div className="linkedin-buttons">
+                <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
+                  <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
+                </button>
+                <button onClick={addTestLinkedInData} className="btn btn-outline" style={{marginTop: '0.5rem'}}>
+                  <i className="fas fa-flask"></i> Add Test Data
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -367,16 +432,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
               <div className="creation-card">
                 <div className="creation-icon">
-                  <i className="fab fa-linkedin"></i>
+                  <i className="fas fa-palette"></i>
                 </div>
-                <h3>Import from LinkedIn</h3>
-                <p>Connect your LinkedIn profile to auto-fill your portfolio</p>
+                <h3>Start from Scratch</h3>
+                <p>Create your portfolio manually with our easy-to-use templates</p>
                 <button 
-                  onClick={handleLinkedInLogin}
+                  onClick={() => navigate('/templates')}
                   className="btn btn-secondary"
                   disabled={loading}
                 >
-                  Connect LinkedIn
+                  Choose Template
                 </button>
               </div>
             </div>
