@@ -230,7 +230,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       
       checkInterval = setInterval(() => {
         try {
-          if (authWindow.closed) {
+          if (authWindow && authWindow.closed) {
             cleanup();
             setLoading(false);
             setMessage('LinkedIn authentication window closed. Checking for imported data...');
@@ -240,7 +240,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
               checkLinkedInData();
               setMessage('');
             }, 2000);
-          } else {
+          } else if (authWindow) {
             // Check if we can access the window URL (same origin)
             try {
               const currentUrl = authWindow.location.href;
