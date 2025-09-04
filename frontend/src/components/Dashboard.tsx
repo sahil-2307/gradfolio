@@ -155,7 +155,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       });
 
       if (!clientId) {
-        setMessage('LinkedIn integration not configured. Please add REACT_APP_LINKEDIN_CLIENT_ID to environment variables.');
+        setMessage('LinkedIn integration not configured. For now, you can use the test data option below.');
         setTimeout(() => setMessage(''), 5000);
         setLoading(false);
         return;
@@ -163,14 +163,51 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
       const linkedinUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
       
-      console.log('Redirecting to LinkedIn:', linkedinUrl.substring(0, 100) + '...');
+      console.log('LinkedIn OAuth URL Details:', {
+        fullUrl: linkedinUrl,
+        redirectUri: decodeURIComponent(redirectUri),
+        origin: window.location.origin,
+        currentUrl: window.location.href
+      });
+      console.log('Attempting LinkedIn OAuth...');
       
-      // Redirect to LinkedIn OAuth
-      window.location.href = linkedinUrl;
+      // Try to open in a new window first to avoid navigation issues
+      const popup = window.open(linkedinUrl, 'linkedin-auth', 'width=600,height=600,scrollbars=yes,resizable=yes');
+      
+      if (!popup) {
+        // Fallback to direct redirect if popup is blocked
+        setMessage('Popup blocked. Redirecting to LinkedIn...');
+        setTimeout(() => {
+          window.location.href = linkedinUrl;
+        }, 1000);
+      } else {
+        // Monitor popup for completion
+        const checkClosed = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(checkClosed);
+            setLoading(false);
+            setMessage('LinkedIn connection cancelled or completed.');
+            setTimeout(() => setMessage(''), 3000);
+            // Refresh data to check if LinkedIn data was added
+            checkLinkedInData();
+          }
+        }, 1000);
+        
+        // Auto-close popup after 5 minutes
+        setTimeout(() => {
+          if (!popup.closed) {
+            popup.close();
+            clearInterval(checkClosed);
+            setLoading(false);
+            setMessage('LinkedIn connection timed out. Please try again.');
+            setTimeout(() => setMessage(''), 5000);
+          }
+        }, 300000);
+      }
       
     } catch (error) {
       console.error('LinkedIn login error:', error);
-      setMessage('Failed to connect to LinkedIn. Please try again.');
+      setMessage('LinkedIn service temporarily unavailable. You can use the test data option for now.');
       setTimeout(() => setMessage(''), 5000);
       setLoading(false);
     }
@@ -363,9 +400,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                 <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
                   <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
                 </button>
-                <button onClick={addTestLinkedInData} className="btn btn-outline" style={{marginTop: '0.5rem'}}>
-                  <i className="fas fa-flask"></i> Add Test Data
+                <div className="divider-text">or</div>
+                <button onClick={addTestLinkedInData} className="btn btn-outline">
+                  <i className="fas fa-flask"></i> Use Sample Data
                 </button>
+                <p className="helper-text">Use sample data to see how your LinkedIn information would appear</p>
               </div>
             </div>
           </div>

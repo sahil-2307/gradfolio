@@ -343,6 +343,23 @@
   max-width: 250px;
 }
 
+.divider-text {
+  font-size: 0.9rem;
+  color: var(--text-body);
+  opacity: 0.7;
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.helper-text {
+  font-size: 0.8rem;
+  color: var(--text-body);
+  opacity: 0.6;
+  margin: 0.5rem 0 0 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
 .linkedin-actions {
   display: flex;
   gap: 1rem;
