@@ -989,6 +989,110 @@
   
   .hero-title h1 {
     font-size: 3rem;
+    color: white !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  }
+  
+  .hero-description h2 {
+    color: #ffd700 !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .hero-description h3 {
+    color: white !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  }
+  
+  .hero-description p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .my-story-btn {
+    color: #ffd700 !important;
+    border-color: rgba(255, 215, 0, 0.6) !important;
+    background: rgba(26, 26, 46, 0.8) !important;
+    backdrop-filter: blur(10px);
+  }
+  
+  .section-header h2 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+  }
+  
+  .section-header p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  .feature-card h3 {
+    color: white !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .feature-card p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .contact-left h2 {
+    color: #ffd700 !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .contact-left h3 {
+    color: white !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  }
+  
+  .contact-left p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  .contact-email {
+    color: #ffd700 !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .contact-number {
+    color: #ffd700 !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  }
+  
+  .contact-label {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .faq-section h4 {
+    color: white !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .faq-item {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .service-card h3 {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .project-count {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .footer-brand {
+    color: white !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
   }
   
   .contact-content {
@@ -998,6 +1102,8 @@
   
   .contact-stats {
     gap: 2rem;
+    background: rgba(26, 26, 46, 0.8) !important;
+    backdrop-filter: blur(20px);
   }
   
   .services-grid {
@@ -1014,5 +1120,45 @@
   .form-modal {
     max-width: 95vw;
     margin: 1rem;
+  }
+  
+  /* Enhanced mobile navbar visibility */
+  .navbar {
+    background: rgba(26, 26, 46, 0.98) !important;
+    backdrop-filter: blur(15px);
+  }
+  
+  .brand-text {
+    color: white !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .cta-nav-button {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+    color: #1a1a2e !important;
+    text-shadow: none;
+    font-weight: 700;
+  }
+  
+  /* Floating cards mobile fixes */
+  .project-card-preview h5 {
+    color: #ffd700 !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .project-item-small {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    background: rgba(26, 26, 46, 0.6) !important;
+  }
+  
+  .stat-number {
+    color: #ffd700 !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  }
+  
+  .stat-label {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
   }
 }
