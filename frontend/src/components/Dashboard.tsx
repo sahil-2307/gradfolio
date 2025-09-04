@@ -473,36 +473,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
-        {portfolioUrl ? (
-          <div className="portfolio-status">
-            <div className="status-card active">
-              <div className="status-icon">
-                <i className="fas fa-check-circle"></i>
-              </div>
-              <h3>Portfolio Active</h3>
-              <p>Your portfolio is live and accessible</p>
-              <div className="portfolio-url">
-                <input 
-                  type="text" 
-                  value={portfolioUrl} 
-                  readOnly 
-                  className="url-input"
-                />
-                <button onClick={copyPortfolioUrl} className="copy-btn">
-                  <i className="fas fa-copy"></i>
-                </button>
-              </div>
-              <div className="portfolio-actions">
-                <button onClick={handleViewPortfolio} className="btn btn-primary">
-                  <i className="fas fa-eye"></i> View Portfolio
-                </button>
-                <button onClick={() => handleCreatePortfolio('landing_1')} className="btn btn-secondary">
-                  <i className="fas fa-edit"></i> Edit Portfolio
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
+        {!portfolioUrl && (
           <div className="portfolio-creation">
             <div className="creation-header">
               <h2>Quick Portfolio Creation</h2>
