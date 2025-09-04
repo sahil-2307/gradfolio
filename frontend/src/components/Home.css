@@ -18,9 +18,9 @@
 .dark-theme {
   --bg-primary: #1a1a2e;
   --brand-blue: #4A9EFF;
-  --text-dark: #E8F4FD;
+  --text-dark: #FFFFFF;
   --bg-card: #2d2d44;
-  --text-body: #B0C4DE;
+  --text-body: #E8F4FD;
   --button-hover: #357ABD;
   --white: #16213e;
 }
@@ -462,7 +462,7 @@ body {
 }
 
 .feature-card h3 {
-  color: #123C63 !important; /* Force dark blue text in light mode */
+  color: var(--text-dark);
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -470,15 +470,16 @@ body {
 }
 
 .feature-card p {
-  color: #4A4A4A !important; /* Force darker gray text in light mode */
+  color: var(--text-body);
   font-size: 1rem;
   line-height: 1.6;
 }
 
 /* Dark mode support for feature cards */
 .dark-theme .feature-card {
-  background: var(--white) !important;
+  background: var(--bg-card) !important;
   color: var(--text-dark) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-theme .feature-card h3 {
@@ -687,6 +688,24 @@ html.dark-theme section#testimonials {
 .project-count {
   font-size: 0.9rem;
   opacity: 0.8;
+}
+
+/* Dark mode support for service cards */
+.dark-theme .service-card {
+  background: var(--bg-card) !important;
+  color: var(--text-dark) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-theme .service-card h3 {
+  color: var(--text-dark) !important;
+}
+
+.dark-theme .service-card.primary,
+.dark-theme .service-card.secondary,
+.dark-theme .service-card.tertiary {
+  background: linear-gradient(135deg, var(--brand-blue), var(--button-hover)) !important;
+  color: var(--white) !important;
 }
 
 /* Footer */
