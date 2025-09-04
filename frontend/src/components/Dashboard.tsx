@@ -494,39 +494,37 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
           </div>
         )}
 
-        {!portfolioUrl && (
-          <div className="portfolio-creation">
-            <div className="creation-header">
-              <h2>Quick Portfolio Creation</h2>
-              <p>Get started instantly with one of these easy options</p>
-            </div>
-            
-            <div className="creation-options">
-              <div className="creation-card">
-                <div className="creation-icon">
-                  <i className="fas fa-file-upload"></i>
-                </div>
-                <h3>Upload Resume</h3>
-                <p>Upload your resume and we'll automatically create your portfolio</p>
-                <input
-                  type="file"
-                  id="resume-upload"
-                  accept=".pdf,.doc,.docx"
-                  style={{ display: 'none' }}
-                  onChange={handleResumeUpload}
-                />
-                <button 
-                  onClick={() => document.getElementById('resume-upload')?.click()}
-                  className="btn btn-primary"
-                  disabled={loading}
-                >
-                  {loading ? 'Processing...' : 'Upload Resume'}
-                </button>
-              </div>
-
-            </div>
+        <div className="portfolio-creation">
+          <div className="creation-header">
+            <h2>Quick Portfolio Creation</h2>
+            <p>Get started instantly with one of these easy options</p>
           </div>
-        )}
+          
+          <div className="creation-options">
+            <div className="creation-card">
+              <div className="creation-icon">
+                <i className="fas fa-file-upload"></i>
+              </div>
+              <h3>Upload Resume</h3>
+              <p>Upload your resume and we'll automatically create your portfolio</p>
+              <input
+                type="file"
+                id="resume-upload"
+                accept=".pdf,.doc,.docx"
+                style={{ display: 'none' }}
+                onChange={handleResumeUpload}
+              />
+              <button 
+                onClick={() => document.getElementById('resume-upload')?.click()}
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? 'Processing...' : 'Upload Resume'}
+              </button>
+            </div>
+
+          </div>
+        </div>
 
       </div>
 
