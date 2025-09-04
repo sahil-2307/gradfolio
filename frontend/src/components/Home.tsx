@@ -31,8 +31,8 @@ const Home: React.FC = () => {
   };
 
   const openPortfolioBuilder = () => {
-    // Navigate to template selector
-    window.location.href = '/templates';
+    // Navigate to login page
+    window.location.href = '/login';
   };
 
   // Render mobile-specific experience

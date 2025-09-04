@@ -112,7 +112,7 @@ useEffect(() => {
   };
 
   const openPortfolioBuilder = () => {
-    window.location.href = '/templates';
+    window.location.href = '/login';
   };
 
   return (
