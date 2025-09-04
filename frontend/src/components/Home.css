@@ -803,7 +803,7 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .hero-title h1 {
-    color: var(--text-dark) !important;
+    color: #f0f0f0 !important;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
   }
   
@@ -813,12 +813,12 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .hero-description h3 {
-    color: var(--text-dark) !important;
+    color: #e0e0e0 !important;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
   }
   
   .dark-theme .hero-description p {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
   }
   
@@ -830,22 +830,22 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .section-header h2 {
-    color: var(--text-dark) !important;
+    color: #f0f0f0 !important;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
   }
   
   .dark-theme .section-header p {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6) !important;
   }
   
   .dark-theme .feature-card h3 {
-    color: var(--text-dark) !important;
+    color: #e0e0e0 !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
   }
   
   .dark-theme .feature-card p {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
   }
   
@@ -855,12 +855,12 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .contact-left h3 {
-    color: var(--text-dark) !important;
+    color: #e0e0e0 !important;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
   }
   
   .dark-theme .contact-left p {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6) !important;
   }
   
@@ -875,17 +875,17 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .contact-label {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
   }
   
   .dark-theme .faq-section h4 {
-    color: var(--text-dark) !important;
+    color: #e0e0e0 !important;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
   }
   
   .dark-theme .faq-item {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
   }
   
@@ -905,7 +905,7 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .project-item-small {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
     background: rgba(26, 26, 46, 0.6) !important;
   }
@@ -916,7 +916,7 @@ html.dark-theme section#testimonials {
   }
   
   .dark-theme .stat-label {
-    color: var(--text-body) !important;
+    color: #d0d0d0 !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
   }
   
