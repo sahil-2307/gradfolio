@@ -99,6 +99,238 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+/* LinkedIn Header */
+.linkedin-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.linkedin-title h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.linkedin-title p {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.95rem;
+}
+
+/* LinkedIn Preview */
+.linkedin-preview {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.linkedin-personal {
+  margin-bottom: 1.5rem;
+}
+
+.personal-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.personal-info p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.9;
+}
+
+.personal-info a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.personal-info a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Summary Stats */
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* About Preview */
+.about-preview {
+  margin-bottom: 1.5rem;
+}
+
+.about-preview h5 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.9;
+}
+
+.about-preview p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+/* Skills Preview */
+.skills-preview h5 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.9;
+}
+
+.skill-tags-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skill-tag.more {
+  background: rgba(255, 255, 255, 0.1);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* LinkedIn Actions */
+.linkedin-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.linkedin-actions .btn {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* LinkedIn Import Prompt */
+.linkedin-import-prompt {
+  margin-bottom: 2rem;
+}
+
+.import-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 2px dashed #0077b5;
+  transition: all 0.3s ease;
+}
+
+.import-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.import-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.import-card h3 {
+  margin: 0 0 1rem 0;
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.import-card p {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-body);
+  line-height: 1.6;
+}
+
+.btn-linkedin {
+  background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.btn-linkedin:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 119, 181, 0.3);
+}
+
+.btn-linkedin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .linkedin-actions {
   display: flex;
   gap: 1rem;
@@ -479,6 +711,25 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .summary-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .linkedin-actions {
+    flex-direction: column;
+  }
+  
+  .linkedin-actions .btn {
+    min-width: auto;
+  }
+  
+  .linkedin-preview {
+    padding: 1rem;
+  }
+  
+  .skill-tags-preview {
+    justify-content: center;
+  }
   .dashboard-header {
     flex-direction: column;
     gap: 1rem;
