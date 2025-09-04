@@ -187,7 +187,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       setMessage('Opening LinkedIn authentication...');
       
       // Try multiple approaches for better reliability
-      let authWindow;
+      let authWindow: Window | null = null;
       
       // Approach 1: Try popup with specific parameters for better compatibility
       try {
@@ -198,6 +198,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         );
       } catch (popupError) {
         console.warn('Popup creation failed:', popupError);
+        authWindow = null;
       }
       
       if (!authWindow || authWindow.closed) {
