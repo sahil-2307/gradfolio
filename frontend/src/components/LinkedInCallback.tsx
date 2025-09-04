@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { LinkedInService } from '../services/linkedinService';
 import './LinkedInCallback.css';
 
 const LinkedInCallback: React.FC = () => {
@@ -16,6 +17,9 @@ const LinkedInCallback: React.FC = () => {
       
       const error = searchParams.get('error');
       const errorMessage = searchParams.get('message');
+      const success = searchParams.get('success');
+      const username = searchParams.get('username');
+      const linkedinData = searchParams.get('linkedinData');
 
       if (error) {
         console.log('LinkedIn callback error:', error, errorMessage);
@@ -25,11 +29,35 @@ const LinkedInCallback: React.FC = () => {
         return;
       }
 
-      // If no error, show success and redirect
-      console.log('LinkedIn callback successful, redirecting to dashboard');
-      setStatus('success');
-      setMessage('LinkedIn data imported successfully! Redirecting to portfolio creation...');
-      setTimeout(() => navigate('/dashboard'), 2000);
+      if (success === 'true' && username && linkedinData) {
+        try {
+          // Parse and store the LinkedIn data
+          const parsedData = JSON.parse(decodeURIComponent(linkedinData));
+          console.log('Storing LinkedIn data for user:', username);
+          
+          const storeResult = await LinkedInService.storeLinkedInData(username, parsedData);
+          
+          if (storeResult.success) {
+            setStatus('success');
+            setMessage('LinkedIn data imported successfully! You can now view your data or create a portfolio.');
+            setTimeout(() => navigate('/dashboard'), 3000);
+          } else {
+            throw new Error(storeResult.error || 'Failed to store LinkedIn data');
+          }
+        } catch (error) {
+          console.error('Error processing LinkedIn data:', error);
+          setStatus('error');
+          setMessage('Failed to process LinkedIn data. Please try again.');
+          setTimeout(() => navigate('/dashboard'), 5000);
+        }
+        return;
+      }
+
+      // If no error and no success data, something went wrong
+      console.log('LinkedIn callback completed without clear success or error');
+      setStatus('error');
+      setMessage('LinkedIn import completed but no data was received. Please try again.');
+      setTimeout(() => navigate('/dashboard'), 5000);
     };
 
     processLinkedInCallback();

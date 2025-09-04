@@ -8,6 +8,7 @@ import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import LinkedInCallback from './components/LinkedInCallback';
+import LinkedInPreview from './components/LinkedInPreview';
 import BrowseProfiles from './components/BrowseProfiles';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import PaymentSuccess from './components/PaymentSuccess';
@@ -134,6 +135,14 @@ function App() {
           <Route 
             path="/dashboard/linkedin-callback" 
             element={<LinkedInCallback />}
+          />
+          <Route 
+            path="/linkedin-preview" 
+            element={
+              isAuthenticated ? 
+                <LinkedInPreview /> : 
+                <Navigate to="/login" replace />
+            } 
           />
           <Route 
             path="/privacy" 

@@ -130,10 +130,11 @@ export default async function handler(req, res) {
     console.log('LinkedIn data transformed for user:', username);
     console.log('Transformed portfolio data:', JSON.stringify(portfolioData, null, 2));
 
-    // Redirect to template admin with pre-filled data
-    const adminUrl = `/landing_1/admin.html?auth=true&username=${username}&linkedinData=${encodeURIComponent(JSON.stringify(portfolioData))}`;
+    // Store the LinkedIn data for later use instead of redirecting to admin.html
+    // We'll pass it as a query parameter to the callback page which will handle storage
+    const callbackUrl = `/dashboard/linkedin-callback?success=true&username=${username}&linkedinData=${encodeURIComponent(JSON.stringify(portfolioData))}`;
     
-    res.redirect(adminUrl);
+    res.redirect(callbackUrl);
 
   } catch (error) {
     console.error('LinkedIn callback error:', error);

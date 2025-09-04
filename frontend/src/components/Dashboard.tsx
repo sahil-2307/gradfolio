@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LinkedInService } from '../services/linkedinService';
 import './Dashboard.css';
 
 interface DashboardProps {
@@ -7,14 +9,25 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
+  const navigate = useNavigate();
   const [portfolioUrl, setPortfolioUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [hasLinkedInData, setHasLinkedInData] = useState(false);
 
   useEffect(() => {
     // Check if user has a portfolio
     checkExistingPortfolio();
+    // Check if user has LinkedIn data
+    checkLinkedInData();
   }, [user]);
+
+  const checkLinkedInData = async () => {
+    if (user?.username) {
+      const hasData = await LinkedInService.hasLinkedInData(user.username);
+      setHasLinkedInData(hasData);
+    }
+  };
 
   const checkExistingPortfolio = async () => {
     try {
@@ -165,6 +178,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     }
   };
 
+  const handleCreatePortfolioWithLinkedIn = () => {
+    // Navigate to templates page with LinkedIn data flag
+    navigate('/templates?source=linkedin');
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -178,6 +196,27 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       </div>
 
       <div className="dashboard-content">
+        {/* LinkedIn Data Section */}
+        {hasLinkedInData && (
+          <div className="linkedin-data-section">
+            <div className="status-card linkedin">
+              <div className="status-icon">
+                <i className="fab fa-linkedin"></i>
+              </div>
+              <h3>LinkedIn Data Available</h3>
+              <p>Your LinkedIn profile has been imported and is ready to use</p>
+              <div className="linkedin-actions">
+                <button onClick={() => navigate('/linkedin-preview')} className="btn btn-primary">
+                  <i className="fas fa-eye"></i> View LinkedIn Data
+                </button>
+                <button onClick={() => handleCreatePortfolioWithLinkedIn()} className="btn btn-secondary">
+                  <i className="fas fa-magic"></i> Create Portfolio from LinkedIn
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {portfolioUrl ? (
           <div className="portfolio-status">
             <div className="status-card active">

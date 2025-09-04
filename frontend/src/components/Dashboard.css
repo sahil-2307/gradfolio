@@ -70,6 +70,69 @@
   margin: 0 auto;
 }
 
+/* LinkedIn Data Section */
+.linkedin-data-section {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.status-card.linkedin {
+  background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+  color: white;
+  border: none;
+}
+
+.status-card.linkedin .status-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.status-card.linkedin .status-icon i {
+  color: white;
+}
+
+.status-card.linkedin h3 {
+  color: white;
+}
+
+.status-card.linkedin p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.linkedin-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.linkedin-actions .btn {
+  flex: 1;
+  min-width: 200px;
+}
+
+.linkedin-actions .btn-primary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.linkedin-actions .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.linkedin-actions .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.linkedin-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
 .portfolio-status {
   margin-bottom: 4rem;
 }
