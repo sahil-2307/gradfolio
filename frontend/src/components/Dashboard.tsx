@@ -61,10 +61,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         setPortfolioUrl(portfolioUrl);
       } else {
         console.log('No portfolio found for user:', user.username);
+        // Ensure portfolioUrl is empty so resume section shows
+        setPortfolioUrl('');
       }
     } catch (error) {
       console.log('Error checking portfolio:', error);
       console.log('No existing portfolio found');
+      // Ensure portfolioUrl is empty so resume section shows
+      setPortfolioUrl('');
     }
   };
 
