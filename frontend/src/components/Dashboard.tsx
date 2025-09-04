@@ -119,14 +119,33 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
       const result = await response.json();
 
+      console.log('Resume parser response:', result);
+      
       if (result.success) {
-        setMessage('Resume processed successfully! Creating your portfolio...');
+        console.log('Parsed resume data:', JSON.stringify(result.data, null, 2));
+        setMessage('Resume processed successfully! Here\'s what we extracted:');
+        
+        // Display the parsed data in console and message
+        const summary = `
+Name: ${result.data.personal?.fullName || 'Not found'}
+Email: ${result.data.personal?.email || 'Not found'}
+Phone: ${result.data.personal?.phone || 'Not found'}
+Experience: ${result.data.experience?.length || 0} entries
+Education: ${result.data.education?.length || 0} entries
+Skills: ${result.data.skills?.technical?.length || 0} technical skills
+Projects: ${result.data.projects?.length || 0} projects
+        `;
+        
+        console.log('Resume parsing summary:', summary);
+        alert(`Resume parsed successfully!\n${summary}`);
+        
         // Redirect to template admin with pre-filled data
         const adminUrl = `/landing_1/admin.html?auth=true&username=${user.username}&resumeData=${encodeURIComponent(JSON.stringify(result.data))}`;
         setTimeout(() => {
           window.location.href = adminUrl;
-        }, 1500);
+        }, 3000);
       } else {
+        console.error('Resume parsing failed:', result);
         setMessage(result.message || 'Failed to process resume. Please try again.');
         setTimeout(() => setMessage(''), 5000);
       }
