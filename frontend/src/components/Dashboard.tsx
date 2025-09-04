@@ -137,7 +137,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const handleLinkedInLogin = async () => {
     console.log('LinkedIn Connect clicked');
     setLoading(true);
-    setMessage('Connecting to LinkedIn...');
+    setMessage('Checking LinkedIn service availability...');
 
     try {
       // Create LinkedIn OAuth URL
@@ -155,10 +155,24 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       });
 
       if (!clientId) {
-        setMessage('LinkedIn integration not configured. For now, you can use the test data option below.');
+        setMessage('LinkedIn integration not configured. Please use the sample data option below to see how it works.');
         setTimeout(() => setMessage(''), 5000);
         setLoading(false);
         return;
+      }
+
+      // First, check if LinkedIn OAuth endpoint is accessible
+      setMessage('Testing LinkedIn connectivity...');
+      
+      try {
+        const testResponse = await fetch('https://www.linkedin.com/oauth/v2/authorization', {
+          method: 'HEAD',
+          mode: 'no-cors'
+        });
+        console.log('LinkedIn connectivity test completed');
+      } catch (connectivityError) {
+        console.warn('LinkedIn connectivity test failed:', connectivityError);
+        setMessage('LinkedIn service appears to be experiencing issues. You can try connecting anyway or use sample data.');
       }
 
       const linkedinUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
@@ -169,46 +183,94 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         origin: window.location.origin,
         currentUrl: window.location.href
       });
-      console.log('Attempting LinkedIn OAuth...');
       
-      // Try to open in a new window first to avoid navigation issues
-      const popup = window.open(linkedinUrl, 'linkedin-auth', 'width=600,height=600,scrollbars=yes,resizable=yes');
+      setMessage('Opening LinkedIn authentication...');
       
-      if (!popup) {
-        // Fallback to direct redirect if popup is blocked
-        setMessage('Popup blocked. Redirecting to LinkedIn...');
-        setTimeout(() => {
-          window.location.href = linkedinUrl;
-        }, 1000);
-      } else {
-        // Monitor popup for completion
-        const checkClosed = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(checkClosed);
-            setLoading(false);
-            setMessage('LinkedIn connection cancelled or completed.');
-            setTimeout(() => setMessage(''), 3000);
-            // Refresh data to check if LinkedIn data was added
-            checkLinkedInData();
-          }
-        }, 1000);
-        
-        // Auto-close popup after 5 minutes
-        setTimeout(() => {
-          if (!popup.closed) {
-            popup.close();
-            clearInterval(checkClosed);
-            setLoading(false);
-            setMessage('LinkedIn connection timed out. Please try again.');
-            setTimeout(() => setMessage(''), 5000);
-          }
-        }, 300000);
+      // Try multiple approaches for better reliability
+      let authWindow;
+      
+      // Approach 1: Try popup with specific parameters for better compatibility
+      try {
+        authWindow = window.open(
+          linkedinUrl, 
+          'linkedin-oauth',
+          'width=500,height=600,left=' + (window.screen.width / 2 - 250) + ',top=' + (window.screen.height / 2 - 300) + ',scrollbars=yes,resizable=yes,status=yes,location=yes'
+        );
+      } catch (popupError) {
+        console.warn('Popup creation failed:', popupError);
       }
+      
+      if (!authWindow || authWindow.closed) {
+        // Approach 2: Direct redirect with user confirmation
+        setMessage('Popup blocked or failed. Click OK to redirect to LinkedIn authentication.');
+        const userConfirmed = window.confirm('LinkedIn authentication requires opening a new page. Click OK to continue or Cancel to use sample data instead.');
+        
+        if (userConfirmed) {
+          setMessage('Redirecting to LinkedIn...');
+          setTimeout(() => {
+            window.location.href = linkedinUrl;
+          }, 1000);
+        } else {
+          setLoading(false);
+          setMessage('LinkedIn connection cancelled. You can use sample data to see how the feature works.');
+          setTimeout(() => setMessage(''), 5000);
+        }
+        return;
+      }
+      
+      // Monitor popup for completion with better error handling
+      let checkInterval: NodeJS.Timeout;
+      let timeoutId: NodeJS.Timeout;
+      
+      const cleanup = () => {
+        if (checkInterval) clearInterval(checkInterval);
+        if (timeoutId) clearTimeout(timeoutId);
+      };
+      
+      checkInterval = setInterval(() => {
+        try {
+          if (authWindow.closed) {
+            cleanup();
+            setLoading(false);
+            setMessage('LinkedIn authentication window closed. Checking for imported data...');
+            
+            // Check if LinkedIn data was successfully imported
+            setTimeout(() => {
+              checkLinkedInData();
+              setMessage('');
+            }, 2000);
+          } else {
+            // Check if we can access the window URL (same origin)
+            try {
+              const currentUrl = authWindow.location.href;
+              if (currentUrl.includes('/dashboard')) {
+                // User was redirected back to dashboard, close popup
+                authWindow.close();
+              }
+            } catch (e) {
+              // Cross-origin error is expected during OAuth flow
+            }
+          }
+        } catch (error) {
+          console.warn('Error monitoring auth window:', error);
+        }
+      }, 1000);
+      
+      // Auto-close after 10 minutes with better messaging
+      timeoutId = setTimeout(() => {
+        cleanup();
+        if (authWindow && !authWindow.closed) {
+          authWindow.close();
+        }
+        setLoading(false);
+        setMessage('LinkedIn authentication timed out. This might be due to LinkedIn service issues. Try again later or use sample data.');
+        setTimeout(() => setMessage(''), 8000);
+      }, 600000);
       
     } catch (error) {
       console.error('LinkedIn login error:', error);
-      setMessage('LinkedIn service temporarily unavailable. You can use the test data option for now.');
-      setTimeout(() => setMessage(''), 5000);
+      setMessage('LinkedIn service is currently experiencing issues. Please try again later or use the sample data option to see how the feature works.');
+      setTimeout(() => setMessage(''), 8000);
       setLoading(false);
     }
   };
@@ -400,11 +462,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                 <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
                   <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
                 </button>
-                <div className="divider-text">or</div>
+                <div className="divider-text">or try sample data first</div>
                 <button onClick={addTestLinkedInData} className="btn btn-outline">
                   <i className="fas fa-flask"></i> Use Sample Data
                 </button>
-                <p className="helper-text">Use sample data to see how your LinkedIn information would appear</p>
+                <p className="helper-text">LinkedIn experiencing issues? Use sample data to see how your information would appear, then try connecting later</p>
               </div>
             </div>
           </div>
