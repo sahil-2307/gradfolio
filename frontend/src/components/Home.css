@@ -796,6 +796,130 @@ html.dark-theme section#testimonials {
 }
 
 @media (max-width: 768px) {
+  /* Mobile Dark Mode Text Visibility Fixes */
+  .dark-theme .home {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-dark) !important;
+  }
+  
+  .dark-theme .hero-title h1 {
+    color: var(--text-dark) !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .hero-description h2 {
+    color: var(--brand-blue) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .hero-description h3 {
+    color: var(--text-dark) !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .hero-description p {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .my-story-btn {
+    color: var(--brand-blue) !important;
+    border-color: var(--brand-blue) !important;
+    background: rgba(26, 26, 46, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+  
+  .dark-theme .section-header h2 {
+    color: var(--text-dark) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .section-header p {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .feature-card h3 {
+    color: var(--text-dark) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .feature-card p {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .contact-left h2 {
+    color: var(--brand-blue) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .contact-left h3 {
+    color: var(--text-dark) !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .contact-left p {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .contact-email {
+    color: var(--brand-blue) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .contact-number {
+    color: var(--brand-blue) !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .contact-label {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .faq-section h4 {
+    color: var(--text-dark) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .faq-item {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .footer-brand {
+    color: var(--white) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .footer-links a {
+    color: var(--white) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .dark-theme .project-card-preview h5 {
+    color: var(--brand-blue) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .project-item-small {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+    background: rgba(26, 26, 46, 0.6) !important;
+  }
+  
+  .dark-theme .stat-number {
+    color: var(--brand-blue) !important;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .dark-theme .stat-label {
+    color: var(--text-body) !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6) !important;
+  }
+  
   .navbar {
     padding: 1rem;
     flex-wrap: wrap;

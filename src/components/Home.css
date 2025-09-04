@@ -974,8 +974,17 @@
   }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Responsive Design - Mobile Dark Mode Fixes */
+@media screen and (max-width: 768px) {
+  /* Force dark mode text visibility with highest specificity */
+  .home {
+    background: #1a1a2e !important;
+    color: white !important;
+  }
+  
+  .home *:not(.brand-logo):not(.cta-nav-button):not(.service-card.primary *) {
+    color: inherit !important;
+  }
   .navbar {
     padding: 1rem 1.5rem;
   }
@@ -994,44 +1003,51 @@
     padding: 2rem 1.5rem;
   }
   
-  .hero-title h1 {
-    font-size: 3rem;
+  .home .hero-title h1,
+  .home .hero-section .hero-title h1 {
+    font-size: 3rem !important;
     color: white !important;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8) !important;
   }
   
-  .hero-description h2 {
+  .home .hero-description h2,
+  .home .hero-section .hero-description h2 {
     color: #ffd700 !important;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
   }
   
-  .hero-description h3 {
+  .home .hero-description h3,
+  .home .hero-section .hero-description h3 {
     color: white !important;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
   }
   
-  .hero-description p {
+  .home .hero-description p,
+  .home .hero-section .hero-description p {
     color: rgba(255, 255, 255, 0.9) !important;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
   }
   
-  .my-story-btn {
+  .home .my-story-btn,
+  .home .hero-section .my-story-btn {
     color: #ffd700 !important;
     border-color: rgba(255, 215, 0, 0.6) !important;
     background: rgba(26, 26, 46, 0.8) !important;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px) !important;
   }
   
-  .section-header h2 {
+  .home .section-header h2,
+  .home .about-section .section-header h2 {
     background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
   }
   
-  .section-header p {
+  .home .section-header p,
+  .home .about-section .section-header p {
     color: rgba(255, 255, 255, 0.9) !important;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6) !important;
   }
   
   .feature-card h3 {
