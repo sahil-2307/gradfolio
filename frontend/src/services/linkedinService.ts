@@ -45,24 +45,39 @@ export class LinkedInService {
       // Store in localStorage for immediate access
       localStorage.setItem(`linkedin_data_${username}`, JSON.stringify(data));
       
-      // Also store in Supabase for persistence
-      const user = await supabase.auth.getUser();
-      if (user.data.user) {
-        const { error } = await supabase
-          .from('user_linkedin_data')
-          .upsert({
-            user_id: user.data.user.id,
-            username: username,
-            linkedin_data: data,
-            updated_at: new Date().toISOString()
-          }, {
-            onConflict: 'user_id'
-          });
+      // Try to store in Supabase for persistence, but don't fail if table doesn't exist
+      try {
+        const user = await supabase.auth.getUser();
+        if (user.data.user) {
+          // First check if the table exists by doing a simple select
+          const { error: checkError } = await supabase
+            .from('user_linkedin_data')
+            .select('id')
+            .limit(1);
 
-        if (error) {
-          console.error('Error storing LinkedIn data in Supabase:', error);
-          // Don't fail if Supabase fails, localStorage is sufficient
+          // If table doesn't exist, skip Supabase storage
+          if (checkError && checkError.code === 'PGRST106') {
+            console.log('user_linkedin_data table not found, using localStorage only');
+          } else if (!checkError) {
+            // Table exists, try to upsert
+            const { error } = await supabase
+              .from('user_linkedin_data')
+              .upsert({
+                user_id: user.data.user.id,
+                username: username,
+                linkedin_data: data,
+                updated_at: new Date().toISOString()
+              }, {
+                onConflict: 'user_id'
+              });
+
+            if (error) {
+              console.error('Error storing LinkedIn data in Supabase:', error);
+            }
+          }
         }
+      } catch (supabaseError) {
+        console.log('Supabase storage failed, continuing with localStorage only:', supabaseError);
       }
       
       return { success: true };
@@ -86,20 +101,24 @@ export class LinkedInService {
         }
       }
 
-      // Fall back to Supabase
-      const user = await supabase.auth.getUser();
-      if (user.data.user) {
-        const { data: dbData, error } = await supabase
-          .from('user_linkedin_data')
-          .select('linkedin_data')
-          .eq('user_id', user.data.user.id)
-          .single();
+      // Try to fall back to Supabase, but handle table not existing
+      try {
+        const user = await supabase.auth.getUser();
+        if (user.data.user) {
+          const { data: dbData, error } = await supabase
+            .from('user_linkedin_data')
+            .select('linkedin_data')
+            .eq('user_id', user.data.user.id)
+            .single();
 
-        if (!error && dbData) {
-          // Store in localStorage for next time
-          localStorage.setItem(`linkedin_data_${username}`, JSON.stringify(dbData.linkedin_data));
-          return { success: true, data: dbData.linkedin_data };
+          if (!error && dbData) {
+            // Store in localStorage for next time
+            localStorage.setItem(`linkedin_data_${username}`, JSON.stringify(dbData.linkedin_data));
+            return { success: true, data: dbData.linkedin_data };
+          }
         }
+      } catch (supabaseError) {
+        console.log('Supabase fetch failed, no fallback available:', supabaseError);
       }
       
       return { success: false, error: 'No LinkedIn data found' };
@@ -118,16 +137,20 @@ export class LinkedInService {
         return true;
       }
 
-      // Check Supabase
-      const user = await supabase.auth.getUser();
-      if (user.data.user) {
-        const { data, error } = await supabase
-          .from('user_linkedin_data')
-          .select('id')
-          .eq('user_id', user.data.user.id)
-          .single();
+      // Try to check Supabase, but don't fail if table doesn't exist
+      try {
+        const user = await supabase.auth.getUser();
+        if (user.data.user) {
+          const { data, error } = await supabase
+            .from('user_linkedin_data')
+            .select('id')
+            .eq('user_id', user.data.user.id)
+            .single();
 
-        return !error && !!data;
+          return !error && !!data;
+        }
+      } catch (supabaseError) {
+        console.log('Supabase check failed, using localStorage only:', supabaseError);
       }
       
       return false;
@@ -143,18 +166,21 @@ export class LinkedInService {
       // Clear localStorage
       localStorage.removeItem(`linkedin_data_${username}`);
       
-      // Clear Supabase
-      const user = await supabase.auth.getUser();
-      if (user.data.user) {
-        const { error } = await supabase
-          .from('user_linkedin_data')
-          .delete()
-          .eq('user_id', user.data.user.id);
+      // Try to clear from Supabase, but don't fail if table doesn't exist
+      try {
+        const user = await supabase.auth.getUser();
+        if (user.data.user) {
+          const { error } = await supabase
+            .from('user_linkedin_data')
+            .delete()
+            .eq('user_id', user.data.user.id);
 
-        if (error) {
-          console.error('Error clearing LinkedIn data from Supabase:', error);
-          // Don't fail if Supabase fails
+          if (error) {
+            console.error('Error clearing LinkedIn data from Supabase:', error);
+          }
         }
+      } catch (supabaseError) {
+        console.log('Supabase clear failed, localStorage cleared successfully:', supabaseError);
       }
       
       return { success: true };
