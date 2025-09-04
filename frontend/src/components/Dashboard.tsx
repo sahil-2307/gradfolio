@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LinkedInService } from '../services/linkedinService';
+import { LinkedInService, LinkedInData } from '../services/linkedinService';
+import LinkedInPreview from './LinkedInPreview';
 import './Dashboard.css';
 
 interface DashboardProps {
@@ -283,72 +284,80 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   // Test function to add sample LinkedIn data
   const addTestLinkedInData = async () => {
-    const testData = {
+    const testData: LinkedInData = {
       personal: {
-        fullName: "Sahil Bhujbal",
-        email: "sahil@example.com",
-        phone: "+1234567890",
-        linkedin: "https://linkedin.com/in/sahilbhujbal",
-        github: "https://github.com/sahil-2307",
-        website: "https://sahilbhujbal.dev"
+        fullName: 'Sahil Bhujbal',
+        email: 'sahil@example.com',
+        phone: '+1 (555) 123-4567',
+        linkedin: 'https://linkedin.com/in/sahilbhujbal',
+        github: 'https://github.com/sahil-2307',
+        website: 'https://sahilbhujbal.dev'
       },
       about: {
-        paragraph1: "Passionate Computer Science graduate with expertise in full-stack development and AI/ML technologies.",
-        paragraph2: "Experienced in building scalable web applications and working with modern frameworks."
+        paragraph1: 'Passionate Computer Science graduate with expertise in full-stack development and AI/ML technologies.',
+        paragraph2: 'Experienced in building scalable web applications and working with modern development frameworks.'
       },
       experience: [
         {
-          position: "Software Engineer",
-          company: "Tech Corp",
-          duration: "2023 - Present",
-          description: "Developing scalable web applications using React and Node.js"
+          position: 'Full Stack Developer',
+          company: 'Tech Solutions Inc',
+          duration: '2023 - Present',
+          description: 'Developed and maintained web applications using React, Node.js, and MongoDB. Led a team of 3 developers on multiple client projects.'
         },
         {
-          position: "Frontend Developer Intern",
-          company: "StartupXYZ",
-          duration: "2022 - 2023",
-          description: "Built responsive user interfaces and improved user experience"
+          position: 'Software Engineering Intern',
+          company: 'StartupXYZ',
+          duration: '2022 - 2023',
+          description: 'Built responsive web interfaces and REST APIs. Improved application performance by 40% through code optimization.'
         }
       ],
       education: [
         {
-          degree: "Bachelor of Computer Science",
-          institution: "University of Technology",
-          year: "2023",
-          description: "Graduated with honors, specialized in software engineering"
+          degree: 'Bachelor of Science in Computer Science',
+          institution: 'University of Technology',
+          year: '2023',
+          description: 'Graduated Magna Cum Laude with focus on Software Engineering and Machine Learning'
         }
       ],
       skills: {
-        technical: ["JavaScript", "React", "Node.js", "Python", "MongoDB", "AWS", "Docker", "Git"],
-        soft: ["Leadership", "Communication", "Problem Solving", "Team Collaboration"]
+        technical: ['JavaScript', 'React', 'Node.js', 'Python', 'MongoDB', 'AWS', 'Docker', 'Git'],
+        soft: ['Leadership', 'Problem Solving', 'Team Collaboration', 'Communication']
       },
       projects: [
         {
-          title: "E-commerce Platform",
-          description: "Full-stack e-commerce solution with payment integration",
-          technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-          link: "https://github.com/sahil-2307/ecommerce"
+          title: 'E-commerce Platform',
+          description: 'Full-stack e-commerce solution with payment integration and admin dashboard',
+          technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+          link: 'https://github.com/sahil-2307/ecommerce'
         },
         {
-          title: "Portfolio Builder",
-          description: "Automated portfolio generation tool for students",
-          technologies: ["React", "TypeScript", "Supabase"],
-          link: "https://github.com/sahil-2307/gradfolio"
+          title: 'AI Chat Application',
+          description: 'Real-time chat application with AI-powered responses using OpenAI API',
+          technologies: ['React', 'Socket.io', 'OpenAI', 'Express'],
+          link: 'https://github.com/sahil-2307/ai-chat'
         }
       ],
       achievements: [
-        "Dean's List for Academic Excellence",
-        "Winner of University Hackathon 2022",
-        "Published research paper on AI applications"
+        'Winner of University Hackathon 2023',
+        'Published research paper on Machine Learning applications',
+        'Contributed to 5+ open source projects'
       ]
     };
 
+    console.log('Adding test LinkedIn data for user:', user.username);
     const result = await LinkedInService.storeLinkedInData(user.username, testData);
+    console.log('Store result:', result);
+    
     if (result.success) {
       setHasLinkedInData(true);
       setLinkedInData(testData);
       setMessage('Test LinkedIn data added successfully!');
+      console.log('LinkedIn data state updated successfully');
       setTimeout(() => setMessage(''), 3000);
+    } else {
+      console.error('Failed to store LinkedIn data:', result.error);
+      setMessage('Failed to add test data. Please try again.');
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
