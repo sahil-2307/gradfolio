@@ -503,100 +503,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                 </button>
               </div>
 
-              <div className="creation-card">
-                <div className="creation-icon">
-                  <i className="fas fa-palette"></i>
-                </div>
-                <h3>Start from Scratch</h3>
-                <p>Create your portfolio manually with our easy-to-use templates</p>
-                <button 
-                  onClick={() => navigate('/templates')}
-                  className="btn btn-secondary"
-                  disabled={loading}
-                >
-                  Choose Template
-                </button>
-              </div>
             </div>
           </div>
         )}
 
-        <div className="templates-section">
-          <h2>Portfolio Templates</h2>
-          <div className="templates-grid">
-            <div className="template-card">
-              <div className="template-preview modern-preview">
-                <div className="preview-content">
-                  <h4>Modern Professional</h4>
-                  <p>Clean, dark theme perfect for developers</p>
-                </div>
-              </div>
-              <div className="template-actions">
-                <button 
-                  onClick={() => window.open('https://gradfolio-previews.s3.amazonaws.com/modern/preview.html', '_blank')}
-                  className="btn btn-outline"
-                >
-                  Preview
-                </button>
-                <button 
-                  onClick={() => handleCreatePortfolio('landing_1')}
-                  className="btn btn-primary"
-                >
-                  {portfolioUrl ? 'Edit' : 'Create'}
-                </button>
-              </div>
-            </div>
-
-            <div className="template-card">
-              <div className="template-preview creative-preview">
-                <div className="preview-content">
-                  <h4>Creative Portfolio</h4>
-                  <p>Vibrant design for creative professionals</p>
-                </div>
-              </div>
-              <div className="template-actions">
-                <button 
-                  onClick={() => window.open('https://gradfolio-previews.s3.amazonaws.com/creative/preview.html', '_blank')}
-                  className="btn btn-outline"
-                >
-                  Preview
-                </button>
-                <button 
-                  onClick={() => handleCreatePortfolio('landing_2')}
-                  className="btn btn-primary"
-                >
-                  {portfolioUrl ? 'Switch Template' : 'Create'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="features-section">
-          <h2>Features</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <i className="fas fa-link"></i>
-              <h4>Custom URL</h4>
-              <p>Get your personalized portfolio URL</p>
-            </div>
-            <div className="feature-card">
-              <i className="fas fa-palette"></i>
-              <h4>Customizable</h4>
-              <p>Full control over content and styling</p>
-            </div>
-            <div className="feature-card">
-              <i className="fas fa-mobile-alt"></i>
-              <h4>Responsive</h4>
-              <p>Works perfectly on all devices</p>
-            </div>
-            <div className="feature-card">
-              <i className="fas fa-download"></i>
-              <h4>Download</h4>
-              <p>Export your portfolio source code</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {message && (
