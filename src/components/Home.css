@@ -786,20 +786,21 @@
   color: #1a1a2e;
   transform: scale(1.05);
   z-index: 2;
+  border: 2px solid rgba(255, 215, 0, 0.5);
 }
 
 .service-card.secondary {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  color: #1a1a2e;
-  transform: scale(1.05);
-  z-index: 2;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(20px);
 }
 
 .service-card.tertiary {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  color: #1a1a2e;
-  transform: scale(1.05);
-  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
 }
 
 .service-card::before {
@@ -822,11 +823,17 @@
   left: 100%;
 }
 
-/* .service-card.secondary:hover,
+.service-card.secondary:hover {
+  border-color: rgba(255, 215, 0, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-10px) scale(1.02);
+}
+
 .service-card.tertiary:hover {
-  border-color: rgba(255, 215, 0, 0.5);
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%);
-} */
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-10px) scale(1.02);
+}
 
 .service-icon {
   font-size: 3.5rem;
