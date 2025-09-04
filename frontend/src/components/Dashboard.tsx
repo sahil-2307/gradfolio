@@ -14,6 +14,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [hasLinkedInData, setHasLinkedInData] = useState(false);
+  const [linkedInData, setLinkedInData] = useState<any>(null);
 
   useEffect(() => {
     // Check if user has a portfolio
@@ -26,6 +27,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     if (user?.username) {
       const hasData = await LinkedInService.hasLinkedInData(user.username);
       setHasLinkedInData(hasData);
+      
+      if (hasData) {
+        // Fetch the actual LinkedIn data for preview
+        const result = await LinkedInService.getLinkedInData(user.username);
+        if (result.success && result.data) {
+          setLinkedInData(result.data);
+        }
+      }
     }
   };
 
@@ -197,22 +206,102 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
       <div className="dashboard-content">
         {/* LinkedIn Data Section */}
-        {hasLinkedInData && (
+        {hasLinkedInData && linkedInData && (
           <div className="linkedin-data-section">
             <div className="status-card linkedin">
-              <div className="status-icon">
-                <i className="fab fa-linkedin"></i>
+              <div className="linkedin-header">
+                <div className="status-icon">
+                  <i className="fab fa-linkedin"></i>
+                </div>
+                <div className="linkedin-title">
+                  <h3>LinkedIn Data Available</h3>
+                  <p>Your LinkedIn profile has been imported and is ready to use</p>
+                </div>
               </div>
-              <h3>LinkedIn Data Available</h3>
-              <p>Your LinkedIn profile has been imported and is ready to use</p>
+              
+              {/* LinkedIn Data Preview */}
+              <div className="linkedin-preview">
+                <div className="linkedin-personal">
+                  <div className="personal-info">
+                    <h4><i className="fas fa-user"></i> {linkedInData.personal?.fullName || 'Name not available'}</h4>
+                    <p><i className="fas fa-envelope"></i> {linkedInData.personal?.email || 'Email not available'}</p>
+                    {linkedInData.personal?.linkedin && (
+                      <p><i className="fab fa-linkedin"></i> 
+                        <a href={linkedInData.personal.linkedin} target="_blank" rel="noopener noreferrer">
+                          LinkedIn Profile
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="linkedin-summary">
+                  <div className="summary-stats">
+                    <div className="stat-item">
+                      <span className="stat-number">{linkedInData.experience?.length || 0}</span>
+                      <span className="stat-label">Experience</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{linkedInData.education?.length || 0}</span>
+                      <span className="stat-label">Education</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{(linkedInData.skills?.technical?.length || 0) + (linkedInData.skills?.soft?.length || 0)}</span>
+                      <span className="stat-label">Skills</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{linkedInData.projects?.length || 0}</span>
+                      <span className="stat-label">Projects</span>
+                    </div>
+                  </div>
+                  
+                  {linkedInData.about?.paragraph1 && (
+                    <div className="about-preview">
+                      <h5><i className="fas fa-info-circle"></i> About</h5>
+                      <p>{linkedInData.about.paragraph1.substring(0, 200)}{linkedInData.about.paragraph1.length > 200 ? '...' : ''}</p>
+                    </div>
+                  )}
+                  
+                  {linkedInData.skills?.technical?.length > 0 && (
+                    <div className="skills-preview">
+                      <h5><i className="fas fa-code"></i> Top Skills</h5>
+                      <div className="skill-tags-preview">
+                        {linkedInData.skills.technical.slice(0, 6).map((skill: string, index: number) => (
+                          <span key={index} className="skill-tag">{skill}</span>
+                        ))}
+                        {linkedInData.skills.technical.length > 6 && (
+                          <span className="skill-tag more">+{linkedInData.skills.technical.length - 6} more</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
               <div className="linkedin-actions">
-                <button onClick={() => navigate('/linkedin-preview')} className="btn btn-primary">
-                  <i className="fas fa-eye"></i> View LinkedIn Data
+                <button onClick={() => navigate('/linkedin-preview')} className="btn btn-outline">
+                  <i className="fas fa-eye"></i> View Full Data
                 </button>
-                <button onClick={() => handleCreatePortfolioWithLinkedIn()} className="btn btn-secondary">
+                <button onClick={() => handleCreatePortfolioWithLinkedIn()} className="btn btn-primary">
                   <i className="fas fa-magic"></i> Create Portfolio from LinkedIn
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Show LinkedIn import option if no data */}
+        {!hasLinkedInData && (
+          <div className="linkedin-import-prompt">
+            <div className="import-card">
+              <div className="import-icon">
+                <i className="fab fa-linkedin"></i>
+              </div>
+              <h3>Import from LinkedIn</h3>
+              <p>Connect your LinkedIn profile to automatically populate your portfolio with professional data</p>
+              <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
+                <i className="fab fa-linkedin"></i> Connect LinkedIn
+              </button>
             </div>
           </div>
         )}
