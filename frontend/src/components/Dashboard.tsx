@@ -20,8 +20,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   useEffect(() => {
     // Check if user has a portfolio
     checkExistingPortfolio();
-    // Check if user has LinkedIn data
-    checkLinkedInData();
+    // Clear any existing LinkedIn data on component mount
+    clearExistingLinkedInData();
   }, [user]);
 
   const checkLinkedInData = async () => {
@@ -283,6 +283,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   };
 
   // Test function to add sample LinkedIn data
+  const clearExistingLinkedInData = async () => {
+    if (user?.username) {
+      await LinkedInService.clearLinkedInData(user.username);
+      setHasLinkedInData(false);
+      setLinkedInData(null);
+    }
+  };
+
   const addTestLinkedInData = async () => {
     const testData: LinkedInData = {
       personal: {
