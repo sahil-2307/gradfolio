@@ -131,13 +131,18 @@ export default async function handler(req, res) {
     // Transform LinkedIn data to our portfolio format
     const portfolioData = transformLinkedInData(profileData, email);
 
-    console.log('LinkedIn data transformed for user:', username);
-    console.log('Transformed portfolio data:', JSON.stringify(portfolioData, null, 2));
+    console.log('LinkedIn data transformation complete:', {
+      username: username,
+      originalProfileData: JSON.stringify(profileData, null, 2),
+      transformedPortfolioData: JSON.stringify(portfolioData, null, 2),
+      email: email
+    });
 
     // Store the LinkedIn data for later use instead of redirecting to admin.html
     // We'll pass it as a query parameter to the callback page which will handle storage
     const callbackUrl = `/dashboard/linkedin-callback?success=true&username=${username}&linkedinData=${encodeURIComponent(JSON.stringify(portfolioData))}`;
     
+    console.log('Redirecting to callback URL:', callbackUrl);
     res.redirect(callbackUrl);
 
   } catch (error) {

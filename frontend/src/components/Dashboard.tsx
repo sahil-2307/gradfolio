@@ -323,13 +323,24 @@ Projects: ${result.data.projects?.length || 0} projects
               setTimeout(() => setMessage(''), 10000);
             } else {
               // Check if LinkedIn data was successfully imported
-              setTimeout(() => {
-                checkLinkedInData();
-                if (!hasLinkedInData) {
-                  setMessage('⚠️ LinkedIn authentication completed but no data was imported. Please try again or use sample data.');
+              setTimeout(async () => {
+                console.log('Checking for LinkedIn data after OAuth completion...');
+                await checkLinkedInData();
+                
+                // Also check localStorage directly for debugging
+                const localData = localStorage.getItem(`linkedin_data_${user.username}`);
+                console.log('LinkedIn localStorage check:', {
+                  hasLocalStorage: !!localData,
+                  hasLinkedInData: hasLinkedInData,
+                  username: user.username
+                });
+                
+                if (!hasLinkedInData && !localData) {
+                  setMessage('⚠️ LinkedIn authentication completed but no data was imported. Check browser console for debug info. Please try again or use sample data.');
                   setTimeout(() => setMessage(''), 8000);
                 } else {
-                  setMessage('');
+                  setMessage('✅ LinkedIn data imported successfully!');
+                  setTimeout(() => setMessage(''), 3000);
                 }
               }, 3000);
             }
