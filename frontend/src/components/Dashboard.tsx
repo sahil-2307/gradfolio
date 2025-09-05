@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { LinkedInService, LinkedInData } from '../services/linkedinService';
 import LinkedInPreview from './LinkedInPreview';
 import { useMobileDetection } from '../hooks/useMobileDetection';
+import ThreeBackground from './ThreeBackground';
+
+// Lazy load mobile dashboard for better performance
+const MobileDashboard = lazy(() => import('./mobile/MobileDashboard'));
 
 interface DashboardProps {
   user: any;
@@ -499,224 +503,294 @@ Projects: ${result.data.projects?.length || 0} projects
     }
   };
 
+  // Render mobile-specific experience with glassmorphism style
+  if (isMobile) {
+    return (
+      <Suspense fallback={
+        <div style={{ 
+          height: '100vh', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          background: 'var(--bg-primary)',
+          color: 'var(--brand-blue)',
+          fontSize: '1.2rem',
+          fontWeight: '600'
+        }}>
+          Loading Dashboard...
+        </div>
+      }>
+        <MobileDashboard 
+          user={user}
+          onLogout={onLogout}
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          hasLinkedInData={hasLinkedInData}
+          linkedInData={linkedInData}
+          hasResumeData={hasResumeData}
+          resumeData={resumeData}
+          stats={stats}
+          loading={loading}
+          message={message}
+          handleLinkedInLogin={handleLinkedInLogin}
+          addTestLinkedInData={addTestLinkedInData}
+          handleResumeUpload={handleResumeUpload}
+          handleCreatePortfolio={handleCreatePortfolio}
+          handleCreatePortfolioWithLinkedIn={handleCreatePortfolioWithLinkedIn}
+        />
+      </Suspense>
+    );
+  }
+
   return (
-    <div className={`dashboard-container ${isMobile ? 'mobile' : ''} ${isTablet ? 'tablet' : ''}`}>
-      <div className="dashboard-header">
-        <div className="dashboard-brand">
-          <div className="brand-name">OnlinePortfolios</div>
-        </div>
-        <div className="header-controls">
-          <button onClick={toggleTheme} className="theme-toggle" title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
-            <i className={isDarkMode ? 'fas fa-sun' : 'fas fa-moon'}></i>
-          </button>
-          <button onClick={onLogout} className="logout-btn">
-            <i className="fas fa-sign-out-alt"></i> {!isMobile && 'Logout'}
-          </button>
-        </div>
-      </div>
+    <div className="dashboard">
+      <ThreeBackground isPremium={false} />
       
-      <div className="welcome-section">
-        <h1>Welcome, {user.username}!</h1>
-        <p>Manage your professional portfolio</p>
-      </div>
+      {/* Hero Section with Navigation */}
+      <section className="dashboard-hero-section">
+        <nav className="dashboard-navbar">
+          <div className="nav-brand">
+            <div className="brand-logo">O</div>
+            <span className="brand-text">nlinePortfolios</span>
+          </div>
+          <div className="nav-links">
+            <span className="username-display">Welcome, {user.username}</span>
+            <button className="dark-mode-toggle" onClick={toggleTheme} aria-label="Toggle dark mode">
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
+            <button className="logout-nav-button" onClick={onLogout}>
+              <i className="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </nav>
 
-      <div className="dashboard-content">
-        {/* Main Portfolio Creation Sections */}
-        <div className="main-sections">
-          <h2 className="sections-title">
-            <i className="fas fa-rocket"></i> Create Your Portfolio
-          </h2>
-          <div className="sections-grid">
-            
-            {/* LinkedIn Section */}
-            <div className="creation-section linkedin-section">
-              <div className="section-header">
-                <div className="section-icon linkedin-icon">
-                  <i className="fab fa-linkedin-in"></i>
-                </div>
-                <div className="section-title">
-                  <h3>LinkedIn Import</h3>
-                  <p>Import data from your LinkedIn profile</p>
-                </div>
-              </div>
-              
-              <div className="section-content">
-                {hasLinkedInData && linkedInData ? (
-                  <div className="data-preview">
-                    <div className="preview-info">
-                      <p><strong>{linkedInData.personal?.fullName || 'LinkedIn User'}</strong></p>
-                      <p>{linkedInData.personal?.email || 'Email not available'}</p>
-                      <div className="preview-stats">
-                        <span>{linkedInData.experience?.length || 0} Jobs</span>
-                        <span>{(linkedInData.skills?.technical?.length || 0) + (linkedInData.skills?.soft?.length || 0)} Skills</span>
-                      </div>
-                    </div>
-                    <div className="section-actions">
-                      <button onClick={() => navigate('/linkedin-preview')} className="btn btn-outline">
-                        <i className="fas fa-eye"></i> View Data
-                      </button>
-                      <button onClick={handleCreatePortfolioWithLinkedIn} className="btn btn-primary">
-                        <i className="fas fa-magic"></i> Create Portfolio
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="empty-state">
-                    <p>No LinkedIn data available</p>
-                    <div className="section-actions">
-                      <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
-                        <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
-                      </button>
-                      <button onClick={addTestLinkedInData} className="btn btn-outline" disabled={loading}>
-                        <i className="fas fa-flask"></i> {loading ? 'Loading...' : 'Use Sample Data'}
-                      </button>
-                      <div className="linkedin-status-info">
-                        <p className="helper-text">
-                          <i className="fas fa-info-circle"></i> 
-                          If LinkedIn shows "Network Will Be Back Soon", it's a LinkedIn service issue, not your app.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Resume Section */}
-            <div className="creation-section resume-section">
-              <div className="section-header">
-                <div className="section-icon resume-icon">
-                  <i className="fas fa-file-pdf"></i>
-                </div>
-                <div className="section-title">
-                  <h3>Resume Upload</h3>
-                  <p>Upload and parse your resume automatically</p>
-                </div>
-              </div>
-              
-              <div className="section-content">
-                {hasResumeData && resumeData ? (
-                  <div className="data-preview">
-                    <div className="preview-info">
-                      <p><strong>{resumeData.personal?.fullName || 'Resume Owner'}</strong></p>
-                      <p>{resumeData.personal?.email || 'Email not available'}</p>
-                      <div className="preview-stats">
-                        <span>{resumeData.experience?.length || 0} Jobs</span>
-                        <span>{(resumeData.skills?.technical?.length || 0) + (resumeData.skills?.soft?.length || 0)} Skills</span>
-                      </div>
-                    </div>
-                    <div className="section-actions">
-                      <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="btn btn-outline">
-                        <i className="fas fa-eye"></i> View & Edit Data
-                      </button>
-                      <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="btn btn-primary">
-                        <i className="fas fa-magic"></i> Create Portfolio
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="empty-state">
-                    <p>No resume uploaded yet</p>
-                    <div className="section-actions">
-                      <input
-                        type="file"
-                        id="resume-upload"
-                        accept=".pdf,.doc,.docx"
-                        style={{ display: 'none' }}
-                        onChange={handleResumeUpload}
-                      />
-                      <button 
-                        onClick={() => document.getElementById('resume-upload')?.click()}
-                        className="btn btn-primary"
-                        disabled={loading}
-                      >
-                        <i className="fas fa-upload"></i> {loading ? 'Processing...' : 'Upload Resume'}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Manual Form Section */}
-            <div className="creation-section form-section">
-              <div className="section-header">
-                <div className="section-icon form-icon">
-                  <i className="fas fa-pen-to-square"></i>
-                </div>
-                <div className="section-title">
-                  <h3>Manual Form</h3>
-                  <p>Fill out information manually using our form</p>
-                </div>
-              </div>
-              
-              <div className="section-content">
-                <div className="empty-state">
-                  <p>Create portfolio by filling out a form</p>
-                  <div className="section-actions">
-                    <button onClick={() => handleCreatePortfolio('landing_1')} className="btn btn-primary">
-                      <i className="fas fa-edit"></i> Start Manual Form
-                    </button>
-                    <button onClick={() => handleCreatePortfolio('landing_2')} className="btn btn-outline">
-                      <i className="fas fa-paint-brush"></i> Creative Template
-                    </button>
-                  </div>
-                </div>
-              </div>
+        <div className="dashboard-hero-content">
+          <div className="hero-left">
+            <div className="hero-title">
+              <h1>Your Portfolio</h1>
+              <h1>Dashboard</h1>
+              <div className="title-accent"></div>
             </div>
             
+            <div className="hero-description">
+              <h2>Overview</h2>
+              <h3>Manage and create stunning professional portfolios</h3>
+              <p>
+                Choose from multiple data sources to build your perfect portfolio.
+                Import from LinkedIn, upload your resume, or fill out our comprehensive form.
+              </p>
+            </div>
+          </div>
+
+          <div className="hero-right">
+            <div className="hero-image-container">
+              <div className="floating-cards">
+                <div className="dashboard-preview-card">
+                  <h5>Quick Stats</h5>
+                  <div className="quick-stats">
+                    <div className="quick-stat-item">Resumes: {stats.resumesUploaded}</div>
+                    <div className="quick-stat-item">Portfolios: {stats.portfoliosDeveloped}</div>
+                    <div className="quick-stat-item">Templates: {stats.templatesAvailable}</div>
+                  </div>
+                </div>
+                
+                <div className="dashboard-stats-card">
+                  <div className="stat-item">
+                    <span className="stat-number">{hasLinkedInData ? '✓' : '○'}</span>
+                    <span className="stat-label">LinkedIn Data</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">{hasResumeData ? '✓' : '○'}</span>
+                    <span className="stat-label">Resume Data</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Statistics Section */}
-        <div className="statistics-section">
-          <h2 className="stats-title">
-            <i className="fas fa-chart-line"></i> Your Dashboard Statistics
-          </h2>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">
+      {/* Creation Methods Section */}
+      <section className="creation-methods-section">
+        <div className="creation-content">
+          <div className="section-header">
+            <h2>Create Your Portfolio</h2>
+            <p>Choose your preferred method to build your professional portfolio.</p>
+          </div>
+          
+          <div className="creation-methods-grid">
+            {/* LinkedIn Method */}
+            <div className="creation-method-card linkedin-card">
+              <div className="method-icon">
+                <i className="fab fa-linkedin-in"></i>
+              </div>
+              <h3>LinkedIn Import</h3>
+              <p>Import your professional data from LinkedIn automatically</p>
+              
+              {hasLinkedInData && linkedInData ? (
+                <div className="method-preview">
+                  <div className="preview-user">
+                    <strong>{linkedInData.personal?.fullName || 'LinkedIn User'}</strong>
+                    <span>{linkedInData.experience?.length || 0} jobs • {(linkedInData.skills?.technical?.length || 0) + (linkedInData.skills?.soft?.length || 0)} skills</span>
+                  </div>
+                  <div className="method-actions">
+                    <button onClick={() => navigate('/linkedin-preview')} className="method-btn secondary">
+                      <i className="fas fa-eye"></i> View Data
+                    </button>
+                    <button onClick={handleCreatePortfolioWithLinkedIn} className="method-btn primary">
+                      <i className="fas fa-magic"></i> Create Portfolio
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="method-actions">
+                  <button onClick={handleLinkedInLogin} className="method-btn primary" disabled={loading}>
+                    <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
+                  </button>
+                  <button onClick={addTestLinkedInData} className="method-btn secondary" disabled={loading}>
+                    <i className="fas fa-flask"></i> {loading ? 'Loading...' : 'Try Sample Data'}
+                  </button>
+                  {loading && (
+                    <div className="method-helper">
+                      <i className="fas fa-info-circle"></i>
+                      If LinkedIn shows "Network Will Be Back Soon", it's a LinkedIn service issue.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Resume Method */}
+            <div className="creation-method-card resume-card">
+              <div className="method-icon">
+                <i className="fas fa-file-pdf"></i>
+              </div>
+              <h3>Resume Upload</h3>
+              <p>Upload your PDF/DOC resume and extract data automatically</p>
+              
+              {hasResumeData && resumeData ? (
+                <div className="method-preview">
+                  <div className="preview-user">
+                    <strong>{resumeData.personal?.fullName || 'Resume Owner'}</strong>
+                    <span>{resumeData.experience?.length || 0} jobs • {(resumeData.skills?.technical?.length || 0) + (resumeData.skills?.soft?.length || 0)} skills</span>
+                  </div>
+                  <div className="method-actions">
+                    <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="method-btn secondary">
+                      <i className="fas fa-eye"></i> View & Edit
+                    </button>
+                    <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="method-btn primary">
+                      <i className="fas fa-magic"></i> Create Portfolio
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="method-actions">
+                  <input
+                    type="file"
+                    id="resume-upload"
+                    accept=".pdf,.doc,.docx"
+                    style={{ display: 'none' }}
+                    onChange={handleResumeUpload}
+                  />
+                  <button 
+                    onClick={() => document.getElementById('resume-upload')?.click()}
+                    className="method-btn primary"
+                    disabled={loading}
+                  >
+                    <i className="fas fa-upload"></i> {loading ? 'Processing...' : 'Upload Resume'}
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            {/* Manual Form Method */}
+            <div className="creation-method-card form-card">
+              <div className="method-icon">
+                <i className="fas fa-pen-to-square"></i>
+              </div>
+              <h3>Manual Form</h3>
+              <p>Fill out your information step-by-step with our guided form</p>
+              
+              <div className="method-actions">
+                <button onClick={() => handleCreatePortfolio('landing_1')} className="method-btn primary">
+                  <i className="fas fa-edit"></i> Start Form
+                </button>
+                <button onClick={() => handleCreatePortfolio('landing_2')} className="method-btn secondary">
+                  <i className="fas fa-paint-brush"></i> Creative Style
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="dashboard-stats-section">
+        <div className="stats-content">
+          <div className="section-header">
+            <h2>Your Dashboard Statistics</h2>
+            <p>Track your portfolio creation progress and achievements.</p>
+          </div>
+          
+          <div className="dashboard-stats-grid">
+            <div className="dashboard-stat-card">
+              <div className="stat-icon-wrapper">
                 <i className="fas fa-cloud-upload-alt"></i>
               </div>
-              <div className="stat-content">
-                <h3 className="stat-number">{stats.resumesUploaded}</h3>
-                <p className="stat-label">Resumes Uploaded</p>
+              <div className="stat-details">
+                <h3>{stats.resumesUploaded}</h3>
+                <p>Resumes Uploaded</p>
               </div>
             </div>
             
-            <div className="stat-card">
-              <div className="stat-icon">
+            <div className="dashboard-stat-card">
+              <div className="stat-icon-wrapper">
                 <i className="fas fa-user-tie"></i>
               </div>
-              <div className="stat-content">
-                <h3 className="stat-number">{stats.portfoliosDeveloped}</h3>
-                <p className="stat-label">Portfolios Developed</p>
+              <div className="stat-details">
+                <h3>{stats.portfoliosDeveloped}</h3>
+                <p>Portfolios Created</p>
               </div>
             </div>
             
-            <div className="stat-card">
-              <div className="stat-icon">
+            <div className="dashboard-stat-card">
+              <div className="stat-icon-wrapper">
                 <i className="fas fa-swatchbook"></i>
               </div>
-              <div className="stat-content">
-                <h3 className="stat-number">{stats.templatesAvailable}</h3>
-                <p className="stat-label">Templates Available</p>
+              <div className="stat-details">
+                <h3>{stats.templatesAvailable}</h3>
+                <p>Templates Available</p>
               </div>
             </div>
             
-            <div className="stat-card">
-              <div className="stat-icon">
+            <div className="dashboard-stat-card">
+              <div className="stat-icon-wrapper">
                 <i className="fas fa-external-link-alt"></i>
               </div>
-              <div className="stat-content">
-                <h3 className="stat-number">{stats.portfolioUrls}</h3>
-                <p className="stat-label">Portfolio URLs</p>
+              <div className="stat-details">
+                <h3>{stats.portfolioUrls}</h3>
+                <p>Live Portfolio URLs</p>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
-      </div>
+      {/* Footer */}
+      <footer className="dashboard-footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <div className="brand-logo">O</div>
+            <span>OnlinePortfolios</span>
+          </div>
+          <div className="footer-links">
+            <span>Dashboard</span>
+            <span>Portfolio</span>
+            <span>Settings</span>
+          </div>
+        </div>
+      </footer>
+    </div>
 
       {message && (
         <div className="message-toast">
