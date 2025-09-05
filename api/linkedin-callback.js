@@ -103,11 +103,10 @@ export default async function handler(req, res) {
 
     console.log('LinkedIn access token received');
 
-    // Fetch LinkedIn profile
-    const profileResponse = await fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName,headline,summary,positions)', {
+    // Fetch LinkedIn profile using OpenID Connect userinfo endpoint
+    const profileResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'X-Restli-Protocol-Version': '2.0.0'
+        'Authorization': `Bearer ${accessToken}`
       }
     });
 
@@ -122,26 +121,12 @@ export default async function handler(req, res) {
 
     const profileData = await profileResponse.json();
     console.log('LinkedIn profile fetched:', { 
-      id: profileData.id,
       fullProfileData: JSON.stringify(profileData, null, 2)
     });
 
-    // Fetch email address
-    const emailResponse = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'X-Restli-Protocol-Version': '2.0.0'
-      }
-    });
-
-    let email = '';
-    if (emailResponse.ok) {
-      const emailData = await emailResponse.json();
-      email = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
-      console.log('LinkedIn email fetched:', email);
-    } else {
-      console.log('LinkedIn email fetch failed:', emailResponse.status, await emailResponse.text());
-    }
+    // With OpenID Connect, email is included in the userinfo response
+    const email = profileData.email || '';
+    console.log('LinkedIn email from userinfo:', email);
 
     // Transform LinkedIn data to our portfolio format
     const portfolioData = transformLinkedInData(profileData, email);
@@ -162,60 +147,54 @@ export default async function handler(req, res) {
 }
 
 function transformLinkedInData(profileData, email) {
-  const firstName = profileData.firstName?.localized?.en_US || '';
-  const lastName = profileData.lastName?.localized?.en_US || '';
-  const fullName = `${firstName} ${lastName}`.trim();
+  // OpenID Connect userinfo response format
+  const firstName = profileData.given_name || '';
+  const lastName = profileData.family_name || '';
+  const fullName = profileData.name || `${firstName} ${lastName}`.trim();
 
-  const headline = profileData.headline || '';
-  const summary = profileData.summary || '';
-
-  // Transform positions to experience format
-  const experience = (profileData.positions?.values || []).map(position => ({
-    position: position.title || 'Position',
-    company: position.company?.name || 'Company',
-    duration: formatLinkedInDate(position.startDate, position.endDate),
-    description: position.summary || 'Professional experience at ' + (position.company?.name || 'the company')
-  }));
+  const picture = profileData.picture || '';
+  const locale = profileData.locale || 'en_US';
 
   return {
     personal: {
       fullName: fullName || 'Professional',
-      email: email,
+      email: email || profileData.email || '',
       phone: '',
-      linkedin: `https://linkedin.com/in/${profileData.id}`,
+      linkedin: profileData.profile || `https://linkedin.com/in/profile`,
       github: '',
       website: ''
     },
     about: {
-      paragraph1: summary || headline || 'Experienced professional with a passion for excellence and innovation.',
-      paragraph2: 'Committed to delivering high-quality results and building meaningful professional relationships.'
+      paragraph1: `Experienced professional with a proven track record of success. ${fullName} brings expertise and dedication to every project and collaboration.`,
+      paragraph2: 'Committed to delivering high-quality results and building meaningful professional relationships. Passionate about continuous learning and professional growth.'
     },
-    experience: experience.length > 0 ? experience.slice(0, 3) : [{
-      position: headline || 'Professional',
-      company: 'LinkedIn Profile',
+    experience: [{
+      position: 'Professional',
+      company: 'LinkedIn Member',
       duration: '2020 - Present',
-      description: 'Professional with diverse experience and expertise.'
+      description: 'Experienced professional with diverse expertise and a strong commitment to excellence in all endeavors.'
     }],
     education: [{
-      degree: 'Professional Background',
-      institution: 'LinkedIn Profile',
+      degree: 'Professional Development',
+      institution: 'Continuous Learning',
       year: '2020',
-      description: 'Continuous professional development and learning'
+      description: 'Ongoing professional development and skill enhancement through various channels and experiences.'
     }],
     skills: {
-      technical: ['Leadership', 'Communication', 'Strategy', 'Management'],
-      soft: ['Team Work', 'Problem Solving', 'Critical Thinking', 'Adaptability']
+      technical: ['Leadership', 'Communication', 'Strategy', 'Project Management', 'Problem Solving'],
+      soft: ['Team Collaboration', 'Critical Thinking', 'Adaptability', 'Innovation', 'Time Management']
     },
     projects: [{
       title: 'Professional Portfolio',
-      description: 'Comprehensive professional experience and achievements',
-      technologies: ['Leadership', 'Management'],
-      link: ''
+      description: 'Comprehensive showcase of professional experience, skills, and achievements',
+      technologies: ['Leadership', 'Management', 'Communication'],
+      link: profileData.profile || ''
     }],
     achievements: [
       'LinkedIn verified professional profile',
-      'Established professional network',
-      'Proven track record of professional growth'
+      'Established professional network and connections',
+      'Demonstrated expertise in chosen field',
+      'Active participant in professional communities'
     ]
   };
 }
