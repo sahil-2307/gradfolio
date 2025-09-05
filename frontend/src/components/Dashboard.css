@@ -759,3 +759,50 @@
     font-size: 1.6rem;
   }
 }
+
+/* Message Toast */
+.message-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  background: var(--white);
+  border: 1px solid var(--bg-card);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  color: var(--text-body);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-width: 400px;
+  animation: slideInUp 0.3s ease forwards;
+}
+
+[data-theme="dark"] .message-toast {
+  background: var(--bg-card);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .message-toast {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+  }
+}

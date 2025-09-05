@@ -790,8 +790,8 @@ Projects: ${result.data.projects?.length || 0} projects
           </div>
         </div>
       </footer>
-    </div>
 
+      {/* Message Toast */}
       {message && (
         <div className="message-toast">
           {message}
