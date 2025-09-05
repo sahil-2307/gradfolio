@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthService } from '../services/authService';
 import type { User } from '../config/supabase';
 import './Login.css';
@@ -16,6 +16,47 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [rememberPassword, setRememberPassword] = useState(false);
+
+  // Initialize dark mode from localStorage or system preference
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode');
+    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialDarkMode = savedDarkMode ? JSON.parse(savedDarkMode) : systemDarkMode;
+    setIsDarkMode(initialDarkMode);
+    
+    // Apply dark mode class
+    if (initialDarkMode) {
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+    }
+
+    // Load saved credentials if remember password was enabled
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    const savedPassword = localStorage.getItem('rememberedPassword');
+    if (savedEmail && savedPassword) {
+      setFormData(prev => ({
+        ...prev,
+        email: savedEmail,
+        password: savedPassword
+      }));
+      setRememberPassword(true);
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +69,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         : await AuthService.signUp(formData.email, formData.password, formData.username);
 
       if (result.success && result.user) {
+        // Handle remember password
+        if (isLogin && rememberPassword) {
+          localStorage.setItem('rememberedEmail', formData.email);
+          localStorage.setItem('rememberedPassword', formData.password);
+        } else if (isLogin && !rememberPassword) {
+          localStorage.removeItem('rememberedEmail');
+          localStorage.removeItem('rememberedPassword');
+        }
+        
         onLogin(result.user);
       } else {
         setError(result.error || 'Authentication failed');
@@ -77,11 +127,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="login-container">
+    <div className={`login-container ${isDarkMode ? 'dark-theme' : ''}`}>
       <div className="login-card">
         <button onClick={handleBackClick} className="back-button" aria-label="Go back">
           Back
         </button>
+        
+        {/* Dark Mode Toggle */}
+        <button 
+          className={`login-dark-toggle ${isDarkMode ? 'dark' : ''}`}
+          onClick={toggleDarkMode}
+          aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        />
         
         <div className="login-header">
           <h1>Welcome to OnlinePortfolios</h1>
@@ -145,17 +202,40 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               required
             />
             {isLogin && (
-              <button 
-                type="button" 
-                className="forgot-password-link"
-                onClick={handleForgotPassword}
-              >
-                Forgot password?
-              </button>
+              <>
+                <button 
+                  type="button" 
+                  className="forgot-password-link"
+                  onClick={handleForgotPassword}
+                >
+                  Forgot password?
+                </button>
+                <div className="remember-password">
+                  <label className="checkbox-container">
+                    <input
+                      type="checkbox"
+                      checked={rememberPassword}
+                      onChange={(e) => setRememberPassword(e.target.checked)}
+                    />
+                    <span className="checkmark"></span>
+                    Remember password
+                  </label>
+                </div>
+              </>
             )}
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className={`error-message ${error.includes('Password should be at least 6 characters') ? 'validation-error' : ''}`}>
+              <div className="error-icon">⚠️</div>
+              <div className="error-content">
+                <div className="error-title">
+                  {error.includes('Password should be at least 6 characters') ? 'Password Requirements' : 'Authentication Error'}
+                </div>
+                <div className="error-text">{error}</div>
+              </div>
+            </div>
+          )}
 
           <button type="submit" className="submit-btn" disabled={loading}>
             {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
