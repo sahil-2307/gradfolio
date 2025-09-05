@@ -170,17 +170,27 @@ export class LinkedInService {
       try {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
-          const { error } = await supabase
+          // First check if table exists
+          const { error: checkError } = await supabase
             .from('user_linkedin_data')
-            .delete()
-            .eq('user_id', user.data.user.id);
+            .select('id')
+            .limit(1);
 
-          if (error) {
-            console.error('Error clearing LinkedIn data from Supabase:', error);
+          // Only try to delete if table exists
+          if (!checkError || checkError.code !== 'PGRST106') {
+            const { error } = await supabase
+              .from('user_linkedin_data')
+              .delete()
+              .eq('user_id', user.data.user.id);
+
+            if (error && error.code !== 'PGRST106') {
+              console.log('Non-critical Supabase clear error:', error.message);
+            }
           }
         }
-      } catch (supabaseError) {
-        console.log('Supabase clear failed, localStorage cleared successfully:', supabaseError);
+      } catch (supabaseError: any) {
+        // Silently handle Supabase errors - localStorage is primary storage
+        console.log('Supabase clear skipped (table may not exist)');
       }
       
       return { success: true };

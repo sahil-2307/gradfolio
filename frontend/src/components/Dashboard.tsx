@@ -214,20 +214,10 @@ Projects: ${result.data.projects?.length || 0} projects
 
       setMessage('LinkedIn credentials found. Testing LinkedIn service...');
 
-      // Test LinkedIn service availability first
-      try {
-        const testResponse = await fetch('https://www.linkedin.com/oauth/v2/authorization', {
-          method: 'HEAD',
-          mode: 'no-cors'
-        });
-        console.log('LinkedIn service test completed');
-      } catch (serviceError) {
-        console.warn('LinkedIn service test failed:', serviceError);
-        setMessage('⚠️ LinkedIn service appears to be experiencing issues. This is a known LinkedIn service problem. Please use sample data or try again later.');
-        setTimeout(() => setMessage(''), 10000);
-        setLoading(false);
-        return;
-      }
+      // Skip service test to avoid Mixed Content and CORS issues
+      // LinkedIn service availability will be tested during actual OAuth flow
+      setMessage('LinkedIn credentials found. Proceeding with authentication...');
+      console.log('Skipping LinkedIn service test to avoid Mixed Content issues');
       
       const redirectUri = encodeURIComponent(`${window.location.origin}/api/linkedin-callback`);
       const scope = encodeURIComponent('r_liteprofile r_emailaddress');
@@ -245,7 +235,9 @@ Projects: ${result.data.projects?.length || 0} projects
       console.log('LinkedIn OAuth URL created:', {
         url: linkedinUrl.substring(0, 100) + '...',
         redirectUri: decodeURIComponent(redirectUri),
-        origin: window.location.origin
+        origin: window.location.origin,
+        fullRedirectUri: `${window.location.origin}/api/linkedin-callback`,
+        currentLocation: window.location.href
       });
       
       setMessage('🔄 Opening LinkedIn authentication... If popup is blocked, you will be redirected.');
