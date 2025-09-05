@@ -606,10 +606,10 @@ Projects: ${result.data.projects?.length || 0} projects
                       </div>
                     </div>
                     <div className="section-actions">
-                      <button onClick={() => console.log('Resume Data:', JSON.stringify(resumeData, null, 2))} className="btn btn-outline">
-                        <i className="fas fa-code"></i> View JSON
+                      <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="btn btn-outline">
+                        <i className="fas fa-eye"></i> View & Edit Data
                       </button>
-                      <button onClick={() => handleCreatePortfolio('landing_1')} className="btn btn-primary">
+                      <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="btn btn-primary">
                         <i className="fas fa-magic"></i> Create Portfolio
                       </button>
                     </div>

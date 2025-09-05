@@ -9,6 +9,7 @@ import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import LinkedInCallback from './components/LinkedInCallback';
 import LinkedInPreview from './components/LinkedInPreview';
+import ResumePreview from './components/ResumePreview';
 import BrowseProfiles from './components/BrowseProfiles';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import PaymentSuccess from './components/PaymentSuccess';
@@ -141,6 +142,14 @@ function App() {
             element={
               isAuthenticated ? 
                 <LinkedInPreview /> : 
+                <Navigate to="/login" replace />
+            } 
+          />
+          <Route 
+            path="/resume-preview" 
+            element={
+              isAuthenticated ? 
+                <ResumePreview user={user} /> : 
                 <Navigate to="/login" replace />
             } 
           />
