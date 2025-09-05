@@ -1,7 +1,23 @@
-// Resume parser with PDF processing
+// Resume parser with simplified approach for Vercel
 const fs = require('fs');
 const path = require('path');
-const formidable = require('formidable');
+
+// Try to import required modules
+let IncomingForm, pdfParse;
+try {
+  const formidableModule = require('formidable');
+  IncomingForm = formidableModule.IncomingForm || formidableModule.default?.IncomingForm || formidableModule;
+  console.log('Formidable loaded successfully, type:', typeof IncomingForm);
+} catch (e) {
+  console.error('Failed to load formidable:', e);
+}
+
+try {
+  pdfParse = require('pdf-parse');
+  console.log('pdf-parse loaded successfully, type:', typeof pdfParse);
+} catch (e) {
+  console.error('Failed to load pdf-parse:', e);
+}
 
 // Disable body parsing for file uploads
 export const config = {
@@ -32,14 +48,38 @@ export default async function handler(req, res) {
     console.log('Resume parsing request received');
     console.log('Content-Type:', req.headers['content-type']);
     
-    // Parse the uploaded file
-    const form = formidable({
+    // Check if formidable is available
+    if (!IncomingForm) {
+      console.error('IncomingForm not available');
+      return res.status(500).json({
+        success: false,
+        message: 'File upload library not available. Please ensure formidable is installed.'
+      });
+    }
+
+    // Parse the uploaded file using IncomingForm
+    const form = new IncomingForm({
       maxFileSize: 10 * 1024 * 1024, // 10MB
-      allowEmptyFiles: false,
-      multiples: false
+      keepExtensions: true
     });
 
-    const [fields, files] = await form.parse(req);
+    let fields, files;
+    try {
+      const result = await new Promise((resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) reject(err);
+          else resolve({ fields, files });
+        });
+      });
+      fields = result.fields;
+      files = result.files;
+    } catch (parseError) {
+      console.error('Form parsing error:', parseError);
+      return res.status(400).json({
+        success: false,
+        message: `Failed to parse uploaded file: ${parseError.message}`
+      });
+    }
     console.log('Form parsing completed');
     console.log('Fields:', fields);
     console.log('Files:', Object.keys(files));
@@ -68,7 +108,9 @@ export default async function handler(req, res) {
     if (isPDF) {
       // Try to extract text from PDF
       try {
-        const pdfParse = require('pdf-parse');
+        if (!pdfParse) {
+          throw new Error('pdf-parse library not available');
+        }
         const dataBuffer = fs.readFileSync(uploadedFile.filepath);
         const pdfData = await pdfParse(dataBuffer);
         extractedText = pdfData.text;
@@ -76,7 +118,7 @@ export default async function handler(req, res) {
         console.log('First 500 chars:', extractedText.substring(0, 500));
       } catch (pdfError) {
         console.error('PDF parsing failed:', pdfError);
-        extractedText = 'PDF_PARSING_FAILED';
+        extractedText = `PDF_PARSING_FAILED: ${pdfError.message}`;
       }
     } else {
       console.log('File is not PDF, attempting text extraction...');
@@ -122,8 +164,9 @@ export default async function handler(req, res) {
 function parseResumeText(text, filename = '') {
   console.log('Parsing resume text, length:', text.length);
   
-  if (text === 'PDF_PARSING_FAILED' || text === 'TEXT_EXTRACTION_FAILED') {
-    return createFallbackData(filename);
+  if (text.startsWith('PDF_PARSING_FAILED') || text.startsWith('TEXT_EXTRACTION_FAILED')) {
+    console.log('Using fallback data due to parsing failure');
+    return createFallbackData(filename, text);
   }
 
   // Clean and normalize text
@@ -370,27 +413,46 @@ function extractLink(text) {
   return linkMatch?.[0] || '';
 }
 
-function createFallbackData(filename) {
+function createFallbackData(filename, errorMessage = '') {
   return {
     personal: {
-      fullName: 'Resume Holder',
-      email: 'user@example.com',
-      phone: '',
+      fullName: 'Resume Owner',
+      email: 'please-update@example.com',
+      phone: 'Please update phone number',
       linkedin: '',
       github: '',
       website: ''
     },
     about: {
-      paragraph1: `Resume data extracted from ${filename}. Please update with your actual information.`,
-      paragraph2: 'Add your professional summary and background here.'
+      paragraph1: `Resume upload received from file: ${filename}. Text extraction encountered issues but file was processed.`,
+      paragraph2: errorMessage ? `Technical details: ${errorMessage}` : 'Please manually update your information in the portfolio editor.'
     },
-    experience: [],
-    education: [],
+    experience: [{
+      position: 'Professional Experience',
+      company: 'Please Update Company',
+      duration: 'Please Update Duration',
+      description: 'Please update with your actual work experience and achievements.'
+    }],
+    education: [{
+      degree: 'Please Update Degree',
+      institution: 'Please Update Institution',
+      year: new Date().getFullYear().toString(),
+      description: 'Please update with your educational background'
+    }],
     skills: {
-      technical: [],
-      soft: []
+      technical: ['Please', 'Update', 'Your', 'Technical', 'Skills'],
+      soft: ['Please', 'Update', 'Soft', 'Skills']
     },
-    projects: [],
-    achievements: []
+    projects: [{
+      title: 'Please Update Project Title',
+      description: 'Please add your project details and descriptions',
+      technologies: ['Update', 'Technologies'],
+      link: ''
+    }],
+    achievements: [
+      'Please update with your achievements',
+      'Add more accomplishments here',
+      'Include certifications and awards'
+    ]
   };
 }
