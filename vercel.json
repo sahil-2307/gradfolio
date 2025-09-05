@@ -82,5 +82,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/parse-resume.js": {
+      "maxDuration": 30
+    }
+  }
 }

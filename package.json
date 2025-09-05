@@ -17,6 +17,8 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/three": "^0.179.0",
     "axios": "^1.11.0",
+    "formidable": "^3.5.4",
+    "pdf-parse": "^1.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^6.30.1",
