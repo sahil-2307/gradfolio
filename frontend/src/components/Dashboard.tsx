@@ -196,104 +196,113 @@ Projects: ${result.data.projects?.length || 0} projects
   const handleLinkedInLogin = async () => {
     console.log('LinkedIn Connect clicked');
     setLoading(true);
-    setMessage('Checking LinkedIn service availability...');
+    setMessage('Checking LinkedIn configuration...');
 
     try {
       // Create LinkedIn OAuth URL
       const clientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
-      console.log('LinkedIn Client ID configured:', !!clientId);
+      console.log('LinkedIn Client ID:', clientId);
+      console.log('LinkedIn Client ID configured:', !!clientId && !clientId.includes('your_linkedin'));
+      
+      // Check if credentials are properly configured
+      if (!clientId || clientId === 'your_linkedin_client_id_here' || clientId.includes('your_linkedin')) {
+        setMessage('❌ LinkedIn integration not configured. LinkedIn credentials are missing or using placeholder values. Please use sample data instead.');
+        setTimeout(() => setMessage(''), 8000);
+        setLoading(false);
+        return;
+      }
+
+      setMessage('LinkedIn credentials found. Testing LinkedIn service...');
+
+      // Test LinkedIn service availability first
+      try {
+        const testResponse = await fetch('https://www.linkedin.com/oauth/v2/authorization', {
+          method: 'HEAD',
+          mode: 'no-cors'
+        });
+        console.log('LinkedIn service test completed');
+      } catch (serviceError) {
+        console.warn('LinkedIn service test failed:', serviceError);
+        setMessage('⚠️ LinkedIn service appears to be experiencing issues. This is a known LinkedIn service problem. Please use sample data or try again later.');
+        setTimeout(() => setMessage(''), 10000);
+        setLoading(false);
+        return;
+      }
       
       const redirectUri = encodeURIComponent(`${window.location.origin}/api/linkedin-callback`);
       const scope = encodeURIComponent('r_liteprofile r_emailaddress');
       const state = encodeURIComponent(JSON.stringify({ userId: user.id, username: user.username }));
 
       console.log('LinkedIn OAuth config:', {
-        clientId: clientId ? 'configured' : 'missing',
+        clientId: clientId.substring(0, 10) + '...',
         redirectUri: decodeURIComponent(redirectUri),
-        scope: decodeURIComponent(scope)
+        scope: decodeURIComponent(scope),
+        origin: window.location.origin
       });
-
-      if (!clientId) {
-        setMessage('LinkedIn integration not configured. Please use the sample data option below to see how it works.');
-        setTimeout(() => setMessage(''), 5000);
-        setLoading(false);
-        return;
-      }
-
-      // Skip connectivity test to avoid HTTPS/CORS issues
-      setMessage('Preparing LinkedIn authentication...');
 
       const linkedinUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
       
-      console.log('LinkedIn OAuth URL Details:', {
-        fullUrl: linkedinUrl,
+      console.log('LinkedIn OAuth URL created:', {
+        url: linkedinUrl.substring(0, 100) + '...',
         redirectUri: decodeURIComponent(redirectUri),
-        origin: window.location.origin,
-        currentUrl: window.location.href
+        origin: window.location.origin
       });
       
-      setMessage('Opening LinkedIn authentication...');
+      setMessage('🔄 Opening LinkedIn authentication... If popup is blocked, you will be redirected.');
       
-      // Try multiple approaches for better reliability
+      // Try popup first
       let authWindow: Window | null = null;
       
-      // Approach 1: Try popup with specific parameters for better compatibility
       try {
         authWindow = window.open(
           linkedinUrl, 
           'linkedin-oauth',
-          'width=500,height=600,left=' + (window.screen.width / 2 - 250) + ',top=' + (window.screen.height / 2 - 300) + ',scrollbars=yes,resizable=yes,status=yes,location=yes'
+          'width=500,height=700,left=' + (window.screen.width / 2 - 250) + ',top=' + (window.screen.height / 2 - 350) + ',scrollbars=yes,resizable=yes,status=yes,location=yes'
         );
+        
+        console.log('Popup window opened:', !!authWindow);
       } catch (popupError) {
         console.warn('Popup creation failed:', popupError);
         authWindow = null;
       }
       
       if (!authWindow || authWindow.closed) {
-        // Approach 2: Direct redirect with user confirmation
-        setMessage('Popup blocked or failed. Click OK to redirect to LinkedIn authentication.');
-        const userConfirmed = window.confirm('LinkedIn authentication requires opening a new page. Click OK to continue or Cancel to use sample data instead.');
-        
-        if (userConfirmed) {
-          setMessage('Redirecting to LinkedIn...');
-          setTimeout(() => {
-            window.location.href = linkedinUrl;
-          }, 1000);
-        } else {
-          setLoading(false);
-          setMessage('LinkedIn connection cancelled. You can use sample data to see how the feature works.');
-          setTimeout(() => setMessage(''), 5000);
-        }
+        // Fallback to direct redirect
+        setMessage('🔄 Popup blocked. Redirecting to LinkedIn...');
+        setTimeout(() => {
+          console.log('Redirecting to LinkedIn:', linkedinUrl);
+          window.location.href = linkedinUrl;
+        }, 2000);
         return;
       }
       
-      // Monitor popup for completion with better error handling
+      // Monitor popup
       let checkInterval: NodeJS.Timeout;
       let timeoutId: NodeJS.Timeout;
       
       const cleanup = () => {
         if (checkInterval) clearInterval(checkInterval);
         if (timeoutId) clearTimeout(timeoutId);
+        setLoading(false);
       };
       
       checkInterval = setInterval(() => {
         try {
           if (authWindow && authWindow.closed) {
             cleanup();
-            setLoading(false);
-            setMessage('LinkedIn authentication window closed. Checking for imported data...');
+            setMessage('✅ LinkedIn authentication window closed. Checking for data...');
             
             // Check if LinkedIn data was successfully imported
             setTimeout(() => {
               checkLinkedInData();
               setMessage('');
-            }, 2000);
+            }, 3000);
           } else if (authWindow) {
             // Check if we can access the window URL (same origin)
             try {
               const currentUrl = authWindow.location.href;
+              console.log('Current popup URL:', currentUrl);
               if (currentUrl.includes('/dashboard')) {
-                // User was redirected back to dashboard, close popup
                 authWindow.close();
               }
             } catch (e) {
@@ -303,23 +312,22 @@ Projects: ${result.data.projects?.length || 0} projects
         } catch (error) {
           console.warn('Error monitoring auth window:', error);
         }
-      }, 1000);
+      }, 1500);
       
-      // Auto-close after 10 minutes with better messaging
+      // Timeout after 5 minutes
       timeoutId = setTimeout(() => {
         cleanup();
         if (authWindow && !authWindow.closed) {
           authWindow.close();
         }
-        setLoading(false);
-        setMessage('LinkedIn authentication timed out. This might be due to LinkedIn service issues. Try again later or use sample data.');
-        setTimeout(() => setMessage(''), 8000);
-      }, 600000);
+        setMessage('⏱️ LinkedIn authentication timed out. This may be due to LinkedIn service issues mentioned in your message. Please use sample data or try again later.');
+        setTimeout(() => setMessage(''), 10000);
+      }, 300000);
       
     } catch (error) {
       console.error('LinkedIn login error:', error);
-      setMessage('LinkedIn service is currently experiencing issues. Please try again later or use the sample data option to see how the feature works.');
-      setTimeout(() => setMessage(''), 8000);
+      setMessage('❌ LinkedIn authentication failed. This appears to be the same LinkedIn service issue you mentioned. Please use sample data to continue.');
+      setTimeout(() => setMessage(''), 10000);
       setLoading(false);
     }
   };
@@ -339,80 +347,105 @@ Projects: ${result.data.projects?.length || 0} projects
   };
 
   const addTestLinkedInData = async () => {
+    setLoading(true);
+    setMessage('🔄 Loading sample LinkedIn data...');
+
     const testData: LinkedInData = {
       personal: {
-        fullName: 'Sahil Bhujbal',
-        email: 'sahil@example.com',
+        fullName: user.username.replace('_', ' ').replace('-', ' ') || 'Professional User',
+        email: `${user.username}@professional.com`,
         phone: '+1 (555) 123-4567',
-        linkedin: 'https://linkedin.com/in/sahilbhujbal',
-        github: 'https://github.com/sahil-2307',
-        website: 'https://sahilbhujbal.dev'
+        linkedin: `https://linkedin.com/in/${user.username}`,
+        github: `https://github.com/${user.username}`,
+        website: `https://${user.username}.dev`
       },
       about: {
-        paragraph1: 'Passionate Computer Science graduate with expertise in full-stack development and AI/ML technologies.',
-        paragraph2: 'Experienced in building scalable web applications and working with modern development frameworks.'
+        paragraph1: 'Experienced professional with a passion for innovation and excellence in the technology industry. Proven track record of delivering high-quality solutions and leading successful projects.',
+        paragraph2: 'Skilled in full-stack development, project management, and team collaboration. Committed to continuous learning and staying current with emerging technologies and best practices.'
       },
       experience: [
         {
-          position: 'Full Stack Developer',
-          company: 'Tech Solutions Inc',
-          duration: '2023 - Present',
-          description: 'Developed and maintained web applications using React, Node.js, and MongoDB. Led a team of 3 developers on multiple client projects.'
+          position: 'Senior Software Developer',
+          company: 'Tech Innovations Corp',
+          duration: '2022 - Present',
+          description: 'Lead development of scalable web applications using modern frameworks. Collaborate with cross-functional teams to deliver enterprise-level solutions. Mentor junior developers and drive technical excellence across projects.'
         },
         {
-          position: 'Software Engineering Intern',
-          company: 'StartupXYZ',
-          duration: '2022 - 2023',
-          description: 'Built responsive web interfaces and REST APIs. Improved application performance by 40% through code optimization.'
+          position: 'Full Stack Developer',
+          company: 'Digital Solutions Ltd',
+          duration: '2020 - 2022',
+          description: 'Developed and maintained web applications using React, Node.js, and cloud technologies. Implemented CI/CD pipelines and improved system performance by 45%.'
+        },
+        {
+          position: 'Junior Developer',
+          company: 'StartUp Ventures',
+          duration: '2019 - 2020',
+          description: 'Built responsive web interfaces and REST APIs. Participated in agile development processes and contributed to multiple successful product launches.'
         }
       ],
       education: [
         {
           degree: 'Bachelor of Science in Computer Science',
           institution: 'University of Technology',
-          year: '2023',
-          description: 'Graduated Magna Cum Laude with focus on Software Engineering and Machine Learning'
+          year: '2019',
+          description: 'Graduated with honors. Focus on Software Engineering, Database Systems, and Machine Learning. Active in computer science clubs and hackathons.'
         }
       ],
       skills: {
-        technical: ['JavaScript', 'React', 'Node.js', 'Python', 'MongoDB', 'AWS', 'Docker', 'Git'],
-        soft: ['Leadership', 'Problem Solving', 'Team Collaboration', 'Communication']
+        technical: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'Python', 'MongoDB', 'PostgreSQL', 'AWS', 'Docker', 'Git', 'REST APIs', 'GraphQL'],
+        soft: ['Leadership', 'Problem Solving', 'Team Collaboration', 'Communication', 'Project Management', 'Strategic Thinking']
       },
       projects: [
         {
-          title: 'E-commerce Platform',
-          description: 'Full-stack e-commerce solution with payment integration and admin dashboard',
-          technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-          link: 'https://github.com/sahil-2307/ecommerce'
+          title: 'Portfolio Management Platform',
+          description: 'Comprehensive platform for creating and managing professional portfolios with multiple templates and customization options',
+          technologies: ['React', 'Node.js', 'MongoDB', 'Supabase'],
+          link: 'https://onlineportfolios.in'
         },
         {
-          title: 'AI Chat Application',
-          description: 'Real-time chat application with AI-powered responses using OpenAI API',
-          technologies: ['React', 'Socket.io', 'OpenAI', 'Express'],
-          link: 'https://github.com/sahil-2307/ai-chat'
+          title: 'E-commerce Analytics Dashboard',
+          description: 'Real-time analytics dashboard for e-commerce businesses with advanced reporting and data visualization',
+          technologies: ['React', 'Python', 'PostgreSQL', 'Chart.js'],
+          link: `https://github.com/${user.username}/analytics-dashboard`
+        },
+        {
+          title: 'AI-Powered Code Assistant',
+          description: 'Intelligent code completion and suggestion tool using machine learning algorithms',
+          technologies: ['Python', 'TensorFlow', 'REST API', 'Docker'],
+          link: `https://github.com/${user.username}/ai-code-assistant`
         }
       ],
       achievements: [
-        'Winner of University Hackathon 2023',
-        'Published research paper on Machine Learning applications',
-        'Contributed to 5+ open source projects'
+        'Led successful migration of legacy systems to modern cloud architecture',
+        'Contributed to 10+ open source projects with over 500 GitHub stars',
+        'Speaker at 3 technology conferences and meetups',
+        'Mentor in university coding bootcamp program',
+        'Published technical articles with 50K+ total views'
       ]
     };
 
-    console.log('Adding test LinkedIn data for user:', user.username);
-    const result = await LinkedInService.storeLinkedInData(user.username, testData);
-    console.log('Store result:', result);
-    
-    if (result.success) {
-      setHasLinkedInData(true);
-      setLinkedInData(testData);
-      setMessage('Test LinkedIn data added successfully!');
-      console.log('LinkedIn data state updated successfully');
-      setTimeout(() => setMessage(''), 3000);
-    } else {
-      console.error('Failed to store LinkedIn data:', result.error);
-      setMessage('Failed to add test data. Please try again.');
+    console.log('Adding comprehensive sample LinkedIn data for user:', user.username);
+    try {
+      const result = await LinkedInService.storeLinkedInData(user.username, testData);
+      console.log('Sample data store result:', result);
+      
+      if (result.success) {
+        setHasLinkedInData(true);
+        setLinkedInData(testData);
+        setMessage('✅ Sample LinkedIn data loaded successfully! This demonstrates how your actual LinkedIn data would appear.');
+        console.log('Sample LinkedIn data state updated successfully');
+        setTimeout(() => setMessage(''), 5000);
+      } else {
+        console.error('Failed to store sample LinkedIn data:', result.error);
+        setMessage('❌ Failed to load sample data. Please try again.');
+        setTimeout(() => setMessage(''), 5000);
+      }
+    } catch (error) {
+      console.error('Error loading sample data:', error);
+      setMessage('❌ Error loading sample data. Please try again.');
       setTimeout(() => setMessage(''), 5000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -477,8 +510,8 @@ Projects: ${result.data.projects?.length || 0} projects
                       <button onClick={handleLinkedInLogin} className="btn btn-linkedin" disabled={loading}>
                         <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
                       </button>
-                      <button onClick={addTestLinkedInData} className="btn btn-outline">
-                        <i className="fas fa-flask"></i> Sample Data
+                      <button onClick={addTestLinkedInData} className="btn btn-outline" disabled={loading}>
+                        <i className="fas fa-flask"></i> {loading ? 'Loading...' : 'Use Sample Data'}
                       </button>
                     </div>
                   </div>
