@@ -419,18 +419,15 @@ Projects: ${result.data.projects?.length || 0} projects
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <div className="header-left">
-          <div className="brand-info">
-            <h2 className="brand-name">OnlinePortfolios</h2>
-          </div>
-          <div className="user-info">
-            <h1>Welcome, {user.username}!</h1>
-            <p>Manage your professional portfolio</p>
-          </div>
-        </div>
+        <div className="brand-name">OnlinePortfolios</div>
         <button onClick={onLogout} className="logout-btn">
           <i className="fas fa-sign-out-alt"></i> Logout
         </button>
+      </div>
+      
+      <div className="welcome-section">
+        <h1>Welcome, {user.username}!</h1>
+        <p>Manage your professional portfolio</p>
       </div>
 
       <div className="dashboard-content">
@@ -443,7 +440,7 @@ Projects: ${result.data.projects?.length || 0} projects
             <div className="creation-section linkedin-section">
               <div className="section-header">
                 <div className="section-icon linkedin-icon">
-                  <i className="fab fa-linkedin"></i>
+                  <i className="fab fa-linkedin-in"></i>
                 </div>
                 <div className="section-title">
                   <h3>LinkedIn Import</h3>
@@ -491,7 +488,7 @@ Projects: ${result.data.projects?.length || 0} projects
             <div className="creation-section resume-section">
               <div className="section-header">
                 <div className="section-icon resume-icon">
-                  <i className="fas fa-file-alt"></i>
+                  <i className="fas fa-file-pdf"></i>
                 </div>
                 <div className="section-title">
                   <h3>Resume Upload</h3>
@@ -547,7 +544,7 @@ Projects: ${result.data.projects?.length || 0} projects
             <div className="creation-section form-section">
               <div className="section-header">
                 <div className="section-icon form-icon">
-                  <i className="fas fa-edit"></i>
+                  <i className="fas fa-pen-to-square"></i>
                 </div>
                 <div className="section-title">
                   <h3>Manual Form</h3>
@@ -579,7 +576,7 @@ Projects: ${result.data.projects?.length || 0} projects
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="fas fa-file-upload"></i>
+                <i className="fas fa-cloud-upload-alt"></i>
               </div>
               <div className="stat-content">
                 <h3 className="stat-number">{stats.resumesUploaded}</h3>
@@ -589,7 +586,7 @@ Projects: ${result.data.projects?.length || 0} projects
             
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="fas fa-briefcase"></i>
+                <i className="fas fa-user-tie"></i>
               </div>
               <div className="stat-content">
                 <h3 className="stat-number">{stats.portfoliosDeveloped}</h3>
@@ -599,7 +596,7 @@ Projects: ${result.data.projects?.length || 0} projects
             
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="fas fa-palette"></i>
+                <i className="fas fa-swatchbook"></i>
               </div>
               <div className="stat-content">
                 <h3 className="stat-number">{stats.templatesAvailable}</h3>
@@ -609,7 +606,7 @@ Projects: ${result.data.projects?.length || 0} projects
             
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="fas fa-link"></i>
+                <i className="fas fa-external-link-alt"></i>
               </div>
               <div className="stat-content">
                 <h3 className="stat-number">{stats.portfolioUrls}</h3>

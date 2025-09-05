@@ -22,44 +22,41 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 3rem;
+  padding: 1rem 3rem;
   background: var(--white);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 100;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.brand-info {
-  border-right: 2px solid var(--bg-card);
-  padding-right: 2rem;
+  border-bottom: 3px solid var(--brand-blue);
 }
 
 .brand-name {
   color: var(--brand-blue);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
   font-family: var(--font-primary);
 }
 
-.user-info h1 {
-  font-size: 2.5rem;
+.welcome-section {
+  padding: 2rem 3rem 1rem;
+  background: var(--white);
+  text-align: center;
+}
+
+.welcome-section h1 {
+  font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--text-dark);
   font-family: var(--font-primary);
 }
 
-.user-info p {
+.welcome-section p {
   color: var(--text-body);
   font-size: 1.1rem;
+  margin: 0;
 }
 
 .logout-btn {
@@ -1088,22 +1085,15 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-header {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem;
   }
   
-  .header-left {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
+  .welcome-section {
+    padding: 1.5rem 2rem 1rem;
   }
   
-  .brand-info {
-    border-right: none;
-    border-bottom: 2px solid var(--bg-card);
-    padding-right: 0;
-    padding-bottom: 1rem;
+  .welcome-section h1 {
+    font-size: 1.8rem;
   }
   
   .dashboard-content {
