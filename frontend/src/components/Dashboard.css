@@ -97,6 +97,15 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.sections-title i {
+  color: var(--brand-blue);
+  font-size: 1.8rem;
 }
 
 .sections-grid {
@@ -122,27 +131,27 @@
 }
 
 .linkedin-section {
-  border-color: #0077b5;
+  border-color: var(--brand-blue);
 }
 
 .linkedin-section:hover {
-  border-color: #005885;
+  border-color: var(--button-hover);
 }
 
 .resume-section {
-  border-color: #10b981;
+  border-color: var(--brand-blue);
 }
 
 .resume-section:hover {
-  border-color: #047857;
+  border-color: var(--button-hover);
 }
 
 .form-section {
-  border-color: #8b5cf6;
+  border-color: var(--brand-blue);
 }
 
 .form-section:hover {
-  border-color: #7c3aed;
+  border-color: var(--button-hover);
 }
 
 .section-header {
@@ -164,15 +173,15 @@
 }
 
 .linkedin-icon {
-  background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--button-hover) 100%);
 }
 
 .resume-icon {
-  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--button-hover) 100%);
 }
 
 .form-icon {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--button-hover) 100%);
 }
 
 .section-title h3 {
@@ -271,6 +280,15 @@
   font-weight: 600;
   margin-bottom: 2rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.stats-title i {
+  color: var(--brand-blue);
+  font-size: 1.3rem;
 }
 
 .stats-grid {

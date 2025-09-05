@@ -433,7 +433,9 @@ Projects: ${result.data.projects?.length || 0} projects
       <div className="dashboard-content">
         {/* Main Portfolio Creation Sections */}
         <div className="main-sections">
-          <h2 className="sections-title">Create Your Portfolio</h2>
+          <h2 className="sections-title">
+            <i className="fas fa-rocket"></i> Create Your Portfolio
+          </h2>
           <div className="sections-grid">
             
             {/* LinkedIn Section */}
@@ -572,7 +574,9 @@ Projects: ${result.data.projects?.length || 0} projects
 
         {/* Statistics Section */}
         <div className="statistics-section">
-          <h2 className="stats-title">Your Dashboard Statistics</h2>
+          <h2 className="stats-title">
+            <i className="fas fa-chart-line"></i> Your Dashboard Statistics
+          </h2>
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon">
