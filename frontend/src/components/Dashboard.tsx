@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { LinkedInService, LinkedInData } from '../services/linkedinService';
 import LinkedInPreview from './LinkedInPreview';
+import { useMobileDetection } from '../hooks/useMobileDetection';
 
 interface DashboardProps {
   user: any;
@@ -11,6 +12,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const navigate = useNavigate();
+  const { isMobile, isTablet, screenSize } = useMobileDetection();
   const [portfolioUrl, setPortfolioUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -498,7 +500,7 @@ Projects: ${result.data.projects?.length || 0} projects
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isMobile ? 'mobile' : ''} ${isTablet ? 'tablet' : ''}`}>
       <div className="dashboard-header">
         <div className="dashboard-brand">
           <div className="brand-name">OnlinePortfolios</div>
@@ -508,7 +510,7 @@ Projects: ${result.data.projects?.length || 0} projects
             <i className={isDarkMode ? 'fas fa-sun' : 'fas fa-moon'}></i>
           </button>
           <button onClick={onLogout} className="logout-btn">
-            <i className="fas fa-sign-out-alt"></i> Logout
+            <i className="fas fa-sign-out-alt"></i> {!isMobile && 'Logout'}
           </button>
         </div>
       </div>

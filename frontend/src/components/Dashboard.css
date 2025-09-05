@@ -1434,7 +1434,141 @@
 .stat-card:nth-child(3) { animation-delay: 0.3s; }
 .stat-card:nth-child(4) { animation-delay: 0.4s; }
 
-/* Responsive Design */
+/* Mobile Specific Styles */
+.dashboard-container.mobile {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.dashboard-container.mobile .dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dashboard-container.mobile .welcome-section {
+  margin-top: 80px;
+  padding: 2rem 1rem 1.5rem;
+}
+
+.dashboard-container.mobile .dashboard-content {
+  padding: 1rem;
+  padding-bottom: 2rem;
+}
+
+/* Touch-friendly buttons for mobile */
+.dashboard-container.mobile .btn {
+  min-height: 48px;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  touch-action: manipulation;
+}
+
+.dashboard-container.mobile .theme-toggle,
+.dashboard-container.mobile .logout-btn {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Mobile sections layout */
+.dashboard-container.mobile .sections-grid {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.dashboard-container.mobile .creation-section {
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+
+.dashboard-container.mobile .section-header {
+  flex-direction: column;
+  text-align: center;
+  gap: 1rem;
+}
+
+.dashboard-container.mobile .section-icon {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  margin: 0 auto;
+}
+
+.dashboard-container.mobile .section-title {
+  text-align: center;
+}
+
+.dashboard-container.mobile .section-actions {
+  gap: 0.75rem;
+}
+
+.dashboard-container.mobile .section-actions .btn {
+  width: 100%;
+}
+
+/* Mobile statistics */
+.dashboard-container.mobile .statistics-section {
+  padding: 2rem 1rem;
+  margin-top: 2rem;
+}
+
+.dashboard-container.mobile .stats-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.dashboard-container.mobile .stat-card {
+  padding: 1rem;
+  flex-direction: column;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.dashboard-container.mobile .stat-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  margin: 0 auto;
+}
+
+.dashboard-container.mobile .stat-number {
+  font-size: 1.8rem;
+}
+
+.dashboard-container.mobile .stat-label {
+  font-size: 0.8rem;
+}
+
+/* Mobile message display */
+.dashboard-container.mobile .message-display {
+  top: 90px;
+  left: 1rem;
+  right: 1rem;
+  max-width: none;
+  font-size: 0.9rem;
+  padding: 0.875rem 1rem;
+}
+
+/* Tablet Specific Styles */
+.dashboard-container.tablet .dashboard-content {
+  padding: 2.5rem 2rem;
+}
+
+.dashboard-container.tablet .sections-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.dashboard-container.tablet .stats-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Standard Responsive Design */
 @media (max-width: 768px) {
   .dashboard-header {
     padding: 1rem 1.5rem;
