@@ -556,7 +556,6 @@ Projects: ${result.data.projects?.length || 0} projects
           <div className="nav-links">
             <span className="username-display">Welcome, {user.username}</span>
             <button className="dark-mode-toggle" onClick={toggleTheme} aria-label="Toggle dark mode">
-              {isDarkMode ? '☀️' : '🌙'}
             </button>
             <button className="logout-nav-button" onClick={onLogout}>
               <i className="fas fa-sign-out-alt"></i> Logout

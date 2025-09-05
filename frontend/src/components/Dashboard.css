@@ -5,9 +5,9 @@
   /* Light Theme Colors */
   --bg-primary: #F4F8FB;
   --brand-blue: #1E73BE;
-  --text-dark: #123C63;
+  --text-dark: #1a1a1a;
   --bg-card: #E9F1FA;
-  --text-body: #4A4A4A;
+  --text-body: #2a2a2a;
   --button-hover: #155A96;
   --white: #FFFFFF;
   
@@ -101,7 +101,7 @@
   background: transparent;
   border: 2px solid var(--bg-card);
   color: var(--text-body);
-  font-size: 1.2rem;
+  font-size: 1rem;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -110,13 +110,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .dark-mode-toggle:hover {
   background: var(--bg-card);
   border-color: var(--brand-blue);
-  color: var(--brand-blue);
   transform: scale(1.1);
+}
+
+.dark-mode-toggle::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-body);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .dark-mode-toggle::before {
+  background: var(--text-body);
+  box-shadow: 0 0 0 2px transparent, 0 0 0 4px var(--text-body), 0 0 0 6px transparent, 0 0 0 8px var(--text-body);
+  transform: scale(0.6);
+}
+
+.dark-mode-toggle:hover::before {
+  background: var(--brand-blue);
+}
+
+[data-theme="dark"] .dark-mode-toggle:hover::before {
+  background: var(--brand-blue);
+  box-shadow: 0 0 0 2px transparent, 0 0 0 4px var(--brand-blue), 0 0 0 6px transparent, 0 0 0 8px var(--brand-blue);
 }
 
 .logout-nav-button {
