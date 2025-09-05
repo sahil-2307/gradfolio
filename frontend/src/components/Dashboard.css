@@ -1551,7 +1551,6 @@
   .stats-grid {
     grid-template-columns: 1fr;
   }
-}
   
   .linkedin-actions {
     flex-direction: column;
@@ -1576,6 +1575,7 @@
   .linkedin-buttons .btn {
     max-width: none;
   }
+  
   .dashboard-header {
     flex-direction: column;
     gap: 1rem;
