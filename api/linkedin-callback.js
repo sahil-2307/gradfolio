@@ -17,6 +17,17 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('LinkedIn callback received:', {
+      method: req.method,
+      url: req.url,
+      query: req.query,
+      headers: {
+        origin: req.headers.origin,
+        referer: req.headers.referer,
+        userAgent: req.headers['user-agent']
+      }
+    });
+
     const { code, state, error } = req.query;
 
     if (error) {
@@ -47,9 +58,17 @@ export default async function handler(req, res) {
     const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
     const redirectUri = `${req.headers.origin || 'https://onlineportfolios.in'}/api/linkedin-callback`;
 
+    console.log('LinkedIn credentials check:', {
+      clientId: clientId ? `${clientId.substring(0, 10)}...` : 'MISSING',
+      clientSecret: clientSecret ? 'CONFIGURED' : 'MISSING',
+      redirectUri,
+      origin: req.headers.origin,
+      host: req.headers.host
+    });
+
     if (!clientId || !clientSecret) {
-      console.error('LinkedIn credentials not configured');
-      return res.redirect('/dashboard?error=linkedin_not_configured');
+      console.error('LinkedIn credentials not configured on backend');
+      return res.redirect('/dashboard?error=linkedin_backend_not_configured&message=Backend LinkedIn credentials missing');
     }
 
     console.log('Exchanging LinkedIn code for access token:', { code: code.substring(0, 10) + '...', userId, username });

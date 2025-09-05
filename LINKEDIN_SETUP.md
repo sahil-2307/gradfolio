@@ -35,10 +35,12 @@ REACT_APP_LINKEDIN_CLIENT_ID=your_actual_client_id_here
 
 #### Backend/API (.env or Vercel Environment Variables)
 ```env
-# LinkedIn OAuth Configuration
-LINKEDIN_CLIENT_ID=your_actual_client_id_here
+# LinkedIn OAuth Configuration  
+LINKEDIN_CLIENT_ID=77mf916vuv8u6i
 LINKEDIN_CLIENT_SECRET=your_actual_client_secret_here
 ```
+
+**IMPORTANT**: You already have the Client ID (`77mf916vuv8u6i`) configured in frontend, but the backend API is missing the `LINKEDIN_CLIENT_SECRET`.
 
 ### Step 4: Vercel Environment Variables
 If deploying on Vercel, add these environment variables in your Vercel dashboard:

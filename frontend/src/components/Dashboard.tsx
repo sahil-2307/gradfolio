@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Dashboard.css';
 import { LinkedInService, LinkedInData } from '../services/linkedinService';
 import LinkedInPreview from './LinkedInPreview';
-import './Dashboard.css';
 
 interface DashboardProps {
   user: any;
@@ -24,6 +24,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     templatesAvailable: 3,
     portfolioUrls: 0
   });
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
 
   useEffect(() => {
     // Clear any existing data first to start fresh
@@ -32,7 +36,27 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     checkExistingPortfolio();
     // Update stats
     updateStats();
+    // Apply theme
+    applyTheme();
   }, [user]);
+
+  useEffect(() => {
+    applyTheme();
+  }, [isDarkMode]);
+
+  const applyTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const updateStats = () => {
     if (user?.username) {
@@ -282,19 +306,40 @@ Projects: ${result.data.projects?.length || 0} projects
         try {
           if (authWindow && authWindow.closed) {
             cleanup();
-            setMessage('✅ LinkedIn authentication window closed. Checking for data...');
+            setMessage('✅ LinkedIn authentication completed. Checking for imported data...');
             
-            // Check if LinkedIn data was successfully imported
-            setTimeout(() => {
-              checkLinkedInData();
-              setMessage('');
-            }, 3000);
+            // Check URL parameters for errors
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const errorMessage = urlParams.get('message');
+            
+            if (error) {
+              console.error('LinkedIn OAuth error from callback:', error, errorMessage);
+              if (error === 'linkedin_backend_not_configured') {
+                setMessage('⚠️ LinkedIn backend credentials not configured. Backend needs LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET environment variables. Use sample data for now.');
+              } else {
+                setMessage(`❌ LinkedIn authentication failed: ${errorMessage || error}. Please try again or use sample data.`);
+              }
+              setTimeout(() => setMessage(''), 10000);
+            } else {
+              // Check if LinkedIn data was successfully imported
+              setTimeout(() => {
+                checkLinkedInData();
+                if (!hasLinkedInData) {
+                  setMessage('⚠️ LinkedIn authentication completed but no data was imported. Please try again or use sample data.');
+                  setTimeout(() => setMessage(''), 8000);
+                } else {
+                  setMessage('');
+                }
+              }, 3000);
+            }
           } else if (authWindow) {
             // Check if we can access the window URL (same origin)
             try {
               const currentUrl = authWindow.location.href;
               console.log('Current popup URL:', currentUrl);
               if (currentUrl.includes('/dashboard')) {
+                console.log('Detected redirect to dashboard, closing popup');
                 authWindow.close();
               }
             } catch (e) {
@@ -444,10 +489,17 @@ Projects: ${result.data.projects?.length || 0} projects
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <div className="brand-name">OnlinePortfolios</div>
-        <button onClick={onLogout} className="logout-btn">
-          <i className="fas fa-sign-out-alt"></i> Logout
-        </button>
+        <div className="dashboard-brand">
+          <div className="brand-name">OnlinePortfolios</div>
+        </div>
+        <div className="header-controls">
+          <button onClick={toggleTheme} className="theme-toggle" title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+            <i className={isDarkMode ? 'fas fa-sun' : 'fas fa-moon'}></i>
+          </button>
+          <button onClick={onLogout} className="logout-btn">
+            <i className="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
       </div>
       
       <div className="welcome-section">
@@ -505,6 +557,12 @@ Projects: ${result.data.projects?.length || 0} projects
                       <button onClick={addTestLinkedInData} className="btn btn-outline" disabled={loading}>
                         <i className="fas fa-flask"></i> {loading ? 'Loading...' : 'Use Sample Data'}
                       </button>
+                      <div className="linkedin-status-info">
+                        <p className="helper-text">
+                          <i className="fas fa-info-circle"></i> 
+                          If LinkedIn shows "Network Will Be Back Soon", it's a LinkedIn service issue, not your app.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
