@@ -220,14 +220,18 @@
   border-radius: 10px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
-  color: #1f2937;
+  background: white !important;
+  color: #1f2937 !important;
 }
 
 .form-group input:focus {
   outline: none;
   border-color: #0066cc;
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #9ca3af !important;
 }
 
 .form-group small {
@@ -243,7 +247,7 @@
 }
 
 .dark-theme .form-group input {
-  background: rgba(51, 65, 85, 0.8);
+  background: rgba(51, 65, 85, 0.8) !important;
   border-color: rgba(148, 163, 184, 0.3);
   color: #f1f5f9 !important;
 }
@@ -254,12 +258,22 @@
 }
 
 .dark-theme .form-group input::placeholder {
-  color: #64748b;
+  color: #64748b !important;
 }
 
-/* Ensure light mode input text is dark */
-.login-container:not(.dark-theme) .form-group input {
+.dark-theme .form-group small {
+  color: #94a3b8;
+}
+
+/* Ensure light mode input text is always dark */
+.login-container:not(.dark-theme) .form-group input,
+.login-container .form-group input {
+  background: white !important;
   color: #1f2937 !important;
+}
+
+.login-container:not(.dark-theme) .form-group input::placeholder {
+  color: #9ca3af !important;
 }
 
 .error-message {
@@ -458,13 +472,14 @@
 }
 
 .checkmark {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border: 2px solid #d1d5db;
   border-radius: 4px;
   position: relative;
   transition: all 0.3s ease;
   background: white;
+  flex-shrink: 0;
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark {
@@ -475,11 +490,12 @@
 .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
   content: '✓';
   position: absolute;
-  top: -1px;
-  left: 3px;
+  top: 0px;
+  left: 4px;
   color: white;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
+  line-height: 1;
 }
 
 .checkbox-container:hover .checkmark {
@@ -494,8 +510,8 @@
 .dark-theme .checkmark {
   border-color: rgba(148, 163, 184, 0.5);
   background: rgba(51, 65, 85, 0.8);
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 
 .dark-theme .checkbox-container input[type="checkbox"]:checked + .checkmark {
@@ -542,6 +558,26 @@
   
   .error-text {
     font-size: 0.8rem;
+  }
+  
+  .checkmark {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .checkbox-container {
+    font-size: 0.9rem;
+  }
+  
+  .form-group input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    background: white !important;
+    color: #1f2937 !important;
+  }
+  
+  .dark-theme .form-group input {
+    background: rgba(51, 65, 85, 0.8) !important;
+    color: #f1f5f9 !important;
   }
 }
 
