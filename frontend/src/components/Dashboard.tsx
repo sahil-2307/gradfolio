@@ -20,13 +20,23 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [resumeData, setResumeData] = useState<any>(null);
 
   useEffect(() => {
-    // Check if user has a portfolio
+    // Clear any existing data first to start fresh
+    clearAllStoredData();
+    // Then check if user has a portfolio
     checkExistingPortfolio();
-    // Check if user has LinkedIn data
-    checkLinkedInData();
-    // Check if user has resume data
-    checkResumeData();
   }, [user]);
+
+  const clearAllStoredData = () => {
+    if (user?.username) {
+      // Clear both LinkedIn and resume data to start fresh
+      LinkedInService.clearLinkedInData(user.username);
+      localStorage.removeItem(`resume_data_${user.username}`);
+      setHasLinkedInData(false);
+      setLinkedInData(null);
+      setHasResumeData(false);
+      setResumeData(null);
+    }
+  };
 
   const checkResumeData = () => {
     if (user?.username) {
@@ -134,10 +144,14 @@ Projects: ${result.data.projects?.length || 0} projects
         
         // Store the resume data for later use instead of immediately redirecting
         localStorage.setItem(`resume_data_${user.username}`, JSON.stringify(result.data));
+        console.log('Stored resume data in localStorage for user:', user.username);
+        console.log('Data being stored:', JSON.stringify(result.data, null, 2));
         
         // Update state to show resume data is available
         setResumeData(result.data);
         setHasResumeData(true);
+        console.log('Resume state updated - hasResumeData:', true);
+        console.log('Resume data set to state:', result.data);
         
         // Show success message
         setMessage('Resume data extracted successfully! You can now view the data or create a portfolio.');
@@ -394,6 +408,9 @@ Projects: ${result.data.projects?.length || 0} projects
       <div className="dashboard-content">
         {/* Resume Data Section */}
         {hasResumeData && resumeData && (
+          <>
+            {console.log('Rendering resume section with data:', resumeData)}
+            {console.log('hasResumeData:', hasResumeData, 'resumeData exists:', !!resumeData)}
           <div className="resume-data-section">
             <div className="status-card resume">
               <div className="resume-header">
@@ -471,6 +488,7 @@ Projects: ${result.data.projects?.length || 0} projects
               </div>
             </div>
           </div>
+          </>
         )}
 
         {/* LinkedIn Data Section */}
