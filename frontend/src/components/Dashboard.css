@@ -1419,49 +1419,55 @@
 
 .message-toast {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background: #4caf50;
-  color: var(--white);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  top: 20px;
+  right: 20px;
+  background: var(--success);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-width: 350px;
+  animation: slideInRight 0.3s ease;
 }
 
-/* Message Display */
+/* Message Display - Compact Toast */
 .message-display {
   position: fixed;
   top: 20px;
   right: 20px;
-  max-width: 400px;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
+  max-width: 350px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   background: var(--white);
-  border: 2px solid var(--brand-blue);
-  box-shadow: 0 8px 30px var(--shadow-medium);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   animation: slideInRight 0.3s ease;
   font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.4;
   color: var(--text-dark);
 }
 
 .message-display.success {
   border-color: var(--success);
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  background: var(--success);
   color: white;
 }
 
 .message-display.error {
   border-color: var(--error);
-  background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
+  background: var(--error);
   color: white;
 }
 
 .message-display.warning {
   border-color: var(--warning);
-  background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+  background: var(--warning);
   color: white;
 }
 
@@ -1645,13 +1651,15 @@
 }
 
 /* Mobile message display */
-.dashboard-container.mobile .message-display {
+.dashboard-container.mobile .message-display,
+.dashboard-container.mobile .message-toast {
   top: 90px;
   left: 1rem;
   right: 1rem;
   max-width: none;
-  font-size: 0.9rem;
-  padding: 0.875rem 1rem;
+  font-size: 0.85rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 6px;
 }
 
 /* Tablet Specific Styles */
@@ -1745,11 +1753,15 @@
     font-size: 2rem;
   }
   
-  .message-display {
+  .message-display,
+  .message-toast {
     top: 10px;
     right: 10px;
     left: 10px;
     max-width: none;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
   }
 }
 
