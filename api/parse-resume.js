@@ -1,6 +1,5 @@
-const formidable = require('formidable');
+// Simple resume parser without external dependencies
 const fs = require('fs');
-const pdf = require('pdf-parse');
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -21,72 +20,75 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Parse the multipart form data
-    const form = formidable({
-      maxFileSize: 10 * 1024 * 1024, // 10MB limit
-      allowEmptyFiles: false,
-      multiples: false
-    });
-
-    const [fields, files] = await form.parse(req);
+    // For now, return mock data to test the flow
+    console.log('Resume parsing request received');
     
-    const userId = fields.userId?.[0];
-    const username = fields.username?.[0];
-    const resumeFile = files.resume?.[0];
+    // Mock parsed data
+    const parsedData = {
+      personal: {
+        fullName: 'John Doe',
+        email: 'john.doe@example.com',
+        phone: '+1 (555) 123-4567',
+        linkedin: 'https://linkedin.com/in/johndoe',
+        github: 'https://github.com/johndoe',
+        website: 'https://johndoe.dev'
+      },
+      about: {
+        paragraph1: 'Experienced software developer with 5+ years in full-stack development.',
+        paragraph2: 'Passionate about creating efficient and scalable web applications.'
+      },
+      experience: [
+        {
+          position: 'Senior Software Developer',
+          company: 'Tech Corp',
+          duration: '2021 - Present',
+          description: 'Led development of multiple web applications using React and Node.js.'
+        },
+        {
+          position: 'Software Developer',
+          company: 'StartupXYZ',
+          duration: '2019 - 2021',
+          description: 'Developed REST APIs and frontend components for e-commerce platform.'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Science in Computer Science',
+          institution: 'University of Technology',
+          year: '2019',
+          description: 'Graduated with honors, focus on software engineering'
+        }
+      ],
+      skills: {
+        technical: ['JavaScript', 'React', 'Node.js', 'Python', 'SQL', 'AWS'],
+        soft: ['Leadership', 'Problem Solving', 'Communication', 'Team Work']
+      },
+      projects: [
+        {
+          title: 'E-commerce Platform',
+          description: 'Full-stack web application with payment integration',
+          technologies: ['React', 'Node.js', 'MongoDB'],
+          link: 'https://github.com/johndoe/ecommerce'
+        },
+        {
+          title: 'Task Management App',
+          description: 'Real-time collaborative task management tool',
+          technologies: ['React', 'Socket.io', 'Express'],
+          link: 'https://github.com/johndoe/taskapp'
+        }
+      ],
+      achievements: [
+        'Led team of 5 developers on major project',
+        'Improved application performance by 40%',
+        'Published 3 technical articles'
+      ]
+    };
 
-    if (!userId || !username || !resumeFile) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required fields: userId, username, or resume file'
-      });
-    }
-
-    console.log('Resume parsing request:', {
-      userId,
-      username,
-      fileName: resumeFile.originalFilename,
-      fileSize: resumeFile.size,
-      fileType: resumeFile.mimetype
-    });
-
-    // Check file type
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.includes(resumeFile.mimetype)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid file type. Please upload a PDF, DOC, or DOCX file.'
-      });
-    }
-
-    let resumeText = '';
-
-    // Extract text from PDF
-    if (resumeFile.mimetype === 'application/pdf') {
-      const pdfBuffer = fs.readFileSync(resumeFile.filepath);
-      const pdfData = await pdf(pdfBuffer);
-      resumeText = pdfData.text;
-    } else {
-      // For DOC/DOCX files, we'll use a simple text extraction
-      // In production, you might want to use more sophisticated libraries
-      const fileBuffer = fs.readFileSync(resumeFile.filepath);
-      resumeText = fileBuffer.toString('utf8');
-    }
-
-    console.log('Extracted text length:', resumeText.length);
-
-    // Parse the resume text using AI/NLP or regex patterns
-    const parsedData = parseResumeContent(resumeText);
-
-    // Clean up the temporary file
-    try {
-      fs.unlinkSync(resumeFile.filepath);
-    } catch (cleanupError) {
-      console.warn('Failed to cleanup temp file:', cleanupError);
-    }
+    console.log('Returning mock parsed data');
 
     res.status(200).json({
       success: true,
-      message: 'Resume parsed successfully',
+      message: 'Resume parsed successfully (mock data)',
       data: parsedData
     });
 
@@ -98,18 +100,6 @@ export default async function handler(req, res) {
     });
   }
 }
-
-function parseResumeContent(text) {
-  const sections = {};
-  
-  // Clean up text
-  const cleanText = text.replace(/\s+/g, ' ').trim();
-  
-  // Extract email
-  const emailMatch = cleanText.match(/[\w\.-]+@[\w\.-]+\.\w+/);
-  const email = emailMatch ? emailMatch[0] : '';
-  
-  // Extract phone
   const phoneMatch = cleanText.match(/[\+]?[1-9]?[\d\s\-\(\)]{10,}/);
   const phone = phoneMatch ? phoneMatch[0].replace(/\s+/g, ' ').trim() : '';
   

@@ -43,31 +43,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     try {
       console.log('Checking existing portfolio for user:', user.username);
       
-      // Check if user has an existing portfolio by trying to access it
-      const response = await fetch(`/u/${user.username}`, {
-        method: 'HEAD' // Use HEAD to avoid downloading full HTML
-      });
-      
-      console.log('Portfolio check response:', {
-        status: response.status,
-        ok: response.ok,
-        url: `/u/${user.username}`
-      });
-      
-      if (response.ok) {
-        // If HEAD request succeeds, portfolio likely exists
-        const portfolioUrl = `${window.location.origin}/u/${user.username}`;
-        console.log('Valid portfolio found, setting URL:', portfolioUrl);
-        setPortfolioUrl(portfolioUrl);
-      } else {
-        console.log('No portfolio found for user:', user.username);
-        // Ensure portfolioUrl is empty so resume section shows
-        setPortfolioUrl('');
-      }
+      // Skip portfolio check for now - always show resume section
+      console.log('Skipping portfolio check - keeping resume section visible');
+      setPortfolioUrl('');
     } catch (error) {
       console.log('Error checking portfolio:', error);
-      console.log('No existing portfolio found');
-      // Ensure portfolioUrl is empty so resume section shows
       setPortfolioUrl('');
     }
   };
