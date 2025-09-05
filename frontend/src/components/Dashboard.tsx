@@ -40,16 +40,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   };
 
   const checkExistingPortfolio = async () => {
-    try {
-      console.log('Checking existing portfolio for user:', user.username);
-      
-      // Skip portfolio check for now - always show resume section
-      console.log('Skipping portfolio check - keeping resume section visible');
-      setPortfolioUrl('');
-    } catch (error) {
-      console.log('Error checking portfolio:', error);
-      setPortfolioUrl('');
-    }
+    // Always keep resume section visible
+    setPortfolioUrl('');
   };
 
   const handleCreatePortfolio = (templateType: string) => {
@@ -165,19 +157,8 @@ Projects: ${result.data.projects?.length || 0} projects
         return;
       }
 
-      // First, check if LinkedIn OAuth endpoint is accessible
-      setMessage('Testing LinkedIn connectivity...');
-      
-      try {
-        const testResponse = await fetch('https://www.linkedin.com/oauth/v2/authorization', {
-          method: 'HEAD',
-          mode: 'no-cors'
-        });
-        console.log('LinkedIn connectivity test completed');
-      } catch (connectivityError) {
-        console.warn('LinkedIn connectivity test failed:', connectivityError);
-        setMessage('LinkedIn service appears to be experiencing issues. You can try connecting anyway or use sample data.');
-      }
+      // Skip connectivity test to avoid HTTPS/CORS issues
+      setMessage('Preparing LinkedIn authentication...');
 
       const linkedinUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
       
