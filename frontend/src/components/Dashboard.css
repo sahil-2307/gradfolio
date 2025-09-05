@@ -70,6 +70,94 @@
   margin: 0 auto;
 }
 
+/* Resume Data Section */
+.resume-data-section {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.status-card.resume {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  color: white;
+  border: none;
+}
+
+.status-card.resume .status-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.status-card.resume .status-icon i {
+  color: white;
+}
+
+.status-card.resume h3 {
+  color: white;
+}
+
+.status-card.resume p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.resume-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resume-title h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.resume-title p {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.95rem;
+}
+
+.resume-preview {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.resume-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.resume-actions .btn {
+  flex: 1;
+  min-width: 200px;
+}
+
+.resume-actions .btn-outline {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.resume-actions .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.resume-actions .btn-primary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.resume-actions .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
 /* LinkedIn Data Section */
 .linkedin-data-section {
   width: 100%;

@@ -16,13 +16,35 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [message, setMessage] = useState('');
   const [hasLinkedInData, setHasLinkedInData] = useState(false);
   const [linkedInData, setLinkedInData] = useState<any>(null);
+  const [hasResumeData, setHasResumeData] = useState(false);
+  const [resumeData, setResumeData] = useState<any>(null);
 
   useEffect(() => {
     // Check if user has a portfolio
     checkExistingPortfolio();
-    // Clear any existing LinkedIn data on component mount
-    clearExistingLinkedInData();
+    // Check if user has LinkedIn data
+    checkLinkedInData();
+    // Check if user has resume data
+    checkResumeData();
   }, [user]);
+
+  const checkResumeData = () => {
+    if (user?.username) {
+      const storedResumeData = localStorage.getItem(`resume_data_${user.username}`);
+      if (storedResumeData) {
+        try {
+          const data = JSON.parse(storedResumeData);
+          setResumeData(data);
+          setHasResumeData(true);
+        } catch (error) {
+          console.error('Error parsing resume data:', error);
+          setHasResumeData(false);
+        }
+      } else {
+        setHasResumeData(false);
+      }
+    }
+  };
 
   const checkLinkedInData = async () => {
     if (user?.username) {
@@ -109,13 +131,17 @@ Projects: ${result.data.projects?.length || 0} projects
         `;
         
         console.log('Resume parsing summary:', summary);
-        alert(`Resume parsed successfully!\n${summary}`);
         
-        // Redirect to template admin with pre-filled data
-        const adminUrl = `/landing_1/admin.html?auth=true&username=${user.username}&resumeData=${encodeURIComponent(JSON.stringify(result.data))}`;
-        setTimeout(() => {
-          window.location.href = adminUrl;
-        }, 3000);
+        // Store the resume data for later use instead of immediately redirecting
+        localStorage.setItem(`resume_data_${user.username}`, JSON.stringify(result.data));
+        
+        // Update state to show resume data is available
+        setResumeData(result.data);
+        setHasResumeData(true);
+        
+        // Show success message
+        setMessage('Resume data extracted successfully! You can now view the data or create a portfolio.');
+        setTimeout(() => setMessage(''), 5000);
       } else {
         console.error('Resume parsing failed:', result);
         setMessage(result.message || 'Failed to process resume. Please try again.');
@@ -266,7 +292,7 @@ Projects: ${result.data.projects?.length || 0} projects
     navigate('/templates?source=linkedin');
   };
 
-  // Test function to add sample LinkedIn data
+  // Clear any existing LinkedIn data on component mount
   const clearExistingLinkedInData = async () => {
     if (user?.username) {
       await LinkedInService.clearLinkedInData(user.username);
@@ -366,6 +392,87 @@ Projects: ${result.data.projects?.length || 0} projects
       </div>
 
       <div className="dashboard-content">
+        {/* Resume Data Section */}
+        {hasResumeData && resumeData && (
+          <div className="resume-data-section">
+            <div className="status-card resume">
+              <div className="resume-header">
+                <div className="status-icon">
+                  <i className="fas fa-file-alt"></i>
+                </div>
+                <div className="resume-title">
+                  <h3>Resume Data Available</h3>
+                  <p>Your resume has been parsed and data extracted successfully</p>
+                </div>
+              </div>
+              
+              {/* Resume Data Preview */}
+              <div className="resume-preview">
+                <div className="resume-personal">
+                  <div className="personal-info">
+                    <h4><i className="fas fa-user"></i> {resumeData.personal?.fullName || 'Name not available'}</h4>
+                    <p><i className="fas fa-envelope"></i> {resumeData.personal?.email || 'Email not available'}</p>
+                    {resumeData.personal?.phone && (
+                      <p><i className="fas fa-phone"></i> {resumeData.personal.phone}</p>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="resume-summary">
+                  <div className="summary-stats">
+                    <div className="stat-item">
+                      <span className="stat-number">{resumeData.experience?.length || 0}</span>
+                      <span className="stat-label">Experience</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{resumeData.education?.length || 0}</span>
+                      <span className="stat-label">Education</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{(resumeData.skills?.technical?.length || 0) + (resumeData.skills?.soft?.length || 0)}</span>
+                      <span className="stat-label">Skills</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{resumeData.projects?.length || 0}</span>
+                      <span className="stat-label">Projects</span>
+                    </div>
+                  </div>
+                  
+                  {resumeData.about?.paragraph1 && (
+                    <div className="about-preview">
+                      <h5><i className="fas fa-info-circle"></i> Summary</h5>
+                      <p>{resumeData.about.paragraph1.substring(0, 200)}{resumeData.about.paragraph1.length > 200 ? '...' : ''}</p>
+                    </div>
+                  )}
+                  
+                  {resumeData.skills?.technical?.length > 0 && (
+                    <div className="skills-preview">
+                      <h5><i className="fas fa-code"></i> Top Skills</h5>
+                      <div className="skill-tags-preview">
+                        {resumeData.skills.technical.slice(0, 6).map((skill: string, index: number) => (
+                          <span key={index} className="skill-tag">{skill}</span>
+                        ))}
+                        {resumeData.skills.technical.length > 6 && (
+                          <span className="skill-tag more">+{resumeData.skills.technical.length - 6} more</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="resume-actions">
+                <button onClick={() => console.log('Resume Data:', JSON.stringify(resumeData, null, 2))} className="btn btn-outline">
+                  <i className="fas fa-code"></i> View JSON Data
+                </button>
+                <button onClick={() => handleCreatePortfolio('landing_1')} className="btn btn-primary">
+                  <i className="fas fa-magic"></i> Create Portfolio from Resume
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* LinkedIn Data Section */}
         {hasLinkedInData && linkedInData && (
           <div className="linkedin-data-section">
