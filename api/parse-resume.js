@@ -2,6 +2,23 @@
 const fs = require('fs');
 const path = require('path');
 
+// Import Supabase for database storage
+let supabaseClient;
+try {
+  const { createClient } = require('@supabase/supabase-js');
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    supabaseClient = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+    console.log('Supabase client initialized successfully');
+  } else {
+    console.warn('Supabase environment variables not found');
+  }
+} catch (e) {
+  console.error('Failed to load Supabase:', e);
+}
+
 // Try to import required modules
 let IncomingForm, pdfParse;
 try {
@@ -144,6 +161,35 @@ export default async function handler(req, res) {
     console.log('Resume parsing completed');
     console.log('Parsed data:', JSON.stringify(parsedData, null, 2));
 
+    // Store in database if userId and username are provided
+    if (fields.userId && fields.username) {
+      try {
+        console.log('Attempting to store resume data in database...');
+        console.log('User ID:', fields.userId[0]);
+        console.log('Username:', fields.username[0]);
+        
+        const storageResult = await storeResumeDataInDatabase(
+          fields.userId[0], 
+          fields.username[0], 
+          parsedData,
+          uploadedFile,
+          extractedText
+        );
+        
+        if (storageResult.success) {
+          console.log('✅ Resume data stored in database successfully');
+        } else {
+          console.error('❌ Database storage failed:', storageResult.error);
+        }
+      } catch (dbError) {
+        console.error('❌ Database storage error:', dbError);
+        // Don't fail the entire request if database storage fails
+      }
+    } else {
+      console.log('⚠️ No userId/username provided, skipping database storage');
+      console.log('Available fields:', Object.keys(fields));
+    }
+
     res.status(200).json({
       success: true,
       message: `Resume parsed successfully from ${uploadedFile.originalFilename}`,
@@ -157,6 +203,50 @@ export default async function handler(req, res) {
       success: false,
       message: error.message || 'Failed to parse resume'
     });
+  }
+}
+
+// Function to store resume data in Supabase database
+async function storeResumeDataInDatabase(userId, username, resumeData, fileInfo, rawText) {
+  if (!supabaseClient) {
+    console.warn('Supabase client not available, skipping database storage');
+    return { success: false, error: 'Database not available' };
+  }
+
+  try {
+    console.log('Storing resume data in database for user:', userId);
+    
+    const { data, error } = await supabaseClient
+      .from('user_resume_data')
+      .upsert({
+        user_id: userId,
+        username: username,
+        resume_filename: fileInfo.originalFilename,
+        resume_size: fileInfo.size,
+        personal: resumeData.personal || {},
+        about: resumeData.about || {},
+        experience: resumeData.experience || [],
+        education: resumeData.education || [],
+        skills: resumeData.skills || { technical: [], soft: [] },
+        projects: resumeData.projects || [],
+        achievements: resumeData.achievements || [],
+        raw_text: rawText.substring(0, 10000), // Limit raw text to 10k chars
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id'
+      });
+
+    if (error) {
+      console.error('Supabase storage error:', error);
+      throw error;
+    }
+
+    console.log('Resume data successfully stored in database');
+    return { success: true, data };
+    
+  } catch (error) {
+    console.error('Error storing resume data in database:', error);
+    return { success: false, error: error.message };
   }
 }
 
