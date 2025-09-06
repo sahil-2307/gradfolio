@@ -1,45 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMobileDetection } from '../hooks/useMobileDetection';
+import { ResumeService, ResumeData } from '../services/resumeService';
 import './ResumePreview.css';
 
-interface ResumeData {
-  personal: {
-    fullName: string;
-    email: string;
-    phone: string;
-    linkedin: string;
-    github: string;
-    website: string;
-  };
-  about: {
-    paragraph1: string;
-    paragraph2: string;
-  };
-  experience: Array<{
-    position: string;
-    company: string;
-    duration: string;
-    description: string;
-  }>;
-  education: Array<{
-    degree: string;
-    institution: string;
-    year: string;
-    description: string;
-  }>;
-  skills: {
-    technical: string[];
-    soft: string[];
-  };
-  projects: Array<{
-    title: string;
-    description: string;
-    technologies: string[];
-    link: string;
-  }>;
-  achievements: string[];
-}
+// Remove duplicate interface since we're importing it from resumeService
 
 interface ResumePreviewProps {
   user?: any;
@@ -60,7 +25,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
     loadResumeData();
   }, []);
 
-  const loadResumeData = () => {
+  const loadResumeData = async () => {
     try {
       // Get username from URL params or user prop
       const username = searchParams.get('username') || user?.username;
@@ -71,18 +36,21 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         return;
       }
 
-      // Load resume data from localStorage
-      const storedData = localStorage.getItem(`resume_data_${username}`);
+      console.log('Loading resume data for username:', username);
       
-      if (!storedData) {
+      // Load resume data from database first, fallback to localStorage
+      const result = await ResumeService.getResumeData(username);
+      
+      if (!result.success || !result.data) {
+        console.error('No resume data found:', result.error);
         setMessage('No resume data found. Please upload a resume first.');
         setTimeout(() => navigate('/dashboard'), 2000);
         return;
       }
 
-      const parsedData = JSON.parse(storedData);
-      setResumeData(parsedData);
-      setEditedData(JSON.parse(JSON.stringify(parsedData))); // Deep copy for editing
+      console.log('Resume data loaded successfully:', result.data);
+      setResumeData(result.data);
+      setEditedData(JSON.parse(JSON.stringify(result.data))); // Deep copy for editing
       setLoading(false);
     } catch (error) {
       console.error('Error loading resume data:', error);
@@ -179,33 +147,61 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
     setEditedData(newData);
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (!editedData || !user?.username) return;
 
     setSaving(true);
     try {
-      // Save updated data to localStorage
-      localStorage.setItem(`resume_data_${user.username}`, JSON.stringify(editedData));
-      setResumeData(editedData);
-      setMessage('✅ Changes saved successfully!');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
+      console.log('Saving resume changes to database:', editedData);
+      
+      // Save updated data to both database and localStorage
+      const result = await ResumeService.saveResumeData(user.username, editedData);
+      
+      if (result.success) {
+        setResumeData(editedData);
+        if (result.error) {
+          // Partial success - saved locally but not to database
+          setMessage(`⚠️ ${result.error}`);
+          setTimeout(() => setMessage(''), 8000);
+        } else {
+          // Full success
+          setMessage('✅ Changes saved successfully to database!');
+          setTimeout(() => setMessage(''), 3000);
+        }
+      } else {
+        throw new Error(result.error || 'Failed to save changes');
+      }
+    } catch (error: any) {
       console.error('Error saving changes:', error);
-      setMessage('❌ Error saving changes. Please try again.');
+      setMessage(`❌ Error saving changes: ${error.message}`);
       setTimeout(() => setMessage(''), 5000);
     } finally {
       setSaving(false);
     }
   };
 
-  const createPortfolio = () => {
+  const createPortfolio = async () => {
     if (!editedData || !user?.username) return;
 
-    // Save any unsaved changes first
-    localStorage.setItem(`resume_data_${user.username}`, JSON.stringify(editedData));
-    
-    // Navigate to template selection with resume data
-    navigate(`/templates?source=resume&username=${user.username}`);
+    setSaving(true);
+    try {
+      // Save any unsaved changes first
+      const result = await ResumeService.saveResumeData(user.username, editedData);
+      
+      if (!result.success) {
+        console.warn('Failed to save to database before creating portfolio:', result.error);
+        // Still proceed, data is in localStorage
+      }
+      
+      // Navigate to template selection with resume data
+      navigate(`/templates?source=resume&username=${user.username}`);
+    } catch (error) {
+      console.error('Error saving before portfolio creation:', error);
+      // Still proceed with portfolio creation
+      navigate(`/templates?source=resume&username=${user.username}`);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const sections = [

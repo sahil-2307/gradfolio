@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { LinkedInService, LinkedInData } from '../services/linkedinService';
+import { ResumeService } from '../services/resumeService';
 import LinkedInPreview from './LinkedInPreview';
 import { useMobileDetection } from '../hooks/useMobileDetection';
 import ThreeBackground from './ThreeBackground';
@@ -79,32 +80,46 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     }
   };
 
-  const clearAllStoredData = () => {
+  const clearAllStoredData = async () => {
     if (user?.username) {
-      // Clear both LinkedIn and resume data to start fresh
-      LinkedInService.clearLinkedInData(user.username);
-      localStorage.removeItem(`resume_data_${user.username}`);
-      setHasLinkedInData(false);
-      setLinkedInData(null);
-      setHasResumeData(false);
-      setResumeData(null);
+      try {
+        // Clear both LinkedIn and resume data to start fresh
+        await Promise.all([
+          LinkedInService.clearLinkedInData(user.username),
+          ResumeService.deleteResumeData(user.username)
+        ]);
+        
+        setHasLinkedInData(false);
+        setLinkedInData(null);
+        setHasResumeData(false);
+        setResumeData(null);
+        
+        console.log('All stored data cleared successfully');
+      } catch (error) {
+        console.error('Error clearing stored data:', error);
+      }
     }
   };
 
-  const checkResumeData = () => {
+  const checkResumeData = async () => {
     if (user?.username) {
-      const storedResumeData = localStorage.getItem(`resume_data_${user.username}`);
-      if (storedResumeData) {
-        try {
-          const data = JSON.parse(storedResumeData);
-          setResumeData(data);
+      try {
+        console.log('Checking resume data for user:', user.username);
+        const result = await ResumeService.getResumeData(user.username);
+        
+        if (result.success && result.data) {
+          console.log('Resume data found:', result.data);
+          setResumeData(result.data);
           setHasResumeData(true);
-        } catch (error) {
-          console.error('Error parsing resume data:', error);
+        } else {
+          console.log('No resume data found:', result.error);
           setHasResumeData(false);
+          setResumeData(null);
         }
-      } else {
+      } catch (error) {
+        console.error('Error checking resume data:', error);
         setHasResumeData(false);
+        setResumeData(null);
       }
     }
   };
@@ -195,16 +210,17 @@ Projects: ${result.data.projects?.length || 0} projects
         
         console.log('Resume parsing summary:', summary);
         
-        // Store the resume data for later use instead of immediately redirecting
-        localStorage.setItem(`resume_data_${user.username}`, JSON.stringify(result.data));
-        console.log('Stored resume data in localStorage for user:', user.username);
-        console.log('Data being stored:', JSON.stringify(result.data, null, 2));
+        // The API already stores data in database, but let's ensure we have local copy
+        console.log('Resume data processed and stored automatically by API');
         
         // Update state to show resume data is available
         setResumeData(result.data);
         setHasResumeData(true);
         console.log('Resume state updated - hasResumeData:', true);
         console.log('Resume data set to state:', result.data);
+        
+        // Ensure localStorage backup as well
+        localStorage.setItem(`resume_data_${user.username}`, JSON.stringify(result.data));
         
         // Show success message
         setMessage('Resume data extracted successfully! You can now view the data or create a portfolio.');
