@@ -277,14 +277,14 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       {/* Header */}
       <div className="resume-header">
         <div className="header-content">
-          <button onClick={() => navigate('/dashboard')} className="back-btn">
-            <i className="fas fa-arrow-left"></i>
-            <span>Back</span>
-          </button>
           <button onClick={toggleTheme} className="theme-toggle">
             <div className="toggle-track">
               <div className={`toggle-thumb ${isDarkMode ? 'dark' : 'light'}`}></div>
             </div>
+          </button>
+          <button onClick={() => navigate('/dashboard')} className="back-btn">
+            <i className="fas fa-arrow-left"></i>
+            <span>Back</span>
           </button>
         </div>
       </div>
@@ -637,10 +637,10 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
             <button 
               onClick={goToPreviousSection} 
               disabled={!canGoPrevious}
-              className="btn btn-outline btn-nav"
+              className="btn btn-arrow btn-arrow-left"
+              title="Previous Section"
             >
               <i className="fas fa-chevron-left"></i>
-              Previous
             </button>
 
             <div className="center-actions">
@@ -657,9 +657,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
             <button 
               onClick={goToNextSection} 
               disabled={!canGoNext}
-              className="btn btn-primary btn-nav"
+              className="btn btn-arrow btn-arrow-right"
+              title="Next Section"
             >
-              Next
               <i className="fas fa-chevron-right"></i>
             </button>
           </div>
