@@ -479,6 +479,8 @@
 /* Mobile Responsive */
 .resume-preview-container.mobile .header-content {
   padding: 0.5rem 0.75rem;
+  flex-direction: row !important;
+  justify-content: space-between !important;
 }
 
 .resume-preview-container.mobile .back-btn {
@@ -509,21 +511,29 @@
 }
 
 .resume-preview-container.mobile .nav-controls {
-  flex-direction: column;
-  gap: 1rem;
+  flex-direction: row !important;
+  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .resume-preview-container.mobile .center-actions {
-  order: 1;
-  width: 100%;
+  flex: 1;
   justify-content: center;
-  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .resume-preview-container.mobile .btn-arrow {
-  width: 44px;
-  height: 44px;
-  font-size: 1.1rem;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.resume-preview-container.mobile .center-actions .btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  min-height: 40px;
 }
 
 .resume-preview-container.mobile .resume-content {
@@ -682,29 +692,39 @@
   }
   
   .header-content {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
+    flex-direction: row !important;
+    justify-content: space-between !important;
   }
 
   .bottom-navigation {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .nav-controls {
-    flex-direction: column;
-    gap: 1rem;
+    flex-direction: row !important;
+    gap: 0.75rem;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .center-actions {
-    order: 1;
-    width: 100%;
+    flex: 1;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
   .btn-arrow {
-    width: 44px;
-    height: 44px;
-    font-size: 1.1rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .center-actions .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    min-height: 40px;
   }
 }
 
@@ -714,7 +734,7 @@
   }
   
   .form-section {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   
   .array-item {
@@ -722,16 +742,27 @@
   }
   
   .nav-item span {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   
   .nav-item {
-    min-width: 100px;
-    padding: 0.875rem 1rem;
-    font-size: 0.85rem;
+    min-width: 90px;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.75rem;
   }
   
   .nav-item i {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .center-actions .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
   }
 }
