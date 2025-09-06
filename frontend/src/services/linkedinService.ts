@@ -141,12 +141,14 @@ export class LinkedInService {
       try {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
+          console.log('Checking LinkedIn data for user:', user.data.user.id);
           const { data, error } = await supabase
             .from('user_linkedin_data')
             .select('id')
             .eq('user_id', user.data.user.id)
             .single();
 
+          console.log('LinkedIn data check result:', { data, error });
           return !error && !!data;
         }
       } catch (supabaseError) {

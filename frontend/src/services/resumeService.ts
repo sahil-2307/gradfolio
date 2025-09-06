@@ -49,11 +49,14 @@ export class ResumeService {
 
       // Try to fetch from Supabase database first
       try {
+        console.log('Attempting to fetch resume data from database for user:', user.data.user.id);
         const { data: dbData, error } = await supabase
           .from('user_resume_data')
           .select('*')
           .eq('user_id', user.data.user.id)
           .single();
+
+        console.log('Database query result:', { data: dbData, error });
 
         if (!error && dbData) {
           // Transform database data back to ResumeData format
