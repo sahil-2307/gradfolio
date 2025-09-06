@@ -277,14 +277,14 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       {/* Header */}
       <div className="resume-header">
         <div className="header-content">
+          <button onClick={() => navigate('/dashboard')} className="back-btn">
+            <i className="fas fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
           <button onClick={toggleTheme} className="theme-toggle">
             <div className="toggle-track">
               <div className={`toggle-thumb ${isDarkMode ? 'dark' : 'light'}`}></div>
             </div>
-          </button>
-          <button onClick={() => navigate('/dashboard')} className="back-btn">
-            <i className="fas fa-arrow-left"></i>
-            <span>Back</span>
           </button>
         </div>
       </div>
@@ -297,22 +297,6 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       )}
 
       <div className="resume-content">
-        {/* Navigation Sidebar */}
-        <div className="resume-nav">
-          <div className="nav-sections">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`nav-item ${activeSection === section.id ? 'active' : ''}`}
-              >
-                <i className={section.icon}></i>
-                <span>{section.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Form Content */}
         <div className="resume-form">
           {activeSection === 'personal' && (
@@ -406,7 +390,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               <div className="section-header">
                 <h2><i className="fas fa-briefcase"></i> Work Experience</h2>
                 <button onClick={() => addArrayItem('experience')} className="btn btn-outline btn-sm">
-                  <i className="fas fa-plus"></i> Add Experience
+                  <i className="fas fa-plus"></i> Add
                 </button>
               </div>
               {editedData.experience.map((exp, index) => (
@@ -465,7 +449,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               <div className="section-header">
                 <h2><i className="fas fa-graduation-cap"></i> Education</h2>
                 <button onClick={() => addArrayItem('education')} className="btn btn-outline btn-sm">
-                  <i className="fas fa-plus"></i> Add Education
+                  <i className="fas fa-plus"></i> Add
                 </button>
               </div>
               {editedData.education.map((edu, index) => (
@@ -550,7 +534,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               <div className="section-header">
                 <h2><i className="fas fa-project-diagram"></i> Projects</h2>
                 <button onClick={() => addArrayItem('projects')} className="btn btn-outline btn-sm">
-                  <i className="fas fa-plus"></i> Add Project
+                  <i className="fas fa-plus"></i> Add
                 </button>
               </div>
               {editedData.projects.map((project, index) => (
@@ -609,7 +593,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               <div className="section-header">
                 <h2><i className="fas fa-trophy"></i> Achievements</h2>
                 <button onClick={() => addArrayItem('achievements')} className="btn btn-outline btn-sm">
-                  <i className="fas fa-plus"></i> Add Achievement
+                  <i className="fas fa-plus"></i> Add
                 </button>
               </div>
               {editedData.achievements.map((achievement, index) => (
@@ -640,7 +624,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               className="btn btn-arrow btn-arrow-left"
               title="Previous Section"
             >
-              <i className="fas fa-chevron-left"></i>
+              &lt;
             </button>
 
             <div className="center-actions">
@@ -660,7 +644,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               className="btn btn-arrow btn-arrow-right"
               title="Next Section"
             >
-              <i className="fas fa-chevron-right"></i>
+              &gt;
             </button>
           </div>
         </div>
