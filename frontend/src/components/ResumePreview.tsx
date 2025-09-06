@@ -20,10 +20,29 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [activeSection, setActiveSection] = useState('personal');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
 
   useEffect(() => {
     loadResumeData();
   }, []);
+
+  useEffect(() => {
+    // Apply theme
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const loadResumeData = async () => {
     try {
@@ -214,6 +233,22 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
     { id: 'achievements', label: 'Achievements', icon: 'fas fa-trophy' }
   ];
 
+  const currentSectionIndex = sections.findIndex(section => section.id === activeSection);
+  const canGoPrevious = currentSectionIndex > 0;
+  const canGoNext = currentSectionIndex < sections.length - 1;
+
+  const goToPreviousSection = () => {
+    if (canGoPrevious) {
+      setActiveSection(sections[currentSectionIndex - 1].id);
+    }
+  };
+
+  const goToNextSection = () => {
+    if (canGoNext) {
+      setActiveSection(sections[currentSectionIndex + 1].id);
+    }
+  };
+
   if (loading) {
     return (
       <div className="resume-preview-container">
@@ -244,19 +279,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         <div className="header-content">
           <button onClick={() => navigate('/dashboard')} className="back-btn">
             <i className="fas fa-arrow-left"></i>
-            {!isMobile && 'Back to Dashboard'}
+            <span>Back</span>
           </button>
-          <h1>Resume Preview & Edit</h1>
-          <div className="header-actions">
-            <button onClick={saveChanges} disabled={saving} className="btn btn-outline">
-              <i className="fas fa-save"></i>
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-            <button onClick={createPortfolio} className="btn btn-primary">
-              <i className="fas fa-magic"></i>
-              Create Portfolio
-            </button>
-          </div>
+          <button onClick={toggleTheme} className="theme-toggle">
+            <div className="toggle-track">
+              <div className={`toggle-thumb ${isDarkMode ? 'dark' : 'light'}`}></div>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -600,6 +629,40 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Bottom Navigation */}
+        <div className="bottom-navigation">
+          <div className="nav-controls">
+            <button 
+              onClick={goToPreviousSection} 
+              disabled={!canGoPrevious}
+              className="btn btn-outline btn-nav"
+            >
+              <i className="fas fa-chevron-left"></i>
+              Previous
+            </button>
+
+            <div className="center-actions">
+              <button onClick={saveChanges} disabled={saving} className="btn btn-primary">
+                <i className="fas fa-save"></i>
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button onClick={createPortfolio} className="btn btn-outline">
+                <i className="fas fa-magic"></i>
+                Create Portfolio
+              </button>
+            </div>
+
+            <button 
+              onClick={goToNextSection} 
+              disabled={!canGoNext}
+              className="btn btn-primary btn-nav"
+            >
+              Next
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
