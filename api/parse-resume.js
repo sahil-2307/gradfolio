@@ -6,14 +6,24 @@ const path = require('path');
 let supabaseClient;
 try {
   const { createClient } = require('@supabase/supabase-js');
-  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-    supabaseClient = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY
-    );
-    console.log('Supabase client initialized successfully');
+  
+  // Try service key first, fall back to anon key
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  const anonKey = process.env.SUPABASE_ANON_KEY;
+  
+  if (supabaseUrl && serviceKey) {
+    supabaseClient = createClient(supabaseUrl, serviceKey);
+    console.log('Supabase client initialized with service key');
+  } else if (supabaseUrl && anonKey) {
+    supabaseClient = createClient(supabaseUrl, anonKey);
+    console.log('Supabase client initialized with anon key');
   } else {
-    console.warn('Supabase environment variables not found');
+    console.warn('Supabase environment variables not found. Available vars:', {
+      SUPABASE_URL: !!process.env.SUPABASE_URL,
+      SUPABASE_SERVICE_KEY: !!process.env.SUPABASE_SERVICE_KEY,
+      SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY
+    });
   }
 } catch (e) {
   console.error('Failed to load Supabase:', e);
