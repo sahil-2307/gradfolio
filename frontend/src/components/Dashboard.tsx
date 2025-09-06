@@ -37,12 +37,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   });
 
   useEffect(() => {
-    // Clear any existing data first to start fresh
-    clearAllStoredData();
-    // Then check if user has a portfolio
-    checkExistingPortfolio();
-    // Update stats
-    updateStats();
+    if (user?.username) {
+      // Load existing data from database
+      checkResumeData();
+      checkLinkedInData();
+      // Check if user has a portfolio
+      checkExistingPortfolio();
+      // Update stats
+      updateStats();
+    }
     // Apply theme
     applyTheme();
   }, [user]);
@@ -50,6 +53,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   useEffect(() => {
     applyTheme();
   }, [isDarkMode]);
+
+  // Update stats whenever resume or LinkedIn data state changes
+  useEffect(() => {
+    updateStats();
+  }, [hasResumeData, hasLinkedInData, portfolioUrl]);
 
   const applyTheme = () => {
     if (isDarkMode) {
@@ -67,13 +75,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   const updateStats = () => {
     if (user?.username) {
-      // Check localStorage for stats
-      const resumeData = localStorage.getItem(`resume_data_${user.username}`);
-      const linkedinData = localStorage.getItem(`linkedin_data_${user.username}`);
-      
       setStats(prev => ({
         ...prev,
-        resumesUploaded: resumeData ? 1 : 0,
+        resumesUploaded: hasResumeData ? 1 : 0,
         portfoliosDeveloped: portfolioUrl ? 1 : 0,
         portfolioUrls: portfolioUrl ? 1 : 0
       }));
