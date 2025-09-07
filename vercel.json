@@ -76,6 +76,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/portfolio-templates",
+      "destination": "/index.html"
+    },
+    {
       "source": "/u/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
     },

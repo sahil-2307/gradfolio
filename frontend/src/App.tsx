@@ -11,6 +11,7 @@ import LinkedInCallback from './components/LinkedInCallback';
 import LinkedInPreview from './components/LinkedInPreview';
 import ResumePreview from './components/ResumePreview';
 import PortfolioPreview from './components/PortfolioPreview';
+import PortfolioTemplateSelector from './components/PortfolioTemplateSelector';
 import BrowseProfiles from './components/BrowseProfiles';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import PaymentSuccess from './components/PaymentSuccess';
@@ -161,6 +162,14 @@ function App() {
           <Route 
             path="/resume-generator" 
             element={<PortfolioPreview />} 
+          />
+          <Route 
+            path="/portfolio-templates" 
+            element={
+              isAuthenticated ? 
+                <PortfolioTemplateSelector /> : 
+                <Navigate to="/login" replace />
+            }
           />
           <Route 
             path="/privacy" 

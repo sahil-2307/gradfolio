@@ -255,13 +255,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       const storedData = localStorage.getItem(storageKey);
       console.log('API Success - Verification - stored data exists:', !!storedData);
       
-      // Redirect to portfolio viewer or create a portfolio preview page
+      // Navigate to template selection page
       setTimeout(() => {
-        const portfolioUrl = `${window.location.origin}/resume-generator?username=${user.username}`;
-        console.log('About to redirect to:', portfolioUrl);
-        window.open(portfolioUrl, '_blank');
+        const templateUrl = `${window.location.origin}/portfolio-templates?username=${user.username}`;
+        console.log('About to redirect to:', templateUrl);
+        navigate(templateUrl.replace(window.location.origin, ''));
         setMessage('');
-      }, 2000);
+      }, 1500);
       
     } catch (error: any) {
       console.error('Error creating portfolio:', error);
@@ -286,13 +286,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         const storedData = localStorage.getItem(storageKey);
         console.log('Verification - stored data exists:', !!storedData);
         
-        setMessage('🎉 Portfolio generated locally! Redirecting...');
+        setMessage('🎉 Portfolio generated locally! Choose a template...');
         setTimeout(() => {
-          const portfolioUrl = `${window.location.origin}/resume-generator?username=${user.username}`;
-          console.log('About to redirect to:', portfolioUrl);
-          window.open(portfolioUrl, '_blank');
+          const templateUrl = `${window.location.origin}/portfolio-templates?username=${user.username}`;
+          console.log('About to redirect to:', templateUrl);
+          navigate(templateUrl.replace(window.location.origin, ''));
           setMessage('');
-        }, 2000);
+        }, 1500);
         
       } catch (fallbackError) {
         console.error('Fallback generation failed:', fallbackError);
