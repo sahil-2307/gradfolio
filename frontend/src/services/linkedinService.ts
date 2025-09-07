@@ -45,35 +45,26 @@ export class LinkedInService {
       // Store in localStorage for immediate access
       localStorage.setItem(`linkedin_data_${username}`, JSON.stringify(data));
       
-      // Try to store in Supabase for persistence, but don't fail if table doesn't exist
+      // Try to store in Supabase for persistence, but don't fail if there are access issues
       try {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
-          // First check if the table exists by doing a simple select
-          const { error: checkError } = await supabase
+          const { error } = await supabase
             .from('user_linkedin_data')
-            .select('id')
-            .limit(1);
+            .upsert({
+              user_id: user.data.user.id,
+              username: username,
+              linkedin_data: data,
+              updated_at: new Date().toISOString()
+            }, {
+              onConflict: 'user_id'
+            });
 
-          // If table doesn't exist, skip Supabase storage
-          if (checkError && (checkError.code === 'PGRST106' || checkError.message.includes('does not exist') || checkError.message.includes('Not Acceptable'))) {
-            console.log('user_linkedin_data table not found, using localStorage only');
-          } else if (!checkError) {
-            // Table exists, try to upsert
-            const { error } = await supabase
-              .from('user_linkedin_data')
-              .upsert({
-                user_id: user.data.user.id,
-                username: username,
-                linkedin_data: data,
-                updated_at: new Date().toISOString()
-              }, {
-                onConflict: 'user_id'
-              });
-
-            if (error) {
-              console.error('Error storing LinkedIn data in Supabase:', error);
-            }
+          // If we get a 406 error or access issues, just log and continue
+          if (error && (error.code === 'PGRST106' || error.message?.includes('Not Acceptable') || error.message?.includes('does not exist'))) {
+            console.log('Supabase storage not available, using localStorage only:', error);
+          } else if (error) {
+            console.error('Error storing LinkedIn data in Supabase:', error);
           }
         }
       } catch (supabaseError) {
@@ -101,7 +92,7 @@ export class LinkedInService {
         }
       }
 
-      // Try to fall back to Supabase, but handle table not existing
+      // Try to fall back to Supabase, but handle access issues
       try {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
@@ -111,7 +102,10 @@ export class LinkedInService {
             .eq('user_id', user.data.user.id)
             .single();
 
-          if (!error && dbData) {
+          // If we get a 406 error or access issues, skip Supabase
+          if (error && (error.code === 'PGRST106' || error.message?.includes('Not Acceptable') || error.message?.includes('does not exist'))) {
+            console.log('Supabase access not available, no fallback data:', error);
+          } else if (!error && dbData) {
             // Store in localStorage for next time
             localStorage.setItem(`linkedin_data_${username}`, JSON.stringify(dbData.linkedin_data));
             return { success: true, data: dbData.linkedin_data };
@@ -137,35 +131,27 @@ export class LinkedInService {
         return true;
       }
 
-      // Try to check Supabase, but don't fail if table doesn't exist
+      // Try to check Supabase, but don't fail if there are access issues
       try {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
           console.log('Checking LinkedIn data for user:', user.data.user.id);
           
-          // First check if the table exists by doing a simple select
-          const { error: checkError } = await supabase
+          const { data, error } = await supabase
             .from('user_linkedin_data')
             .select('id')
-            .limit(1);
+            .eq('user_id', user.data.user.id)
+            .single();
 
-          // If table doesn't exist, skip Supabase check
-          if (checkError && (checkError.code === 'PGRST106' || checkError.message.includes('does not exist') || checkError.message.includes('Not Acceptable'))) {
-            console.log('user_linkedin_data table not found, using localStorage only');
+          console.log('LinkedIn data check result:', { data, error });
+          
+          // If we get a 406 error or table access issues, fall back to localStorage only
+          if (error && (error.code === 'PGRST106' || error.message?.includes('Not Acceptable') || error.message?.includes('does not exist'))) {
+            console.log('Supabase access issue, using localStorage only:', error);
             return false;
           }
           
-          // Only query if table exists
-          if (!checkError) {
-            const { data, error } = await supabase
-              .from('user_linkedin_data')
-              .select('id')
-              .eq('user_id', user.data.user.id)
-              .single();
-
-            console.log('LinkedIn data check result:', { data, error });
-            return !error && !!data;
-          }
+          return !error && !!data;
         }
       } catch (supabaseError) {
         console.log('Supabase check failed, using localStorage only:', supabaseError);
@@ -184,31 +170,25 @@ export class LinkedInService {
       // Clear localStorage
       localStorage.removeItem(`linkedin_data_${username}`);
       
-      // Try to clear from Supabase, but don't fail if table doesn't exist
+      // Try to clear from Supabase, but don't fail if there are access issues
       try {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
-          // First check if table exists
-          const { error: checkError } = await supabase
+          const { error } = await supabase
             .from('user_linkedin_data')
-            .select('id')
-            .limit(1);
+            .delete()
+            .eq('user_id', user.data.user.id);
 
-          // Only try to delete if table exists
-          if (!checkError || checkError.code !== 'PGRST106') {
-            const { error } = await supabase
-              .from('user_linkedin_data')
-              .delete()
-              .eq('user_id', user.data.user.id);
-
-            if (error && error.code !== 'PGRST106') {
-              console.log('Non-critical Supabase clear error:', error.message);
-            }
+          // If we get access issues, just log and continue
+          if (error && (error.code === 'PGRST106' || error.message?.includes('Not Acceptable') || error.message?.includes('does not exist'))) {
+            console.log('Supabase clear not available:', error);
+          } else if (error) {
+            console.log('Non-critical Supabase clear error:', error.message);
           }
         }
       } catch (supabaseError: any) {
         // Silently handle Supabase errors - localStorage is primary storage
-        console.log('Supabase clear skipped (table may not exist)');
+        console.log('Supabase clear skipped:', supabaseError.message);
       }
       
       return { success: true };
