@@ -103,39 +103,19 @@ export default async function handler(req, res) {
 
     console.log('LinkedIn access token received');
 
-    // Fetch LinkedIn profile using OpenID Connect userinfo endpoint
-    const profileResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-
-    if (!profileResponse.ok) {
-      const errorData = await profileResponse.text();
-      console.error('LinkedIn profile fetch failed:', {
-        status: profileResponse.status,
-        error: errorData
-      });
-      return res.redirect('/dashboard?error=profile_fetch_failed');
-    }
-
-    const profileData = await profileResponse.json();
+    // Fetch comprehensive LinkedIn profile data
+    const profileData = await fetchLinkedInProfileData(accessToken);
     console.log('LinkedIn profile fetched:', { 
       fullProfileData: JSON.stringify(profileData, null, 2)
     });
 
-    // With OpenID Connect, email is included in the userinfo response
-    const email = profileData.email || '';
-    console.log('LinkedIn email from userinfo:', email);
-
     // Transform LinkedIn data to our portfolio format
-    const portfolioData = transformLinkedInData(profileData, email);
+    const portfolioData = transformLinkedInData(profileData);
 
     console.log('LinkedIn data transformation complete:', {
       username: username,
       originalProfileData: JSON.stringify(profileData, null, 2),
-      transformedPortfolioData: JSON.stringify(portfolioData, null, 2),
-      email: email
+      transformedPortfolioData: JSON.stringify(portfolioData, null, 2)
     });
 
     // Store the LinkedIn data for later use instead of redirecting to admin.html
@@ -151,56 +131,228 @@ export default async function handler(req, res) {
   }
 }
 
-function transformLinkedInData(profileData, email) {
-  // OpenID Connect userinfo response format
-  const firstName = profileData.given_name || '';
-  const lastName = profileData.family_name || '';
-  const fullName = profileData.name || `${firstName} ${lastName}`.trim();
+// Comprehensive LinkedIn profile data fetching function
+async function fetchLinkedInProfileData(accessToken) {
+  const headers = {
+    'Authorization': `Bearer ${accessToken}`,
+    'Content-Type': 'application/json'
+  };
 
-  const picture = profileData.picture || '';
-  const locale = profileData.locale || 'en_US';
+  try {
+    console.log('Fetching comprehensive LinkedIn profile data...');
+    
+    // Fetch basic profile information
+    const [profileResponse, emailResponse] = await Promise.all([
+      fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName,profilePicture(displayImage~:playableStreams),headline,summary,industryName,location)', {
+        headers
+      }),
+      fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
+        headers
+      })
+    ]);
+
+    if (!profileResponse.ok) {
+      throw new Error(`Profile fetch failed: ${profileResponse.status}`);
+    }
+
+    const profile = await profileResponse.json();
+    let email = '';
+    
+    try {
+      if (emailResponse.ok) {
+        const emailData = await emailResponse.json();
+        email = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
+      }
+    } catch (emailError) {
+      console.log('Email fetch failed, continuing without email:', emailError.message);
+    }
+
+    // Try to fetch positions (experience)
+    let positions = [];
+    try {
+      const positionsResponse = await fetch('https://api.linkedin.com/v2/people/~/positions?count=20&start=0', {
+        headers
+      });
+      if (positionsResponse.ok) {
+        const positionsData = await positionsResponse.json();
+        positions = positionsData.elements || [];
+      }
+    } catch (posError) {
+      console.log('Positions fetch failed, using basic data:', posError.message);
+    }
+
+    // Try to fetch educations
+    let educations = [];
+    try {
+      const educationsResponse = await fetch('https://api.linkedin.com/v2/people/~/educations?count=10&start=0', {
+        headers
+      });
+      if (educationsResponse.ok) {
+        const educationsData = await educationsResponse.json();
+        educations = educationsData.elements || [];
+      }
+    } catch (eduError) {
+      console.log('Educations fetch failed, using basic data:', eduError.message);
+    }
+
+    // Try to fetch skills
+    let skills = [];
+    try {
+      const skillsResponse = await fetch('https://api.linkedin.com/v2/people/~/skills?count=50&start=0', {
+        headers
+      });
+      if (skillsResponse.ok) {
+        const skillsData = await skillsResponse.json();
+        skills = skillsData.elements || [];
+      }
+    } catch (skillError) {
+      console.log('Skills fetch failed, using basic data:', skillError.message);
+    }
+
+    return {
+      profile,
+      email,
+      positions,
+      educations,
+      skills
+    };
+
+  } catch (error) {
+    console.error('Error fetching LinkedIn data:', error);
+    // Return basic structure to prevent complete failure
+    return {
+      profile: profileData || {},
+      email: '',
+      positions: [],
+      educations: [],
+      skills: []
+    };
+  }
+}
+
+function transformLinkedInData(linkedInData) {
+  const { profile, email, positions, educations, skills } = linkedInData;
+
+  // Extract basic info
+  const firstName = profile.firstName?.localized?.en_US || profile.firstName?.preferredLocale?.language || '';
+  const lastName = profile.lastName?.localized?.en_US || profile.lastName?.preferredLocale?.language || '';
+  const fullName = `${firstName} ${lastName}`.trim() || 'LinkedIn Professional';
+  
+  const headline = profile.headline || 'Professional';
+  const summary = profile.summary || '';
+  const location = profile.location?.name || '';
+  
+  // Extract profile picture
+  let profilePicture = '';
+  if (profile.profilePicture?.displayImage) {
+    const images = profile.profilePicture.displayImage.elements || [];
+    if (images.length > 0) {
+      profilePicture = images[0].identifiers?.[0]?.identifier || '';
+    }
+  }
+
+  // Transform positions to experience
+  const experience = positions.map((pos) => {
+    const company = pos.companyName || 'Company';
+    const position = pos.title || 'Position';
+    
+    // Format dates
+    const startDate = pos.dateRange?.start ? `${pos.dateRange.start.month || '01'}/${pos.dateRange.start.year}` : '';
+    const endDate = pos.dateRange?.end ? `${pos.dateRange.end.month || '12'}/${pos.dateRange.end.year}` : 'Present';
+    const duration = startDate ? `${startDate} - ${endDate}` : 'Date not specified';
+    
+    const description = pos.description || `Professional role at ${company} with responsibilities in ${position}.`;
+    
+    return {
+      position,
+      company,
+      duration,
+      description
+    };
+  });
+
+  // Transform educations
+  const education = educations.map((edu) => {
+    const institution = edu.schoolName || 'Educational Institution';
+    const degree = edu.degreeName || edu.fieldOfStudy || 'Degree';
+    const year = edu.dateRange?.end?.year || edu.dateRange?.start?.year || new Date().getFullYear();
+    const description = edu.description || `${degree} from ${institution}`;
+    
+    return {
+      degree,
+      institution,
+      year: year.toString(),
+      description
+    };
+  });
+
+  // Transform skills
+  const technicalSkills = skills.slice(0, 10).map(skill => 
+    skill.name?.localized?.en_US || skill.name || 'Skill'
+  );
+  
+  // Add some default soft skills based on headline and summary
+  const softSkills = [
+    'Communication',
+    'Leadership', 
+    'Problem Solving',
+    'Team Collaboration',
+    'Critical Thinking'
+  ];
+
+  // Transform to projects (use a default project based on experience)
+  const projects = experience.length > 0 ? [{
+    title: `${experience[0].position} Project`,
+    description: `Professional project during tenure at ${experience[0].company}. ${experience[0].description.substring(0, 100)}...`,
+    technologies: technicalSkills.slice(0, 3),
+    link: ''
+  }] : [{
+    title: 'Professional Portfolio',
+    description: 'Comprehensive showcase of professional experience and achievements',
+    technologies: ['Professional Development'],
+    link: ''
+  }];
+
+  // Generate achievements from LinkedIn data
+  const achievements = [
+    'LinkedIn verified professional profile',
+    ...(experience.length > 0 ? [`Professional experience at ${experience[0].company}`] : []),
+    ...(education.length > 0 ? [`${education[0].degree} graduate`] : []),
+    ...(skills.length > 0 ? [`Expertise in ${skills.length} professional skills`] : []),
+    'Active professional network member'
+  ].slice(0, 5); // Limit to 5 achievements
 
   return {
     personal: {
-      fullName: fullName || 'Professional',
-      email: email || profileData.email || '',
+      fullName,
+      email: email || '',
       phone: '',
-      linkedin: profileData.profile || `https://linkedin.com/in/profile`,
+      linkedin: `https://linkedin.com/in/${profile.id || 'profile'}`,
       github: '',
       website: ''
     },
     about: {
-      paragraph1: `Experienced professional with a proven track record of success. ${fullName} brings expertise and dedication to every project and collaboration.`,
-      paragraph2: 'Committed to delivering high-quality results and building meaningful professional relationships. Passionate about continuous learning and professional growth.'
+      paragraph1: summary || `${headline}. Experienced professional with a proven track record of success.`,
+      paragraph2: location ? `Based in ${location}. ` : '' + 'Committed to delivering high-quality results and building meaningful professional relationships.'
     },
-    experience: [{
-      position: 'Professional',
+    experience: experience.length > 0 ? experience : [{
+      position: headline || 'Professional',
       company: 'LinkedIn Member',
       duration: '2020 - Present',
-      description: 'Experienced professional with diverse expertise and a strong commitment to excellence in all endeavors.'
+      description: summary || 'Experienced professional with diverse expertise and a strong commitment to excellence in all endeavors.'
     }],
-    education: [{
+    education: education.length > 0 ? education : [{
       degree: 'Professional Development',
       institution: 'Continuous Learning',
-      year: '2020',
+      year: new Date().getFullYear().toString(),
       description: 'Ongoing professional development and skill enhancement through various channels and experiences.'
     }],
     skills: {
-      technical: ['Leadership', 'Communication', 'Strategy', 'Project Management', 'Problem Solving'],
-      soft: ['Team Collaboration', 'Critical Thinking', 'Adaptability', 'Innovation', 'Time Management']
+      technical: technicalSkills.length > 0 ? technicalSkills : ['Leadership', 'Communication', 'Strategy', 'Project Management', 'Problem Solving'],
+      soft: softSkills
     },
-    projects: [{
-      title: 'Professional Portfolio',
-      description: 'Comprehensive showcase of professional experience, skills, and achievements',
-      technologies: ['Leadership', 'Management', 'Communication'],
-      link: profileData.profile || ''
-    }],
-    achievements: [
-      'LinkedIn verified professional profile',
-      'Established professional network and connections',
-      'Demonstrated expertise in chosen field',
-      'Active participant in professional communities'
-    ]
+    projects,
+    achievements
   };
 }
 

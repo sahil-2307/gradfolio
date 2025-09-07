@@ -270,7 +270,7 @@ Projects: ${result.data.projects?.length || 0} projects
       console.log('Skipping LinkedIn service test to avoid Mixed Content issues');
       
       const redirectUri = encodeURIComponent(`${window.location.origin}/api/linkedin-callback`);
-      const scope = encodeURIComponent('openid profile email');
+      const scope = encodeURIComponent('r_liteprofile r_emailaddress w_member_social');
       const state = encodeURIComponent(JSON.stringify({ userId: user.id, username: user.username }));
 
       console.log('LinkedIn OAuth config:', {
