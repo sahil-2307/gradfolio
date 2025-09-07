@@ -1,0 +1,69 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Glassmorphism Template Preview -->
+  <defs>
+    <linearGradient id="glassGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667EEA"/>
+      <stop offset="100%" style="stop-color:#764BA2"/>
+    </linearGradient>
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#glassGrad1)"/>
+  
+  <!-- Background Blurred Elements -->
+  <circle cx="100" cy="80" r="60" fill="#FFFFFF" opacity="0.1" filter="url(#blur1)"/>
+  <circle cx="320" cy="200" r="80" fill="#FFFFFF" opacity="0.08" filter="url(#blur1)"/>
+  <rect x="250" y="50" width="120" height="80" rx="20" fill="#FFFFFF" opacity="0.06" filter="url(#blur2)"/>
+  
+  <!-- Glass Card 1 - Main Header -->
+  <rect x="30" y="40" width="340" height="70" rx="16" fill="#FFFFFF" opacity="0.15" stroke="#FFFFFF" stroke-opacity="0.2"/>
+  <rect x="50" y="55" width="150" height="10" rx="5" fill="#FFFFFF" opacity="0.9"/>
+  <rect x="50" y="70" width="100" height="6" rx="3" fill="#FFFFFF" opacity="0.6"/>
+  <rect x="50" y="82" width="200" height="5" rx="2.5" fill="#FFFFFF" opacity="0.5"/>
+  
+  <!-- Navigation Dots -->
+  <circle cx="320" cy="60" r="4" fill="#FFFFFF" opacity="0.6"/>
+  <circle cx="340" cy="60" r="4" fill="#FFFFFF" opacity="0.4"/>
+  <circle cx="360" cy="60" r="4" fill="#FFFFFF" opacity="0.8"/>
+  
+  <!-- Glass Card 2 - Content Area -->
+  <rect x="30" y="130" width="200" height="140" rx="16" fill="#FFFFFF" opacity="0.12" stroke="#FFFFFF" stroke-opacity="0.15"/>
+  <rect x="50" y="150" width="120" height="8" rx="4" fill="#FFFFFF" opacity="0.9"/>
+  <rect x="50" y="165" width="160" height="5" rx="2.5" fill="#FFFFFF" opacity="0.6"/>
+  <rect x="50" y="175" width="140" height="5" rx="2.5" fill="#FFFFFF" opacity="0.6"/>
+  <rect x="50" y="185" width="120" height="5" rx="2.5" fill="#FFFFFF" opacity="0.6"/>
+  
+  <!-- Glass Elements inside -->
+  <rect x="50" y="205" width="70" height="25" rx="8" fill="#FFFFFF" opacity="0.2"/>
+  <rect x="130" y="205" width="70" height="25" rx="8" fill="#FFFFFF" opacity="0.2"/>
+  <rect x="50" y="240" width="150" height="20" rx="10" fill="#FFFFFF" opacity="0.25"/>
+  
+  <!-- Glass Card 3 - Sidebar -->
+  <rect x="250" y="130" width="120" height="140" rx="16" fill="#FFFFFF" opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.12"/>
+  <rect x="270" y="150" width="80" height="6" rx="3" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="270" y="165" width="60" height="4" rx="2" fill="#FFFFFF" opacity="0.6"/>
+  <rect x="270" y="175" width="70" height="4" rx="2" fill="#FFFFFF" opacity="0.6"/>
+  
+  <!-- Glass list items -->
+  <rect x="270" y="195" width="80" height="15" rx="7" fill="#FFFFFF" opacity="0.15"/>
+  <rect x="270" y="215" width="80" height="15" rx="7" fill="#FFFFFF" opacity="0.15"/>
+  <rect x="270" y="235" width="80" height="15" rx="7" fill="#FFFFFF" opacity="0.15"/>
+  
+  <!-- Floating glass elements -->
+  <circle cx="380" cy="120" r="15" fill="#FFFFFF" opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.2"/>
+  <rect x="20" y="250" width="30" height="30" rx="15" fill="#FFFFFF" opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.15"/>
+  
+  <!-- Subtle grid pattern -->
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.1"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="300" fill="url(#grid)"/>
+</svg>

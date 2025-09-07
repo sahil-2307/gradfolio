@@ -46,7 +46,7 @@ const PortfolioTemplateSelector: React.FC = () => {
       id: 'modern',
       name: 'Modern Professional',
       description: 'Clean, minimalist design with smooth animations and modern typography',
-      image: '/api/placeholder/400/300?text=Modern',
+      image: '/images/templates/modern.svg',
       tags: ['Clean', 'Professional', 'Animations'],
       isPopular: true
     },
@@ -54,14 +54,14 @@ const PortfolioTemplateSelector: React.FC = () => {
       id: 'creative',
       name: 'Creative Portfolio',
       description: 'Bold colors and creative layouts perfect for designers and artists',
-      image: '/api/placeholder/400/300?text=Creative',
+      image: '/images/templates/creative.svg',
       tags: ['Colorful', 'Creative', 'Artistic'],
     },
     {
       id: 'developer',
       name: 'Developer Focus',
       description: 'Code-oriented design with syntax highlighting and project showcases',
-      image: '/api/placeholder/400/300?text=Developer',
+      image: '/images/templates/developer.svg',
       tags: ['Technical', 'Code', 'Projects'],
       isPopular: true
     },
@@ -69,21 +69,21 @@ const PortfolioTemplateSelector: React.FC = () => {
       id: 'business',
       name: 'Business Executive',
       description: 'Professional corporate design for business professionals and executives',
-      image: '/api/placeholder/400/300?text=Business',
+      image: '/images/templates/business.svg',
       tags: ['Corporate', 'Executive', 'Formal']
     },
     {
       id: 'minimal',
       name: 'Minimal Elegance',
       description: 'Ultra-clean minimal design focusing on content and readability',
-      image: '/api/placeholder/400/300?text=Minimal',
+      image: '/images/templates/minimal.svg',
       tags: ['Minimal', 'Clean', 'Simple']
     },
     {
       id: 'glassmorphism',
       name: 'Glassmorphism',
       description: 'Modern glass-like effects with blurred backgrounds and transparency',
-      image: '/api/placeholder/400/300?text=Glass',
+      image: '/images/templates/glassmorphism.svg',
       tags: ['Modern', 'Glass', 'Effects'],
       isPremium: true
     }

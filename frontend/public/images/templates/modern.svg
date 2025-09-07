@@ -1,0 +1,41 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Modern Professional Template Preview -->
+  <rect width="400" height="300" fill="#F8FAFF"/>
+  
+  <!-- Header -->
+  <rect width="400" height="60" fill="#FFFFFF"/>
+  <rect x="20" y="20" width="150" height="8" rx="4" fill="#667EEA"/>
+  <rect x="20" y="32" width="100" height="6" rx="3" fill="#C7D2FE"/>
+  
+  <!-- Navigation -->
+  <rect x="280" y="18" width="40" height="4" rx="2" fill="#9CA3AF"/>
+  <rect x="330" y="18" width="40" height="4" rx="2" fill="#9CA3AF"/>
+  
+  <!-- Hero Section -->
+  <rect x="20" y="80" width="360" height="120" rx="12" fill="#FFFFFF"/>
+  <rect x="40" y="100" width="200" height="12" rx="6" fill="#1F2937"/>
+  <rect x="40" y="120" width="150" height="8" rx="4" fill="#6B7280"/>
+  <rect x="40" y="140" width="320" height="6" rx="3" fill="#9CA3AF"/>
+  <rect x="40" y="150" width="280" height="6" rx="3" fill="#9CA3AF"/>
+  
+  <!-- CTA Button -->
+  <rect x="40" y="170" width="80" height="24" rx="12" fill="#667EEA"/>
+  
+  <!-- Cards Section -->
+  <rect x="20" y="220" width="110" height="60" rx="8" fill="#FFFFFF"/>
+  <rect x="140" y="220" width="110" height="60" rx="8" fill="#FFFFFF"/>
+  <rect x="260" y="220" width="110" height="60" rx="8" fill="#FFFFFF"/>
+  
+  <!-- Card Content -->
+  <rect x="30" y="230" width="60" height="6" rx="3" fill="#667EEA"/>
+  <rect x="30" y="240" width="90" height="4" rx="2" fill="#9CA3AF"/>
+  <rect x="30" y="248" width="70" height="4" rx="2" fill="#9CA3AF"/>
+  
+  <rect x="150" y="230" width="60" height="6" rx="3" fill="#667EEA"/>
+  <rect x="150" y="240" width="90" height="4" rx="2" fill="#9CA3AF"/>
+  <rect x="150" y="248" width="70" height="4" rx="2" fill="#9CA3AF"/>
+  
+  <rect x="270" y="230" width="60" height="6" rx="3" fill="#667EEA"/>
+  <rect x="270" y="240" width="90" height="4" rx="2" fill="#9CA3AF"/>
+  <rect x="270" y="248" width="70" height="4" rx="2" fill="#9CA3AF"/>
+</svg>

@@ -1,0 +1,51 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimal Elegance Template Preview -->
+  <rect width="400" height="300" fill="#FFFFFF"/>
+  
+  <!-- Minimal Header -->
+  <rect x="50" y="30" width="120" height="6" rx="3" fill="#000000"/>
+  <rect x="50" y="42" width="80" height="4" rx="2" fill="#666666"/>
+  
+  <!-- Navigation dots -->
+  <circle cx="320" cy="35" r="3" fill="#CCCCCC"/>
+  <circle cx="335" cy="35" r="3" fill="#CCCCCC"/>
+  <circle cx="350" cy="35" r="3" fill="#000000"/>
+  
+  <!-- Main Content Area - Very Clean -->
+  <rect x="50" y="80" width="300" height="1" fill="#EEEEEE"/>
+  
+  <!-- Content Block 1 -->
+  <rect x="50" y="100" width="200" height="8" rx="4" fill="#000000"/>
+  <rect x="50" y="115" width="280" height="4" rx="2" fill="#888888"/>
+  <rect x="50" y="125" width="260" height="4" rx="2" fill="#888888"/>
+  <rect x="50" y="135" width="240" height="4" rx="2" fill="#888888"/>
+  
+  <!-- Divider -->
+  <rect x="50" y="160" width="300" height="1" fill="#EEEEEE"/>
+  
+  <!-- Content Block 2 -->
+  <rect x="50" y="180" width="150" height="8" rx="4" fill="#000000"/>
+  <rect x="50" y="195" width="220" height="4" rx="2" fill="#888888"/>
+  <rect x="50" y="205" width="200" height="4" rx="2" fill="#888888"/>
+  
+  <!-- Simple Cards -->
+  <rect x="50" y="230" width="90" height="50" rx="0" fill="#FFFFFF" stroke="#EEEEEE" stroke-width="1"/>
+  <rect x="155" y="230" width="90" height="50" rx="0" fill="#FFFFFF" stroke="#EEEEEE" stroke-width="1"/>
+  <rect x="260" y="230" width="90" height="50" rx="0" fill="#FFFFFF" stroke="#EEEEEE" stroke-width="1"/>
+  
+  <!-- Card Content -->
+  <rect x="60" y="240" width="40" height="4" rx="2" fill="#000000"/>
+  <rect x="60" y="250" width="70" height="3" rx="1.5" fill="#AAAAAA"/>
+  <rect x="60" y="258" width="60" height="3" rx="1.5" fill="#AAAAAA"/>
+  
+  <rect x="165" y="240" width="45" height="4" rx="2" fill="#000000"/>
+  <rect x="165" y="250" width="70" height="3" rx="1.5" fill="#AAAAAA"/>
+  <rect x="165" y="258" width="55" height="3" rx="1.5" fill="#AAAAAA"/>
+  
+  <rect x="270" y="240" width="35" height="4" rx="2" fill="#000000"/>
+  <rect x="270" y="250" width="70" height="3" rx="1.5" fill="#AAAAAA"/>
+  <rect x="270" y="258" width="65" height="3" rx="1.5" fill="#AAAAAA"/>
+  
+  <!-- Minimalist accent -->
+  <rect x="45" y="25" width="2" height="260" fill="#000000"/>
+</svg>
