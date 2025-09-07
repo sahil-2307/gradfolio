@@ -155,14 +155,17 @@ export class LinkedInService {
             return false;
           }
           
-          const { data, error } = await supabase
-            .from('user_linkedin_data')
-            .select('id')
-            .eq('user_id', user.data.user.id)
-            .single();
+          // Only query if table exists
+          if (!checkError) {
+            const { data, error } = await supabase
+              .from('user_linkedin_data')
+              .select('id')
+              .eq('user_id', user.data.user.id)
+              .single();
 
-          console.log('LinkedIn data check result:', { data, error });
-          return !error && !!data;
+            console.log('LinkedIn data check result:', { data, error });
+            return !error && !!data;
+          }
         }
       } catch (supabaseError) {
         console.log('Supabase check failed, using localStorage only:', supabaseError);
