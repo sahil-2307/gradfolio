@@ -67,9 +67,23 @@ const PortfolioPreview: React.FC = () => {
 
   const loadPortfolioData = (username: string) => {
     try {
+      console.log('Looking for portfolio data with key:', `portfolio_data_${username}`);
+      
+      // Check all localStorage keys for debugging
+      const allKeys = Object.keys(localStorage);
+      console.log('All localStorage keys:', allKeys);
+      const portfolioKeys = allKeys.filter(key => key.startsWith('portfolio_data_'));
+      console.log('Portfolio data keys found:', portfolioKeys);
+      
       const data = localStorage.getItem(`portfolio_data_${username}`);
+      console.log('Retrieved data:', data ? 'Found' : 'Not found');
+      
       if (data) {
-        setPortfolioData(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        console.log('Parsed portfolio data:', parsedData);
+        setPortfolioData(parsedData);
+      } else {
+        console.log('No portfolio data found for username:', username);
       }
     } catch (error) {
       console.error('Error loading portfolio data:', error);
@@ -94,11 +108,32 @@ const PortfolioPreview: React.FC = () => {
   }
 
   if (!portfolioData) {
+    const username = searchParams.get('username');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
+        <div className="text-center max-w-md mx-auto p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Portfolio Not Found</h2>
-          <p className="text-gray-600">Unable to load portfolio data.</p>
+          <p className="text-gray-600 mb-4">
+            Unable to load portfolio data for <strong>{username}</strong>.
+          </p>
+          <p className="text-sm text-gray-500 mb-6">
+            This might happen if the portfolio data wasn't properly generated or stored. 
+            Please go back to the resume editor and try generating the portfolio again.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => window.close()}
+              className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Close This Tab
+            </button>
+            <a
+              href="/resume-preview"
+              className="block w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-decoration-none"
+            >
+              Back to Resume Editor
+            </a>
+          </div>
         </div>
       </div>
     );

@@ -242,10 +242,22 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       setMessage('🎉 Portfolio generated successfully! Redirecting...');
       
       // Store portfolio data temporarily for the portfolio viewer
-      localStorage.setItem(`portfolio_data_${user.username}`, JSON.stringify(portfolioResult.portfolioData));
+      const storageKey = `portfolio_data_${user.username}`;
+      console.log('API Success - Storing portfolio data with key:', storageKey);
+      console.log('API Success - Portfolio data:', portfolioResult.portfolioData);
+      
+      localStorage.setItem(storageKey, JSON.stringify(portfolioResult.portfolioData));
+      
+      // Small delay to ensure localStorage write is complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Verify storage
+      const storedData = localStorage.getItem(storageKey);
+      console.log('API Success - Verification - stored data exists:', !!storedData);
       
       // Redirect to portfolio viewer or create a portfolio preview page
       setTimeout(() => {
+        console.log('About to redirect to:', `/portfolio-preview?username=${user.username}`);
         window.open(`/portfolio-preview?username=${user.username}`, '_blank');
         setMessage('');
       }, 2000);
@@ -258,10 +270,24 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         setMessage('⚠️ API failed, generating portfolio locally...');
         
         const fallbackPortfolioData = generatePortfolioFromResumeData(editedData);
-        localStorage.setItem(`portfolio_data_${user.username}`, JSON.stringify(fallbackPortfolioData));
+        const storageKey = `portfolio_data_${user.username}`;
+        
+        console.log('Storing portfolio data with key:', storageKey);
+        console.log('Portfolio data being stored:', fallbackPortfolioData);
+        console.log('User username:', user.username);
+        
+        localStorage.setItem(storageKey, JSON.stringify(fallbackPortfolioData));
+        
+        // Small delay to ensure localStorage write is complete
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Verify storage
+        const storedData = localStorage.getItem(storageKey);
+        console.log('Verification - stored data exists:', !!storedData);
         
         setMessage('🎉 Portfolio generated locally! Redirecting...');
         setTimeout(() => {
+          console.log('About to redirect to:', `/portfolio-preview?username=${user.username}`);
           window.open(`/portfolio-preview?username=${user.username}`, '_blank');
           setMessage('');
         }, 2000);
