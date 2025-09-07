@@ -1,13 +1,16 @@
-import { createClient } from '@supabase/supabase-js';
+const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('Missing Supabase environment variables');
+  console.error('Missing Supabase environment variables:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseServiceKey
+  });
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabase = supabaseUrl && supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey) : null;
 
 // Transform resume data to portfolio format
 function transformResumeToPortfolio(resumeData, username) {
@@ -108,7 +111,7 @@ function transformResumeToPortfolio(resumeData, username) {
   };
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -132,6 +135,13 @@ export default async function handler(req, res) {
 
     console.log('Generating portfolio for user:', { username, userId });
 
+    if (!supabase) {
+      console.error('Supabase not configured, trying localStorage fallback');
+      return res.status(500).json({ 
+        error: 'Database not configured. Please ensure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables are set.' 
+      });
+    }
+
     // Fetch resume data from database
     const { data: resumeData, error: fetchError } = await supabase
       .from('user_resume_data')
@@ -141,7 +151,10 @@ export default async function handler(req, res) {
 
     if (fetchError) {
       console.error('Error fetching resume data:', fetchError);
-      return res.status(404).json({ error: 'Resume data not found' });
+      return res.status(404).json({ 
+        error: 'Resume data not found',
+        details: fetchError.message 
+      });
     }
 
     if (!resumeData) {

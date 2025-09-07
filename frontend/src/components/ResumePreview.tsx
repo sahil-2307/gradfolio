@@ -226,9 +226,16 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         }),
       });
 
-      const portfolioResult = await response.json();
+      let portfolioResult;
+      try {
+        portfolioResult = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse API response:', parseError);
+        throw new Error('Server returned invalid response. Please check server logs.');
+      }
       
       if (!response.ok) {
+        console.error('API error:', portfolioResult);
         throw new Error(portfolioResult.error || 'Failed to generate portfolio');
       }
 
@@ -245,11 +252,115 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       
     } catch (error: any) {
       console.error('Error creating portfolio:', error);
-      setMessage(`❌ Failed to generate portfolio: ${error.message}`);
-      setTimeout(() => setMessage(''), 5000);
+      
+      // Fallback: Generate portfolio from current editedData
+      try {
+        setMessage('⚠️ API failed, generating portfolio locally...');
+        
+        const fallbackPortfolioData = generatePortfolioFromResumeData(editedData);
+        localStorage.setItem(`portfolio_data_${user.username}`, JSON.stringify(fallbackPortfolioData));
+        
+        setMessage('🎉 Portfolio generated locally! Redirecting...');
+        setTimeout(() => {
+          window.open(`/portfolio-preview?username=${user.username}`, '_blank');
+          setMessage('');
+        }, 2000);
+        
+      } catch (fallbackError) {
+        console.error('Fallback generation failed:', fallbackError);
+        setMessage(`❌ Failed to generate portfolio: ${error.message}`);
+        setTimeout(() => setMessage(''), 5000);
+      }
     } finally {
       setSaving(false);
     }
+  };
+
+  // Fallback function to generate portfolio data from resume data
+  const generatePortfolioFromResumeData = (resumeData: ResumeData) => {
+    const { personal, about, experience, education, skills, projects, achievements } = resumeData;
+    
+    return {
+      hero: {
+        title: `Hi, I'm ${personal.fullName || 'Your Name'}`,
+        subtitle: experience.length > 0 ? experience[0].position : 'Developer',
+        description: about.paragraph1 || "I'm a passionate developer who loves building beautiful, responsive, and user-friendly applications with modern technologies.",
+        ctaText: 'Get in touch',
+        ctaSecondaryText: 'View my work'
+      },
+      about: {
+        title: 'About Me',
+        description: about.paragraph2 || about.paragraph1 || "I'm a passionate full-stack developer with a love for creating beautiful, functional, and user-centered digital experiences.",
+        skills: [
+          ...skills.technical.map((skill, index) => ({
+            name: skill,
+            level: 85 + (index % 3) * 5,
+            category: 'Technical'
+          })),
+          ...skills.soft.map((skill, index) => ({
+            name: skill,
+            level: 80 + (index % 4) * 5,
+            category: 'Soft Skills'
+          }))
+        ],
+        highlights: [
+          {
+            title: 'Experience',
+            description: `${experience.length}+ years of professional experience in software development`,
+            icon: 'CodeBracketIcon'
+          },
+          {
+            title: 'Education',
+            description: education.length > 0 ? `${education[0].degree} from ${education[0].institution}` : 'Continuous learner with strong educational background',
+            icon: 'AcademicCapIcon'
+          },
+          {
+            title: 'Achievements',
+            description: achievements.length > 0 ? achievements[0] : 'Delivered high-quality solutions with focus on user experience',
+            icon: 'TrophyIcon'
+          }
+        ]
+      },
+      projects: {
+        title: 'Featured Projects',
+        subtitle: 'Here are some of my recent works that showcase my skills and creativity',
+        projects: projects.map((project, index) => ({
+          id: `project-${index + 1}`,
+          title: project.title,
+          description: project.description,
+          image: `/api/placeholder/400/300?text=${encodeURIComponent(project.title)}`,
+          technologies: project.technologies || [],
+          liveUrl: project.link || undefined,
+          githubUrl: personal.github ? `${personal.github}/${project.title.toLowerCase().replace(/\s+/g, '-')}` : undefined,
+          featured: index < 3
+        }))
+      },
+      contact: {
+        title: 'Get In Touch',
+        subtitle: "I'm always open to discussing new opportunities and interesting projects",
+        email: personal.email || '',
+        phone: personal.phone || '',
+        location: 'Remote',
+        socialLinks: [
+          ...(personal.linkedin ? [{
+            name: 'LinkedIn',
+            url: personal.linkedin,
+            icon: 'linkedin'
+          }] : []),
+          ...(personal.github ? [{
+            name: 'GitHub', 
+            url: personal.github,
+            icon: 'github'
+          }] : []),
+          ...(personal.website ? [{
+            name: 'Website',
+            url: personal.website,
+            icon: 'globe'
+          }] : [])
+        ]
+      },
+      lastUpdated: new Date().toISOString()
+    };
   };
 
   const sections = [
