@@ -159,6 +159,10 @@ function App() {
             element={<PortfolioPreview />} 
           />
           <Route 
+            path="/portfolio-temp" 
+            element={<PortfolioPreview />} 
+          />
+          <Route 
             path="/privacy" 
             element={<PrivacyPolicy />}
           />

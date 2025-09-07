@@ -127,12 +127,12 @@ const PortfolioPreview: React.FC = () => {
             >
               Close This Tab
             </button>
-            <a
-              href={`${window.location.origin}/resume-preview`}
-              className="block w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-decoration-none"
+            <button
+              onClick={() => window.close()}
+              className="block w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Back to Resume Editor
-            </a>
+              Back to Resume Editor (Close Tab)
+            </button>
           </div>
         </div>
       </div>
