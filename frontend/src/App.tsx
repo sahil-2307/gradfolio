@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard';
 import LinkedInCallback from './components/LinkedInCallback';
 import LinkedInPreview from './components/LinkedInPreview';
 import ResumePreview from './components/ResumePreview';
+import PortfolioPreview from './components/PortfolioPreview';
 import BrowseProfiles from './components/BrowseProfiles';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import PaymentSuccess from './components/PaymentSuccess';
@@ -152,6 +153,10 @@ function App() {
                 <ResumePreview user={user} /> : 
                 <Navigate to="/login" replace />
             } 
+          />
+          <Route 
+            path="/portfolio-preview" 
+            element={<PortfolioPreview />} 
           />
           <Route 
             path="/privacy" 

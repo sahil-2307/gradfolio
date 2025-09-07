@@ -209,15 +209,44 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       
       if (!result.success) {
         console.warn('Failed to save to database before creating portfolio:', result.error);
-        // Still proceed, data is in localStorage
+        setMessage('⚠️ Data saved locally, generating portfolio...');
+      } else {
+        setMessage('✨ Generating your portfolio...');
       }
       
-      // Navigate to template selection with resume data
-      navigate(`/templates?source=resume&username=${user.username}`);
-    } catch (error) {
-      console.error('Error saving before portfolio creation:', error);
-      // Still proceed with portfolio creation
-      navigate(`/templates?source=resume&username=${user.username}`);
+      // Generate portfolio using our API
+      const response = await fetch('/api/generate-portfolio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: user.username,
+          userId: user.id || user.user_id
+        }),
+      });
+
+      const portfolioResult = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(portfolioResult.error || 'Failed to generate portfolio');
+      }
+
+      setMessage('🎉 Portfolio generated successfully! Redirecting...');
+      
+      // Store portfolio data temporarily for the portfolio viewer
+      localStorage.setItem(`portfolio_data_${user.username}`, JSON.stringify(portfolioResult.portfolioData));
+      
+      // Redirect to portfolio viewer or create a portfolio preview page
+      setTimeout(() => {
+        window.open(`/portfolio-preview?username=${user.username}`, '_blank');
+        setMessage('');
+      }, 2000);
+      
+    } catch (error: any) {
+      console.error('Error creating portfolio:', error);
+      setMessage(`❌ Failed to generate portfolio: ${error.message}`);
+      setTimeout(() => setMessage(''), 5000);
     } finally {
       setSaving(false);
     }
