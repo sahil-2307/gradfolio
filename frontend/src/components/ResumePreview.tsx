@@ -257,8 +257,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       
       // Redirect to portfolio viewer or create a portfolio preview page
       setTimeout(() => {
-        console.log('About to redirect to:', `/portfolio-preview?username=${user.username}`);
-        window.open(`/portfolio-preview?username=${user.username}`, '_blank');
+        const portfolioUrl = `${window.location.origin}/portfolio-preview?username=${user.username}`;
+        console.log('About to redirect to:', portfolioUrl);
+        window.open(portfolioUrl, '_blank');
         setMessage('');
       }, 2000);
       
@@ -287,8 +288,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         
         setMessage('🎉 Portfolio generated locally! Redirecting...');
         setTimeout(() => {
-          console.log('About to redirect to:', `/portfolio-preview?username=${user.username}`);
-          window.open(`/portfolio-preview?username=${user.username}`, '_blank');
+          const portfolioUrl = `${window.location.origin}/portfolio-preview?username=${user.username}`;
+          console.log('About to redirect to:', portfolioUrl);
+          window.open(portfolioUrl, '_blank');
           setMessage('');
         }, 2000);
         
