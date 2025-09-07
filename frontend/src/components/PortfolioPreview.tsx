@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import './PortfolioPreview.css';
 
 interface PortfolioData {
   hero: {
@@ -98,10 +99,10 @@ const PortfolioPreview: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your portfolio...</p>
+      <div className="portfolio-loading">
+        <div className="portfolio-loading-content">
+          <div className="portfolio-loading-spinner"></div>
+          <p>Loading your portfolio...</p>
         </div>
       </div>
     );
@@ -110,26 +111,26 @@ const PortfolioPreview: React.FC = () => {
   if (!portfolioData) {
     const username = searchParams.get('username');
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center max-w-md mx-auto p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Portfolio Not Found</h2>
-          <p className="text-gray-600 mb-4">
+      <div className="portfolio-error">
+        <div className="portfolio-error-content">
+          <h2>Portfolio Not Found</h2>
+          <p>
             Unable to load portfolio data for <strong>{username}</strong>.
           </p>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="error-description">
             This might happen if the portfolio data wasn't properly generated or stored. 
             Please go back to the resume editor and try generating the portfolio again.
           </p>
-          <div className="space-y-3">
+          <div className="portfolio-error-actions">
             <button
               onClick={() => window.close()}
-              className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="portfolio-error-btn primary"
             >
               Close This Tab
             </button>
             <button
               onClick={() => window.close()}
-              className="block w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              className="portfolio-error-btn secondary"
             >
               Back to Resume Editor (Close Tab)
             </button>
@@ -140,33 +141,27 @@ const PortfolioPreview: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-white'}`}>
+    <div className={`portfolio-container${isDarkMode ? ' dark' : ''}`}>
       {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
-        className="fixed top-4 right-4 z-50 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-colors"
+        className="portfolio-theme-toggle"
       >
         {isDarkMode ? '☀️' : '🌙'}
       </button>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900"></div>
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {portfolioData.hero.title}
-          </h1>
-          <p className="text-2xl md:text-3xl font-semibold mb-6 text-gray-700 dark:text-gray-300">
-            {portfolioData.hero.subtitle}
-          </p>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
-            {portfolioData.hero.description}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors">
+      <section className="portfolio-hero">
+        <div className="portfolio-hero-bg"></div>
+        <div className="portfolio-hero-content">
+          <h1>{portfolioData.hero.title}</h1>
+          <p className="subtitle">{portfolioData.hero.subtitle}</p>
+          <p className="description">{portfolioData.hero.description}</p>
+          <div className="portfolio-hero-actions">
+            <button className="portfolio-btn primary">
               {portfolioData.hero.ctaText}
             </button>
-            <button className="px-8 py-4 border-2 border-blue-600 text-blue-600 dark:text-blue-400 rounded-full font-semibold hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors">
+            <button className="portfolio-btn outline">
               {portfolioData.hero.ctaSecondaryText}
             </button>
           </div>
@@ -174,47 +169,41 @@ const PortfolioPreview: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            {portfolioData.about.title}
-          </h2>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 mb-16 max-w-3xl mx-auto">
-            {portfolioData.about.description}
-          </p>
+      <section className="portfolio-section alt">
+        <div className="portfolio-container-inner">
+          <div className="portfolio-section-header">
+            <h2>{portfolioData.about.title}</h2>
+            <p className="section-subtitle">{portfolioData.about.description}</p>
+          </div>
 
           {/* Highlights */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="portfolio-grid-3" style={{ marginBottom: '4rem' }}>
             {portfolioData.about.highlights.map((highlight, index) => (
-              <div key={index} className="text-center p-6 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
-                <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">🔧</span>
+              <div key={index} className="portfolio-card">
+                <div className="portfolio-card-icon">
+                  <span>🔧</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-                  {highlight.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {highlight.description}
-                </p>
+                <h3>{highlight.title}</h3>
+                <p>{highlight.description}</p>
               </div>
             ))}
           </div>
 
           {/* Skills */}
           <div>
-            <h3 className="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+            <h3 style={{ fontSize: '2rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '2rem', color: 'var(--text-dark, #333)' }}>
               Technical Skills
             </h3>
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="portfolio-grid-2">
               {portfolioData.about.skills.map((skill, index) => (
-                <div key={index} className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium text-gray-900 dark:text-white">{skill.name}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
+                <div key={index} className="portfolio-skill-item">
+                  <div className="portfolio-skill-header">
+                    <span className="portfolio-skill-name">{skill.name}</span>
+                    <span className="portfolio-skill-level">{skill.level}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                  <div className="portfolio-skill-bar">
                     <div
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+                      className="portfolio-skill-progress"
                       style={{ width: `${skill.level}%` }}
                     ></div>
                   </div>
@@ -226,47 +215,36 @@ const PortfolioPreview: React.FC = () => {
       </section>
 
       {/* Projects Section */}
-      <section className="py-20 bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-              {portfolioData.projects.title}
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              {portfolioData.projects.subtitle}
-            </p>
+      <section className="portfolio-section">
+        <div className="portfolio-container-inner">
+          <div className="portfolio-section-header">
+            <h2>{portfolioData.projects.title}</h2>
+            <p className="section-subtitle">{portfolioData.projects.subtitle}</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="portfolio-grid-3">
             {portfolioData.projects.projects.map((project) => (
-              <div key={project.id} className="bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
-                <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 flex items-center justify-center">
-                  <span className="text-gray-600 dark:text-gray-400">Project Image</span>
+              <div key={project.id} className="portfolio-project-card">
+                <div className="portfolio-project-image">
+                  <span>Project Image</span>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                <div className="portfolio-project-content">
+                  <h3 className="portfolio-project-title">{project.title}</h3>
+                  <p className="portfolio-project-description">{project.description}</p>
+                  <div className="portfolio-tech-tags">
                     {project.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm"
-                      >
+                      <span key={index} className="portfolio-tech-tag">
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-4">
+                  <div className="portfolio-project-links">
                     {project.liveUrl && (
                       <a
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="portfolio-project-link"
                       >
                         Live Demo
                       </a>
@@ -276,7 +254,7 @@ const PortfolioPreview: React.FC = () => {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="portfolio-project-link"
                       >
                         GitHub
                       </a>
@@ -290,38 +268,36 @@ const PortfolioPreview: React.FC = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-            {portfolioData.contact.title}
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
-            {portfolioData.contact.subtitle}
-          </p>
+      <section className="portfolio-section alt">
+        <div className="portfolio-container-inner">
+          <div className="portfolio-section-header">
+            <h2>{portfolioData.contact.title}</h2>
+            <p className="section-subtitle">{portfolioData.contact.subtitle}</p>
+          </div>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-12 max-w-4xl mx-auto">
-            <div className="p-6 bg-white dark:bg-gray-700 rounded-xl">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Email</h3>
-              <p className="text-gray-600 dark:text-gray-300">{portfolioData.contact.email}</p>
+          <div className="portfolio-contact-grid">
+            <div className="portfolio-contact-card">
+              <h3>Email</h3>
+              <p>{portfolioData.contact.email}</p>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-700 rounded-xl">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Phone</h3>
-              <p className="text-gray-600 dark:text-gray-300">{portfolioData.contact.phone}</p>
+            <div className="portfolio-contact-card">
+              <h3>Phone</h3>
+              <p>{portfolioData.contact.phone}</p>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-700 rounded-xl">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Location</h3>
-              <p className="text-gray-600 dark:text-gray-300">{portfolioData.contact.location}</p>
+            <div className="portfolio-contact-card">
+              <h3>Location</h3>
+              <p>{portfolioData.contact.location}</p>
             </div>
           </div>
 
-          <div className="flex justify-center gap-6">
+          <div className="portfolio-social-links">
             {portfolioData.contact.socialLinks.map((link, index) => (
               <a
                 key={index}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+                className="portfolio-social-link"
               >
                 {link.name.charAt(0)}
               </a>
@@ -331,9 +307,9 @@ const PortfolioPreview: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-gray-600 dark:text-gray-400">
+      <footer className="portfolio-footer">
+        <div className="portfolio-footer-content">
+          <p>
             Generated with Gradfolio • Last updated: {new Date(portfolioData.lastUpdated).toLocaleDateString()}
           </p>
         </div>
