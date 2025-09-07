@@ -159,7 +159,7 @@ function App() {
             element={<PortfolioPreview />} 
           />
           <Route 
-            path="/portfolio-temp" 
+            path="/resume-generator" 
             element={<PortfolioPreview />} 
           />
           <Route 

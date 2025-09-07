@@ -48,6 +48,34 @@
       "destination": "/index.html"
     },
     {
+      "source": "/portfolio-preview",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/resume-generator",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/linkedin-preview",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/resume-preview",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/browse-profiles",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/featured-profiles",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mobile-testimonials",
+      "destination": "/index.html"
+    },
+    {
       "source": "/u/(.*)",
       "destination": "/api/portfolio-serve?username=$1"
     },
