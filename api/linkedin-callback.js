@@ -141,9 +141,9 @@ async function fetchLinkedInProfileData(accessToken) {
   try {
     console.log('Fetching comprehensive LinkedIn profile data...');
     
-    // Fetch basic profile information
+    // Fetch basic profile information using simpler endpoints
     const [profileResponse, emailResponse] = await Promise.all([
-      fetch('https://api.linkedin.com/v2/people/~:(id,firstName,lastName,profilePicture(displayImage~:playableStreams),headline,summary,industryName,location)', {
+      fetch('https://api.linkedin.com/v2/people/~', {
         headers
       }),
       fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
@@ -167,47 +167,12 @@ async function fetchLinkedInProfileData(accessToken) {
       console.log('Email fetch failed, continuing without email:', emailError.message);
     }
 
-    // Try to fetch positions (experience)
+    // LinkedIn API v2 doesn't allow access to detailed positions/educations/skills with basic scopes
+    // We'll generate reasonable defaults based on the basic profile data
+    console.log('Note: Using basic LinkedIn profile data only due to API limitations');
     let positions = [];
-    try {
-      const positionsResponse = await fetch('https://api.linkedin.com/v2/people/~/positions?count=20&start=0', {
-        headers
-      });
-      if (positionsResponse.ok) {
-        const positionsData = await positionsResponse.json();
-        positions = positionsData.elements || [];
-      }
-    } catch (posError) {
-      console.log('Positions fetch failed, using basic data:', posError.message);
-    }
-
-    // Try to fetch educations
     let educations = [];
-    try {
-      const educationsResponse = await fetch('https://api.linkedin.com/v2/people/~/educations?count=10&start=0', {
-        headers
-      });
-      if (educationsResponse.ok) {
-        const educationsData = await educationsResponse.json();
-        educations = educationsData.elements || [];
-      }
-    } catch (eduError) {
-      console.log('Educations fetch failed, using basic data:', eduError.message);
-    }
-
-    // Try to fetch skills
     let skills = [];
-    try {
-      const skillsResponse = await fetch('https://api.linkedin.com/v2/people/~/skills?count=50&start=0', {
-        headers
-      });
-      if (skillsResponse.ok) {
-        const skillsData = await skillsResponse.json();
-        skills = skillsData.elements || [];
-      }
-    } catch (skillError) {
-      console.log('Skills fetch failed, using basic data:', skillError.message);
-    }
 
     return {
       profile,
@@ -221,7 +186,7 @@ async function fetchLinkedInProfileData(accessToken) {
     console.error('Error fetching LinkedIn data:', error);
     // Return basic structure to prevent complete failure
     return {
-      profile: profileData || {},
+      profile: {},
       email: '',
       positions: [],
       educations: [],
