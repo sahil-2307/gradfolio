@@ -141,31 +141,24 @@ async function fetchLinkedInProfileData(accessToken) {
   try {
     console.log('Fetching comprehensive LinkedIn profile data...');
     
-    // Fetch basic profile information using simpler endpoints
-    const [profileResponse, emailResponse] = await Promise.all([
-      fetch('https://api.linkedin.com/v2/people/~', {
-        headers
-      }),
-      fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
-        headers
-      })
-    ]);
+    // Use OpenID Connect userinfo endpoint which works with current scopes
+    const profileResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
+      headers
+    });
 
     if (!profileResponse.ok) {
       throw new Error(`Profile fetch failed: ${profileResponse.status}`);
     }
 
     const profile = await profileResponse.json();
-    let email = '';
+    const email = profile.email || '';
     
-    try {
-      if (emailResponse.ok) {
-        const emailData = await emailResponse.json();
-        email = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
-      }
-    } catch (emailError) {
-      console.log('Email fetch failed, continuing without email:', emailError.message);
-    }
+    console.log('LinkedIn userinfo received:', {
+      name: profile.name,
+      email: profile.email,
+      picture: profile.picture,
+      sub: profile.sub
+    });
 
     // LinkedIn API v2 doesn't allow access to detailed positions/educations/skills with basic scopes
     // We'll generate reasonable defaults based on the basic profile data
@@ -198,23 +191,14 @@ async function fetchLinkedInProfileData(accessToken) {
 function transformLinkedInData(linkedInData) {
   const { profile, email, positions, educations, skills } = linkedInData;
 
-  // Extract basic info
-  const firstName = profile.firstName?.localized?.en_US || profile.firstName?.preferredLocale?.language || '';
-  const lastName = profile.lastName?.localized?.en_US || profile.lastName?.preferredLocale?.language || '';
-  const fullName = `${firstName} ${lastName}`.trim() || 'LinkedIn Professional';
+  // Extract basic info from OpenID Connect userinfo format
+  const fullName = profile.name || 'LinkedIn Professional';
+  const profilePicture = profile.picture || '';
   
-  const headline = profile.headline || 'Professional';
-  const summary = profile.summary || '';
-  const location = profile.location?.name || '';
-  
-  // Extract profile picture
-  let profilePicture = '';
-  if (profile.profilePicture?.displayImage) {
-    const images = profile.profilePicture.displayImage.elements || [];
-    if (images.length > 0) {
-      profilePicture = images[0].identifiers?.[0]?.identifier || '';
-    }
-  }
+  // Since OpenID Connect provides limited data, we'll use defaults
+  const headline = 'Professional';
+  const summary = `${fullName} is a professional with experience and expertise in their field.`;
+  const location = '';
 
   // Transform positions to experience
   const experience = positions.map((pos) => {
@@ -292,7 +276,7 @@ function transformLinkedInData(linkedInData) {
       fullName,
       email: email || '',
       phone: '',
-      linkedin: `https://linkedin.com/in/${profile.id || 'profile'}`,
+      linkedin: 'https://linkedin.com/in/profile',
       github: '',
       website: ''
     },
