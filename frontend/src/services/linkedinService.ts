@@ -56,7 +56,7 @@ export class LinkedInService {
             .limit(1);
 
           // If table doesn't exist, skip Supabase storage
-          if (checkError && checkError.code === 'PGRST106') {
+          if (checkError && (checkError.code === 'PGRST106' || checkError.message.includes('does not exist') || checkError.message.includes('Not Acceptable'))) {
             console.log('user_linkedin_data table not found, using localStorage only');
           } else if (!checkError) {
             // Table exists, try to upsert
@@ -142,6 +142,19 @@ export class LinkedInService {
         const user = await supabase.auth.getUser();
         if (user.data.user) {
           console.log('Checking LinkedIn data for user:', user.data.user.id);
+          
+          // First check if the table exists by doing a simple select
+          const { error: checkError } = await supabase
+            .from('user_linkedin_data')
+            .select('id')
+            .limit(1);
+
+          // If table doesn't exist, skip Supabase check
+          if (checkError && (checkError.code === 'PGRST106' || checkError.message.includes('does not exist') || checkError.message.includes('Not Acceptable'))) {
+            console.log('user_linkedin_data table not found, using localStorage only');
+            return false;
+          }
+          
           const { data, error } = await supabase
             .from('user_linkedin_data')
             .select('id')
