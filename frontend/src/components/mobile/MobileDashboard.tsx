@@ -249,51 +249,23 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({
             {/* LinkedIn Section */}
             {section.id === 'linkedin' && (
               <div className="linkedin-section-content">
-                {hasLinkedInData && linkedInData ? (
-                  <div className="data-preview-mobile">
-                    <div className="preview-card">
-                      <h4>{linkedInData.personal?.fullName || 'LinkedIn User'}</h4>
-                      <p>{linkedInData.personal?.email}</p>
-                      <div className="preview-stats-mobile">
-                        <span>{linkedInData.experience?.length || 0} jobs</span>
-                        <span>{(linkedInData.skills?.technical?.length || 0) + (linkedInData.skills?.soft?.length || 0)} skills</span>
-                      </div>
-                    </div>
-                    <div className="mobile-actions">
-                      <button 
-                        onClick={() => navigate('/linkedin-preview')} 
-                        className="mobile-btn secondary"
-                      >
-                        <i className="fas fa-eye"></i> View Data
-                      </button>
-                      <button 
-                        onClick={handleCreatePortfolioWithLinkedIn} 
-                        className="mobile-btn primary"
-                        style={{ background: primaryColor }}
-                      >
-                        <i className="fas fa-magic"></i> Create Portfolio
-                      </button>
-                    </div>
+                <div className="coming-soon-mobile">
+                  <div className="coming-soon-icon">
+                    <i className="fas fa-clock"></i>
                   </div>
-                ) : (
-                  <div className="mobile-actions">
+                  <div className="coming-soon-content">
+                    <h3>Coming Soon</h3>
+                    <p>We're working on perfecting the LinkedIn integration. Use Resume Upload or Manual Form for now.</p>
+                  </div>
+                  <div className="mobile-actions disabled">
                     <button 
-                      onClick={handleLinkedInLogin} 
-                      className="mobile-btn primary linkedin-btn"
-                      disabled={loading}
+                      className="mobile-btn primary linkedin-btn disabled"
+                      disabled
                     >
-                      <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
-                    </button>
-                    <button 
-                      onClick={addTestLinkedInData} 
-                      className="mobile-btn secondary"
-                      disabled={loading}
-                      style={{ borderColor: primaryColor, color: primaryColor }}
-                    >
-                      <i className="fas fa-flask"></i> {loading ? 'Loading...' : 'Try Sample Data'}
+                      <i className="fab fa-linkedin"></i> Connect LinkedIn
                     </button>
                   </div>
-                )}
+                </div>
               </div>
             )}
 

@@ -407,6 +407,66 @@
   transform: none !important;
 }
 
+/* Coming Soon Mobile */
+.coming-soon-mobile {
+  text-align: center;
+  padding: 2rem;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin: 1rem 0;
+}
+
+.coming-soon-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-blue), #4A9EFF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.coming-soon-content h3 {
+  color: var(--text-dark);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-primary);
+}
+
+.coming-soon-content p {
+  color: var(--text-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.mobile-actions.disabled {
+  pointer-events: none;
+}
+
+.mobile-btn.disabled {
+  background: #f0f0f0 !important;
+  color: #999 !important;
+  border-color: #f0f0f0 !important;
+  opacity: 0.5 !important;
+}
+
+[data-theme="dark"] .coming-soon-mobile {
+  background: var(--white);
+}
+
+[data-theme="dark"] .mobile-btn.disabled {
+  background: var(--bg-card) !important;
+  color: #666 !important;
+  border-color: var(--bg-card) !important;
+}
+
 /* Stats Mobile */
 .stats-mobile {
   width: 100%;
