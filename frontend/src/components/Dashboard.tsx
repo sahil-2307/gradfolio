@@ -639,44 +639,20 @@ Projects: ${result.data.projects?.length || 0} projects
           
           <div className="creation-methods-grid">
             {/* LinkedIn Method */}
-            <div className="creation-method-card linkedin-card">
+            <div className="creation-method-card linkedin-card coming-soon">
               <div className="method-icon">
                 <i className="fab fa-linkedin-in"></i>
               </div>
               <h3>LinkedIn Import</h3>
               <p>Import your professional data from LinkedIn automatically</p>
               
-              {hasLinkedInData && linkedInData ? (
-                <div className="method-preview">
-                  <div className="preview-user">
-                    <strong>{linkedInData.personal?.fullName || 'LinkedIn User'}</strong>
-                    <span>{linkedInData.experience?.length || 0} jobs • {(linkedInData.skills?.technical?.length || 0) + (linkedInData.skills?.soft?.length || 0)} skills</span>
-                  </div>
-                  <div className="method-actions">
-                    <button onClick={() => navigate('/linkedin-preview')} className="method-btn secondary">
-                      <i className="fas fa-eye"></i> View Data
-                    </button>
-                    <button onClick={handleCreatePortfolioWithLinkedIn} className="method-btn primary">
-                      <i className="fas fa-magic"></i> Create Portfolio
-                    </button>
-                  </div>
+              <div className="coming-soon-overlay">
+                <div className="coming-soon-badge">
+                  <i className="fas fa-clock"></i>
+                  <span>Coming Soon</span>
                 </div>
-              ) : (
-                <div className="method-actions">
-                  <button onClick={handleLinkedInLogin} className="method-btn primary" disabled={loading}>
-                    <i className="fab fa-linkedin"></i> {loading ? 'Connecting...' : 'Connect LinkedIn'}
-                  </button>
-                  <button onClick={addTestLinkedInData} className="method-btn secondary" disabled={loading}>
-                    <i className="fas fa-flask"></i> {loading ? 'Loading...' : 'Try Sample Data'}
-                  </button>
-                  {loading && (
-                    <div className="method-helper">
-                      <i className="fas fa-info-circle"></i>
-                      If LinkedIn shows "Network Will Be Back Soon", it's a LinkedIn service issue.
-                    </div>
-                  )}
-                </div>
-              )}
+                <p>We're working on perfecting the LinkedIn integration. Use Resume Upload or Manual Form for now.</p>
+              </div>
             </div>
             
             {/* Resume Method */}
@@ -697,7 +673,7 @@ Projects: ${result.data.projects?.length || 0} projects
                     <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="method-btn secondary">
                       <i className="fas fa-eye"></i> View & Edit
                     </button>
-                    <button onClick={() => navigate(`/resume-preview?username=${user.username}`)} className="method-btn primary">
+                    <button onClick={() => navigate(`/resume-template-preview?data=${encodeURIComponent(JSON.stringify(resumeData))}`)} className="method-btn primary">
                       <i className="fas fa-magic"></i> Create Portfolio
                     </button>
                   </div>

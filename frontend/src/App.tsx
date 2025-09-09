@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard';
 import LinkedInCallback from './components/LinkedInCallback';
 import LinkedInPreview from './components/LinkedInPreview';
 import ResumePreview from './components/ResumePreview';
+import ResumeTemplatePreview from './components/ResumeTemplatePreview';
 import PortfolioPreview from './components/PortfolioPreview';
 import PortfolioTemplateSelector from './components/PortfolioTemplateSelector';
 import BrowseProfiles from './components/BrowseProfiles';
@@ -152,6 +153,14 @@ function App() {
             element={
               isAuthenticated ? 
                 <ResumePreview user={user} /> : 
+                <Navigate to="/login" replace />
+            } 
+          />
+          <Route 
+            path="/resume-template-preview" 
+            element={
+              isAuthenticated ? 
+                <ResumeTemplatePreview /> : 
                 <Navigate to="/login" replace />
             } 
           />
