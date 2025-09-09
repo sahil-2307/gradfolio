@@ -291,7 +291,7 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({
                         <i className="fas fa-eye"></i> View & Edit
                       </button>
                       <button 
-                        onClick={() => navigate(`/resume-preview?username=${user.username}`)} 
+                        onClick={() => navigate(`/resume-template-preview?data=${encodeURIComponent(JSON.stringify(resumeData))}`)} 
                         className="mobile-btn primary"
                         style={{ background: primaryColor }}
                       >

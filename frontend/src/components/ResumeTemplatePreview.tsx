@@ -76,9 +76,18 @@ const ResumeTemplatePreview: React.FC = () => {
   const [deploymentStatus, setDeploymentStatus] = useState<'idle' | 'deploying' | 'success' | 'error'>('idle');
   const [deployedUrl, setDeployedUrl] = useState<string>('');
   const [user, setUser] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);
 
   useEffect(() => {
     loadUserAndData();
+
+    // Handle window resize for mobile detection
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const loadUserAndData = async () => {
@@ -142,7 +151,7 @@ const ResumeTemplatePreview: React.FC = () => {
 
   const handlePreviewInNewTab = () => {
     const previewData = generatePreviewData();
-    const previewUrl = selectedTemplate.previewUrl + '?data=' + encodeURIComponent(JSON.stringify(previewData));
+    const previewUrl = selectedTemplate.previewUrl + '?data=' + encodeURIComponent(JSON.stringify(previewData)) + '&mobile=' + (isMobile ? 'true' : 'false');
     window.open(previewUrl, '_blank');
   };
 
@@ -258,9 +267,15 @@ const ResumeTemplatePreview: React.FC = () => {
             </div>
             
             <iframe
-              src={selectedTemplate.previewUrl + '?data=' + encodeURIComponent(JSON.stringify(generatePreviewData()))}
+              src={selectedTemplate.previewUrl + '?data=' + encodeURIComponent(JSON.stringify(generatePreviewData())) + '&mobile=' + (isMobile ? 'true' : 'false')}
               className="preview-iframe"
               title={`${selectedTemplate.name} Preview`}
+              style={{
+                transform: isMobile ? 'scale(0.75)' : 'scale(1)',
+                transformOrigin: 'top left',
+                width: isMobile ? '133%' : '100%',
+                height: isMobile ? '133%' : '100%'
+              }}
             />
           </div>
 
