@@ -58,9 +58,13 @@ const PortfolioPreview: React.FC = () => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState('default');
 
   useEffect(() => {
     const username = searchParams.get('username');
+    const template = searchParams.get('template') || 'default';
+    setSelectedTemplate(template);
+    
     if (username) {
       loadPortfolioData(username);
     }
@@ -95,6 +99,63 @@ const PortfolioPreview: React.FC = () => {
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const renderModernProfessionalTemplate = () => {
+    if (!portfolioData) return null;
+
+    // Transform portfolio data to Modern Professional format
+    const modernData = transformToModernFormat(portfolioData);
+    
+    return (
+      <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+        <iframe
+          src={`/portfolio-templates/modern-professional/index.html?data=${encodeURIComponent(JSON.stringify(modernData))}`}
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            border: 'none',
+            display: 'block'
+          }}
+          title="Modern Professional Portfolio"
+        />
+      </div>
+    );
+  };
+
+  const transformToModernFormat = (data: PortfolioData) => {
+    return {
+      name: data.hero.title,
+      title: data.hero.subtitle,
+      shortBio: data.hero.description,
+      email: data.contact.email,
+      phone: data.contact.phone,
+      location: data.contact.location,
+      linkedin: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('linkedin'))?.url || '',
+      github: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('github'))?.url || '',
+      website: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('website'))?.url || '',
+      aboutParagraph1: data.about.description,
+      aboutParagraph2: 'Passionate about creating innovative solutions and delivering exceptional results.',
+      skills: {
+        technical: data.about.skills.filter(skill => skill.category === 'technical').map(skill => skill.name),
+        soft: data.about.skills.filter(skill => skill.category === 'soft').map(skill => skill.name)
+      },
+      experience: [
+        {
+          position: 'Professional Role',
+          company: 'Company Name',
+          duration: '2022 - Present',
+          description: 'Leading innovative projects and delivering exceptional results in a dynamic environment.'
+        }
+      ],
+      projects: data.projects.projects.map(project => ({
+        title: project.title,
+        description: project.description,
+        technologies: project.technologies,
+        link: project.liveUrl || '',
+        github: project.githubUrl || ''
+      }))
+    };
   };
 
   if (loading) {
@@ -138,6 +199,11 @@ const PortfolioPreview: React.FC = () => {
         </div>
       </div>
     );
+  }
+
+  // Render Modern Professional template if selected
+  if (selectedTemplate === 'modern') {
+    return renderModernProfessionalTemplate();
   }
 
   return (

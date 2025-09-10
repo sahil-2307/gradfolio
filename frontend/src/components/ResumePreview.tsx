@@ -257,7 +257,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
       
       // Navigate to template selection page
       setTimeout(() => {
-        const templateUrl = `${window.location.origin}/portfolio-templates?username=${user.username}`;
+        const templateUrl = `${window.location.origin}/portfolio-template-selector?username=${user.username}`;
         console.log('About to redirect to:', templateUrl);
         navigate(templateUrl.replace(window.location.origin, ''));
         setMessage('');
@@ -288,7 +288,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ user }) => {
         
         setMessage('🎉 Portfolio generated locally! Choose a template...');
         setTimeout(() => {
-          const templateUrl = `${window.location.origin}/portfolio-templates?username=${user.username}`;
+          const templateUrl = `${window.location.origin}/portfolio-template-selector?username=${user.username}`;
           console.log('About to redirect to:', templateUrl);
           navigate(templateUrl.replace(window.location.origin, ''));
           setMessage('');

@@ -181,6 +181,14 @@ function App() {
             }
           />
           <Route 
+            path="/portfolio-template-selector" 
+            element={
+              isAuthenticated ? 
+                <PortfolioTemplateSelector /> : 
+                <Navigate to="/login" replace />
+            }
+          />
+          <Route 
             path="/privacy" 
             element={<PrivacyPolicy />}
           />

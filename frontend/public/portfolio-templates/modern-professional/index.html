@@ -1,227 +1,468 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{FULL_NAME}} - Modern Professional Portfolio</title>
+    <meta name="description" content="{{FULL_NAME}} - Creative Professional Portfolio. {{SHORT_BIO}}">
+    <meta name="keywords" content="creative, professional, portfolio, design, development">
+    <meta name="author" content="{{FULL_NAME}}">
+    <meta property="og:title" content="{{FULL_NAME}} - Creative Professional">
+    <meta property="og:description" content="{{SHORT_BIO}}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>{{FULL_NAME}} - Creative Professional Portfolio</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" as="style">
+    
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "{{FULL_NAME}}",
+        "jobTitle": "{{PROFESSIONAL_TITLE}}",
+        "description": "{{SHORT_BIO}}",
+        "url": "{{WEBSITE_URL}}",
+        "sameAs": [
+            "{{LINKEDIN_URL}}",
+            "{{GITHUB_URL}}"
+        ]
+    }
+    </script>
 </head>
-<body>
-    <!-- Edit/Deploy Controls (hidden by default, shown when user is editing) -->
-    <div id="portfolio-controls" class="portfolio-controls">
+<body class="font-inter antialiased bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text transition-colors duration-300">
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-accent text-white px-4 py-2 rounded-md z-50">
+        Skip to main content
+    </a>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-light-bg dark:bg-dark-bg z-50 flex items-center justify-center transition-opacity duration-1000">
+        <div class="loading-animation">
+            <div class="loading-sphere"></div>
+            <p class="mt-8 text-light-text-secondary dark:text-dark-text-secondary font-medium">Loading Portfolio...</p>
+        </div>
+    </div>
+
+    <!-- Edit/Deploy Controls -->
+    <div id="portfolio-controls" class="portfolio-controls" role="toolbar" aria-label="Portfolio editing tools">
         <div class="controls-container">
-            <button id="edit-btn" class="control-btn edit-btn">
-                <i class="fas fa-edit"></i>
+            <button id="edit-btn" class="control-btn edit-btn" aria-label="Edit portfolio">
+                <i class="fas fa-edit" aria-hidden="true"></i>
                 <span>Edit Portfolio</span>
             </button>
-            <button id="deploy-btn" class="control-btn deploy-btn">
-                <i class="fas fa-rocket"></i>
+            <button id="deploy-btn" class="control-btn deploy-btn" aria-label="Deploy portfolio">
+                <i class="fas fa-rocket" aria-hidden="true"></i>
                 <span>Deploy Live</span>
             </button>
-            <button id="preview-btn" class="control-btn preview-btn">
-                <i class="fas fa-eye"></i>
+            <button id="preview-btn" class="control-btn preview-btn" aria-label="Preview portfolio">
+                <i class="fas fa-eye" aria-hidden="true"></i>
                 <span>Preview</span>
             </button>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="#hero" class="nav-logo">{{FIRST_NAME}}</a>
+            <a href="#hero" class="nav-logo" data-field="firstName" aria-label="Home">{{FIRST_NAME}}</a>
+            
+            <!-- Theme Toggle -->
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-sun sun-icon" aria-hidden="true"></i>
+                <i class="fas fa-moon moon-icon" aria-hidden="true"></i>
+            </button>
+            
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
-                    <a href="#hero" class="nav-link">Home</a>
+                    <a href="#hero" class="nav-link" data-scroll="hero">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#about" class="nav-link">About</a>
+                    <a href="#about" class="nav-link" data-scroll="about">About</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#skills" class="nav-link">Skills</a>
+                    <a href="#work" class="nav-link" data-scroll="work">Work</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#experience" class="nav-link">Experience</a>
+                    <a href="#services" class="nav-link" data-scroll="services">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#projects" class="nav-link">Projects</a>
+                    <a href="#blog" class="nav-link" data-scroll="blog">Blog</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="#contact" class="nav-link" data-scroll="contact">Contact</a>
                 </li>
             </ul>
-            <div class="hamburger" id="hamburger">
+            
+            <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
-            </div>
+            </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1 class="hero-title">
-                        Hi, I'm <span class="highlight" data-field="fullName">{{FULL_NAME}}</span>
-                    </h1>
-                    <p class="hero-subtitle" data-field="title">
-                        {{PROFESSIONAL_TITLE}}
-                    </p>
-                    <p class="hero-description" data-field="shortBio">
-                        {{SHORT_BIO}}
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="#contact" class="btn btn-primary">Get In Touch</a>
-                        <a href="#projects" class="btn btn-secondary">View My Work</a>
-                    </div>
-                </div>
-                <div class="hero-image">
-                    <div class="image-placeholder">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">Get to know me better</p>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <p class="about-paragraph" data-field="aboutParagraph1">
-                        {{ABOUT_PARAGRAPH_1}}
-                    </p>
-                    <p class="about-paragraph" data-field="aboutParagraph2">
-                        {{ABOUT_PARAGRAPH_2}}
-                    </p>
-                    <div class="about-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="projects-count">{{PROJECTS_COUNT}}</span>
-                            <span class="stat-label">Projects</span>
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section with 3D Background -->
+        <section id="hero" class="hero" role="banner">
+            <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-text" data-aos="fade-up" data-aos-delay="300">
+                        <p class="hero-greeting animate-fade-in" data-field="greeting">Hello, I'm</p>
+                        <h1 class="hero-title animate-slide-up" data-field="fullName">{{FULL_NAME}}</h1>
+                        <h2 class="hero-subtitle animate-slide-up" data-aos-delay="100" data-field="title">{{PROFESSIONAL_TITLE}}</h2>
+                        <p class="hero-description animate-fade-in" data-aos-delay="200" data-field="shortBio">{{SHORT_BIO}}</p>
+                        
+                        <div class="hero-buttons animate-fade-in" data-aos-delay="400">
+                            <a href="#work" class="btn btn-primary" data-scroll="work">
+                                <span>View My Work</span>
+                                <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
+                            </a>
+                            <a href="#contact" class="btn btn-secondary" data-scroll="contact">
+                                <span>Get In Touch</span>
+                            </a>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="experience-years">{{EXPERIENCE_YEARS}}</span>
-                            <span class="stat-label">Years Experience</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="skills-count">{{SKILLS_COUNT}}</span>
-                            <span class="stat-label">Skills</span>
+                        
+                        <div class="hero-stats animate-fade-in" data-aos-delay="600">
+                            <div class="stat-item">
+                                <span class="stat-number" id="projects-count" data-field="projectsCount">{{PROJECTS_COUNT}}</span>
+                                <span class="stat-label">Projects</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="experience-years" data-field="experienceYears">{{EXPERIENCE_YEARS}}</span>
+                                <span class="stat-label">Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="clients-count" data-field="clientsCount">{{CLIENTS_COUNT}}</span>
+                                <span class="stat-label">Happy Clients</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Skills & Expertise</h2>
-                <p class="section-subtitle">Technologies and tools I work with</p>
+            
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator" aria-hidden="true">
+                <div class="scroll-line"></div>
+                <span class="scroll-text">Scroll</span>
             </div>
-            <div class="skills-content">
-                <div class="skills-category">
-                    <h3 class="category-title">Technical Skills</h3>
-                    <div class="skills-grid" id="technical-skills">
-                        <!-- Technical skills will be populated by JavaScript -->
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about section" data-aos="fade-up">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-aos="fade-up">About Me</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+                        Crafting Digital Experiences with <span class="text-gradient">Purpose</span>
+                    </h2>
+                </div>
+                
+                <div class="about-grid">
+                    <div class="about-content" data-aos="fade-right">
+                        <div class="about-text">
+                            <p class="about-paragraph lead" data-field="aboutParagraph1">{{ABOUT_PARAGRAPH_1}}</p>
+                            <p class="about-paragraph" data-field="aboutParagraph2">{{ABOUT_PARAGRAPH_2}}</p>
+                        </div>
+                        
+                        <div class="skills-preview">
+                            <h3 class="skills-title">Core Expertise</h3>
+                            <div class="skills-tags" id="skills-preview">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <a href="{{RESUME_URL}}" class="btn btn-outline" target="_blank" rel="noopener">
+                            <i class="fas fa-download mr-2" aria-hidden="true"></i>
+                            Download Resume
+                        </a>
+                    </div>
+                    
+                    <div class="about-visual" data-aos="fade-left" data-aos-delay="200">
+                        <div class="profile-card">
+                            <div class="profile-image">
+                                <img src="{{PROFILE_IMAGE}}" alt="{{FULL_NAME}}" class="profile-img" loading="lazy">
+                            </div>
+                            <div class="profile-info">
+                                <h3 data-field="fullName">{{FULL_NAME}}</h3>
+                                <p data-field="location">{{LOCATION}}</p>
+                                <div class="social-links-preview">
+                                    <a href="{{LINKEDIN_URL}}" target="_blank" rel="noopener" aria-label="LinkedIn">
+                                        <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{GITHUB_URL}}" target="_blank" rel="noopener" aria-label="GitHub">
+                                        <i class="fab fa-github" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{WEBSITE_URL}}" target="_blank" rel="noopener" aria-label="Website">
+                                        <i class="fas fa-globe" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h3 class="category-title">Soft Skills</h3>
-                    <div class="skills-grid" id="soft-skills">
-                        <!-- Soft skills will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Work Section -->
+        <section id="work" class="work section bg-light-bg-secondary dark:bg-dark-bg-secondary">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-aos="fade-up">Portfolio</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+                        Featured <span class="text-gradient">Work</span>
+                    </h2>
+                    <p class="section-description" data-aos="fade-up" data-aos-delay="200">
+                        A showcase of projects that demonstrate creativity, technical expertise, and problem-solving.
+                    </p>
+                </div>
+                
+                <div class="work-filter" data-aos="fade-up" data-aos-delay="300">
+                    <button class="filter-btn active" data-filter="all">All Work</button>
+                    <button class="filter-btn" data-filter="web">Web Design</button>
+                    <button class="filter-btn" data-filter="mobile">Mobile Apps</button>
+                    <button class="filter-btn" data-filter="branding">Branding</button>
+                </div>
+                
+                <div class="work-grid" id="work-grid" data-aos="fade-up" data-aos-delay="400">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-aos="fade-up">Services</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+                        How I Can <span class="text-gradient">Help You</span>
+                    </h2>
+                </div>
+                
+                <div class="services-grid" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="service-icon">
+                            <i class="fas fa-palette" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="service-title">UI/UX Design</h3>
+                        <p class="service-description">Creating intuitive and beautiful user experiences that engage and convert.</p>
+                        <ul class="service-features">
+                            <li>User Research & Analysis</li>
+                            <li>Wireframing & Prototyping</li>
+                            <li>Visual Design & Branding</li>
+                            <li>Usability Testing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="service-icon">
+                            <i class="fas fa-code" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="service-title">Frontend Development</h3>
+                        <p class="service-description">Building responsive, performant websites with modern technologies.</p>
+                        <ul class="service-features">
+                            <li>React & Next.js Development</li>
+                            <li>Responsive Web Design</li>
+                            <li>Performance Optimization</li>
+                            <li>Cross-browser Compatibility</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="service-icon">
+                            <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="service-title">Mobile Development</h3>
+                        <p class="service-description">Native and cross-platform mobile applications that users love.</p>
+                        <ul class="service-features">
+                            <li>React Native Development</li>
+                            <li>iOS & Android Apps</li>
+                            <li>App Store Optimization</li>
+                            <li>Mobile UI/UX Design</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="experience">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Professional Experience</h2>
-                <p class="section-subtitle">My career journey</p>
-            </div>
-            <div class="experience-timeline" id="experience-timeline">
-                <!-- Experience items will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-subtitle">Some of my recent work</p>
-            </div>
-            <div class="projects-grid" id="projects-grid">
-                <!-- Projects will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Let's Connect</h2>
-                <p class="section-subtitle">Feel free to reach out for opportunities or collaborations</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item" data-field="email">
-                        <i class="fas fa-envelope"></i>
-                        <span>{{EMAIL}}</span>
-                    </div>
-                    <div class="contact-item" data-field="phone">
-                        <i class="fas fa-phone"></i>
-                        <span>{{PHONE}}</span>
-                    </div>
-                    <div class="contact-item" data-field="location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>{{LOCATION}}</span>
-                    </div>
+        <!-- Blog Section -->
+        <section id="blog" class="blog section bg-light-bg-secondary dark:bg-dark-bg-secondary">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-aos="fade-up">Blog</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+                        Latest <span class="text-gradient">Insights</span>
+                    </h2>
                 </div>
-                <div class="social-links">
-                    <a href="{{LINKEDIN_URL}}" class="social-link linkedin" target="_blank" rel="noopener">
-                        <i class="fab fa-linkedin-in"></i>
+                
+                <div class="blog-grid" id="blog-grid" data-aos="fade-up" data-aos-delay="200">
+                    <!-- Populated by JavaScript -->
+                </div>
+                
+                <div class="blog-cta" data-aos="fade-up" data-aos-delay="300">
+                    <a href="{{BLOG_URL}}" class="btn btn-outline" target="_blank" rel="noopener">
+                        View All Articles
+                        <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
                     </a>
-                    <a href="{{GITHUB_URL}}" class="social-link github" target="_blank" rel="noopener">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="{{WEBSITE_URL}}" class="social-link website" target="_blank" rel="noopener">
-                        <i class="fas fa-globe"></i>
-                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag" data-aos="fade-up">Contact</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+                        Let's Create Something <span class="text-gradient">Amazing</span>
+                    </h2>
+                    <p class="section-description" data-aos="fade-up" data-aos-delay="200">
+                        Ready to bring your ideas to life? Let's discuss your project and create something extraordinary together.
+                    </p>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-info" data-aos="fade-right">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-content">
+                                <h3>Email</h3>
+                                <a href="mailto:{{EMAIL}}" data-field="email">{{EMAIL}}</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-content">
+                                <h3>Phone</h3>
+                                <a href="tel:{{PHONE}}" data-field="phone">{{PHONE}}</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-content">
+                                <h3>Location</h3>
+                                <p data-field="location">{{LOCATION}}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="{{LINKEDIN_URL}}" class="social-link linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                            </a>
+                            <a href="{{GITHUB_URL}}" class="social-link github" target="_blank" rel="noopener" aria-label="GitHub">
+                                <i class="fab fa-github" aria-hidden="true"></i>
+                            </a>
+                            <a href="{{TWITTER_URL}}" class="social-link twitter" target="_blank" rel="noopener" aria-label="Twitter">
+                                <i class="fab fa-twitter" aria-hidden="true"></i>
+                            </a>
+                            <a href="{{DRIBBBLE_URL}}" class="social-link dribbble" target="_blank" rel="noopener" aria-label="Dribbble">
+                                <i class="fab fa-dribbble" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <form class="contact-form" id="contact-form" data-aos="fade-left" data-aos-delay="200" novalidate>
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name *</label>
+                            <input type="text" id="name" name="name" class="form-input" required aria-describedby="name-error">
+                            <span class="form-error" id="name-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" id="email" name="email" class="form-input" required aria-describedby="email-error">
+                            <span class="form-error" id="email-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject *</label>
+                            <input type="text" id="subject" name="subject" class="form-input" required aria-describedby="subject-error">
+                            <span class="form-error" id="subject-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message *</label>
+                            <textarea id="message" name="message" rows="5" class="form-input" required aria-describedby="message-error"></textarea>
+                            <span class="form-error" id="message-error"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+                            <span class="btn-text">Send Message</span>
+                            <span class="btn-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                                Sending...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p class="footer-text">
-                © 2024 <span data-field="fullName">{{FULL_NAME}}</span>. All rights reserved.
-            </p>
-            <p class="footer-credit">
-                Built with <i class="fas fa-heart"></i> using Gradfolio
-            </p>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 data-field="fullName">{{FULL_NAME}}</h3>
+                    <p>Creating digital experiences that inspire and engage.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="#about" data-scroll="about">About</a></li>
+                            <li><a href="#work" data-scroll="work">Work</a></li>
+                            <li><a href="#services" data-scroll="services">Services</a></li>
+                            <li><a href="#contact" data-scroll="contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <ul>
+                            <li><a href="{{LINKEDIN_URL}}" target="_blank" rel="noopener">LinkedIn</a></li>
+                            <li><a href="{{GITHUB_URL}}" target="_blank" rel="noopener">GitHub</a></li>
+                            <li><a href="{{TWITTER_URL}}" target="_blank" rel="noopener">Twitter</a></li>
+                            <li><a href="{{BLOG_URL}}" target="_blank" rel="noopener">Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 <span data-field="fullName">{{FULL_NAME}}</span>. All rights reserved.</p>
+                <p class="footer-credit">Built with ❤️ using <strong>Gradfolio</strong></p>
+            </div>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="portfolio-data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

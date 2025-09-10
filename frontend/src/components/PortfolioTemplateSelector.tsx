@@ -106,9 +106,8 @@ const PortfolioTemplateSelector: React.FC = () => {
         throw new Error('Portfolio data not found. Please go back and regenerate.');
       }
 
-      // For now, we'll use our existing portfolio preview with the selected template
-      // In the future, you can create different template components
-      const portfolioUrl = `${window.location.origin}/resume-generator?username=${username}&template=${selectedTemplate}`;
+      // Generate portfolio with the selected template
+      const portfolioUrl = `${window.location.origin}/portfolio-preview?username=${username}&template=${selectedTemplate}`;
       window.open(portfolioUrl, '_blank');
       
     } catch (error) {
