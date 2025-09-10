@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{FULL_NAME}} - Modern Professional Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Edit/Deploy Controls (hidden by default, shown when user is editing) -->
+    <div id="portfolio-controls" class="portfolio-controls">
+        <div class="controls-container">
+            <button id="edit-btn" class="control-btn edit-btn">
+                <i class="fas fa-edit"></i>
+                <span>Edit Portfolio</span>
+            </button>
+            <button id="deploy-btn" class="control-btn deploy-btn">
+                <i class="fas fa-rocket"></i>
+                <span>Deploy Live</span>
+            </button>
+            <button id="preview-btn" class="control-btn preview-btn">
+                <i class="fas fa-eye"></i>
+                <span>Preview</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">{{FIRST_NAME}}</a>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#hero" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#skills" class="nav-link">Skills</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#experience" class="nav-link">Experience</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projects" class="nav-link">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Hi, I'm <span class="highlight" data-field="fullName">{{FULL_NAME}}</span>
+                    </h1>
+                    <p class="hero-subtitle" data-field="title">
+                        {{PROFESSIONAL_TITLE}}
+                    </p>
+                    <p class="hero-description" data-field="shortBio">
+                        {{SHORT_BIO}}
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">Get In Touch</a>
+                        <a href="#projects" class="btn btn-secondary">View My Work</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">Get to know me better</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-paragraph" data-field="aboutParagraph1">
+                        {{ABOUT_PARAGRAPH_1}}
+                    </p>
+                    <p class="about-paragraph" data-field="aboutParagraph2">
+                        {{ABOUT_PARAGRAPH_2}}
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="projects-count">{{PROJECTS_COUNT}}</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="experience-years">{{EXPERIENCE_YEARS}}</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="skills-count">{{SKILLS_COUNT}}</span>
+                            <span class="stat-label">Skills</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Skills & Expertise</h2>
+                <p class="section-subtitle">Technologies and tools I work with</p>
+            </div>
+            <div class="skills-content">
+                <div class="skills-category">
+                    <h3 class="category-title">Technical Skills</h3>
+                    <div class="skills-grid" id="technical-skills">
+                        <!-- Technical skills will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="skills-category">
+                    <h3 class="category-title">Soft Skills</h3>
+                    <div class="skills-grid" id="soft-skills">
+                        <!-- Soft skills will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Professional Experience</h2>
+                <p class="section-subtitle">My career journey</p>
+            </div>
+            <div class="experience-timeline" id="experience-timeline">
+                <!-- Experience items will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">Some of my recent work</p>
+            </div>
+            <div class="projects-grid" id="projects-grid">
+                <!-- Projects will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Let's Connect</h2>
+                <p class="section-subtitle">Feel free to reach out for opportunities or collaborations</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item" data-field="email">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{EMAIL}}</span>
+                    </div>
+                    <div class="contact-item" data-field="phone">
+                        <i class="fas fa-phone"></i>
+                        <span>{{PHONE}}</span>
+                    </div>
+                    <div class="contact-item" data-field="location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{LOCATION}}</span>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="{{LINKEDIN_URL}}" class="social-link linkedin" target="_blank" rel="noopener">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="{{GITHUB_URL}}" class="social-link github" target="_blank" rel="noopener">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="{{WEBSITE_URL}}" class="social-link website" target="_blank" rel="noopener">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                © 2024 <span data-field="fullName">{{FULL_NAME}}</span>. All rights reserved.
+            </p>
+            <p class="footer-credit">
+                Built with <i class="fas fa-heart"></i> using Gradfolio
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="portfolio-data.js"></script>
+</body>
+</html>

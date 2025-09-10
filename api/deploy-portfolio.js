@@ -60,19 +60,27 @@ export default async function handler(req, res) {
       });
     }
 
-    // Map template ID to template name
+    // Map template ID to template name and path
     const templateMap = {
-      1: 'modern',
-      2: 'creative'
+      1: {
+        name: 'modern-professional',
+        path: 'portfolio-templates/modern-professional'
+      },
+      2: {
+        name: 'creative',
+        path: 'templates/creative'
+      }
     };
 
-    const templateName = templateMap[templateId];
-    if (!templateName) {
+    const templateConfig = templateMap[templateId];
+    if (!templateConfig) {
       return res.status(400).json({
         success: false,
         error: 'Invalid template ID'
       });
     }
+
+    const templateName = templateConfig.name;
 
     console.log(`Deploying ${templateName} template for user ${username}`);
 
@@ -83,7 +91,7 @@ export default async function handler(req, res) {
 
     try {
       // Read template files from the templates directory
-      const templatePath = path.join(process.cwd(), 'templates', templateName);
+      const templatePath = path.join(process.cwd(), templateConfig.path);
       console.log('Template path:', templatePath);
 
       // Check if template directory exists
@@ -102,13 +110,13 @@ export default async function handler(req, res) {
       const stylesCSS = await fs.readFile(path.join(templatePath, 'styles.css'), 'utf8');
       const scriptJS = await fs.readFile(path.join(templatePath, 'script.js'), 'utf8');
       
-      // Read portfolio updater script
-      let portfolioUpdaterJS = '';
+      // Read portfolio data script
+      let portfolioDataJS = '';
       try {
-        portfolioUpdaterJS = await fs.readFile(path.join(templatePath, 'portfolio-updater.js'), 'utf8');
+        portfolioDataJS = await fs.readFile(path.join(templatePath, 'portfolio-data.js'), 'utf8');
       } catch (error) {
-        console.log('Portfolio updater script not found, using basic version');
-        portfolioUpdaterJS = generateBasicPortfolioUpdater();
+        console.log('Portfolio data script not found, using basic version');
+        portfolioDataJS = generateBasicPortfolioData();
       }
 
       // Replace placeholders in HTML with actual data
@@ -135,8 +143,8 @@ export default async function handler(req, res) {
           contentType: 'application/javascript'
         },
         {
-          key: `${folderName}/portfolio-updater.js`,
-          body: portfolioUpdaterJS,
+          key: `${folderName}/portfolio-data.js`,
+          body: portfolioDataJS,
           contentType: 'application/javascript'
         }
       ];
@@ -227,16 +235,22 @@ function injectUserData(html, templateData, resumeData) {
   return processedHtml;
 }
 
-function generateBasicPortfolioUpdater() {
+function generateBasicPortfolioData() {
   return `
-// Basic Portfolio Updater
-function updatePortfolioData() {
-  // This function will be called to update portfolio data dynamically
-  console.log('Portfolio data loaded');
-}
+// Basic Portfolio Data
+window.PortfolioData = {
+  async loadData() {
+    console.log('Portfolio data loaded');
+    return null;
+  }
+};
 
 // Call on page load
-document.addEventListener('DOMContentLoaded', updatePortfolioData);
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.modernPortfolio) {
+    console.log('Modern portfolio initialized');
+  }
+});
   `;
 }
 

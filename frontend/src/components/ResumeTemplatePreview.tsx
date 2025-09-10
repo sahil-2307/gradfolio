@@ -54,8 +54,8 @@ const templates: Template[] = [
     id: 1,
     name: "Modern Professional",
     description: "Clean, minimalist design perfect for developers and tech professionals",
-    previewUrl: "https://gradfolio-previews.s3.amazonaws.com/modern/preview.html",
-    deploymentUrl: "/templates/modern/index.html"
+    previewUrl: "/portfolio-templates/modern-professional/index.html",
+    deploymentUrl: "/portfolio-templates/modern-professional/index.html"
   },
   {
     id: 2,
