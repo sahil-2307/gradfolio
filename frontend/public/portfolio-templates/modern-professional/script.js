@@ -725,20 +725,28 @@ class ModernProfessionalPortfolio {
     }
 
     loadPortfolioData() {
+        console.log('Loading portfolio data...');
+        
         // Try to load data from window.PortfolioData if available
         if (window.PortfolioData) {
+            console.log('PortfolioData system available');
             window.PortfolioData.loadData().then(data => {
-                if (data) {
+                console.log('Portfolio data loaded:', data);
+                if (data && data.name && data.name !== 'Professional Name') {
+                    console.log('Using loaded data');
                     this.currentData = data;
                     this.populatePortfolio(data);
                 } else {
+                    console.log('No valid data found, using sample data');
                     this.loadSampleData();
                 }
             }).catch(error => {
                 console.error('Error loading portfolio data:', error);
+                console.log('Falling back to sample data');
                 this.loadSampleData();
             });
         } else {
+            console.log('PortfolioData system not available, using sample data');
             this.loadSampleData();
         }
     }

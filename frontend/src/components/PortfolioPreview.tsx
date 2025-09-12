@@ -124,23 +124,48 @@ const PortfolioPreview: React.FC = () => {
   };
 
   const transformToModernFormat = (data: PortfolioData) => {
-    return {
-      name: data.hero.title,
-      title: data.hero.subtitle,
-      shortBio: data.hero.description,
-      email: data.contact.email,
-      phone: data.contact.phone,
-      location: data.contact.location,
+    console.log('Transforming portfolio data:', data);
+    
+    // Extract name from hero title (remove "Hi, I'm " prefix if present)
+    const name = data.hero.title.replace(/^Hi,?\s*I'?m\s*/, '') || 'Professional Name';
+    
+    // Get technical and soft skills
+    const technicalSkills = data.about.skills
+      .filter(skill => skill.category.toLowerCase().includes('technical') || skill.category === 'Technical')
+      .map(skill => skill.name);
+    
+    const softSkills = data.about.skills
+      .filter(skill => skill.category.toLowerCase().includes('soft') || skill.category === 'Soft Skills')
+      .map(skill => skill.name);
+    
+    const transformedData = {
+      name: name,
+      title: data.hero.subtitle || 'Professional',
+      shortBio: data.hero.description || 'Passionate professional creating innovative solutions.',
+      email: data.contact.email || 'contact@email.com',
+      phone: data.contact.phone || '+1 (555) 123-4567',
+      location: data.contact.location || 'Location',
       linkedin: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('linkedin'))?.url || '',
       github: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('github'))?.url || '',
-      website: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('website'))?.url || '',
-      aboutParagraph1: data.about.description,
-      aboutParagraph2: 'Passionate about creating innovative solutions and delivering exceptional results.',
+      website: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('website') || link.name.toLowerCase().includes('portfolio'))?.url || '',
+      twitter: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('twitter'))?.url || '',
+      instagram: data.contact.socialLinks.find(link => link.name.toLowerCase().includes('instagram'))?.url || '',
+      aboutParagraph1: data.about.description || 'I am a passionate professional with extensive experience in my field.',
+      aboutParagraph2: data.about.highlights && data.about.highlights.length > 0 
+        ? data.about.highlights.map(h => h.description).join(' ') 
+        : 'I specialize in delivering high-quality results and building meaningful professional relationships.',
       skills: {
-        technical: data.about.skills.filter(skill => skill.category === 'technical').map(skill => skill.name),
-        soft: data.about.skills.filter(skill => skill.category === 'soft').map(skill => skill.name)
+        technical: technicalSkills.length > 0 ? technicalSkills : ['Professional Skills', 'Problem Solving', 'Communication'],
+        soft: softSkills.length > 0 ? softSkills : ['Leadership', 'Team Collaboration', 'Adaptability']
       },
-      experience: [
+      experience: data.projects.projects.length > 0 ? [
+        {
+          position: data.hero.subtitle || 'Professional Role',
+          company: 'Current Company',
+          duration: '2022 - Present',
+          description: data.about.description || 'Leading projects and delivering exceptional results.'
+        }
+      ] : [
         {
           position: 'Professional Role',
           company: 'Company Name',
@@ -149,13 +174,16 @@ const PortfolioPreview: React.FC = () => {
         }
       ],
       projects: data.projects.projects.map(project => ({
-        title: project.title,
-        description: project.description,
-        technologies: project.technologies,
+        title: project.title || 'Project Title',
+        description: project.description || 'Project description',
+        technologies: Array.isArray(project.technologies) ? project.technologies : ['Technology'],
         link: project.liveUrl || '',
         github: project.githubUrl || ''
       }))
     };
+    
+    console.log('Transformed data for Modern Professional template:', transformedData);
+    return transformedData;
   };
 
   if (loading) {
