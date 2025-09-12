@@ -38,15 +38,28 @@ window.PortfolioData = {
 
     // Get data from URL parameters
     getDataFromURL() {
+        console.log('Checking URL parameters for portfolio data...');
         const urlParams = new URLSearchParams(window.location.search);
         const dataParam = urlParams.get('data');
         
-        if (!dataParam) return null;
+        console.log('URL search params:', window.location.search);
+        console.log('Data parameter found:', dataParam ? 'Yes' : 'No');
+        
+        if (!dataParam) {
+            console.log('No data parameter in URL');
+            return null;
+        }
         
         try {
-            return JSON.parse(decodeURIComponent(dataParam));
+            console.log('Attempting to decode and parse URL data...');
+            const decodedData = decodeURIComponent(dataParam);
+            console.log('Decoded data length:', decodedData.length);
+            const parsedData = JSON.parse(decodedData);
+            console.log('Successfully parsed URL data:', parsedData);
+            return parsedData;
         } catch (error) {
             console.error('Error parsing URL data:', error);
+            console.error('Raw data param:', dataParam.substring(0, 200) + '...');
             return null;
         }
     },

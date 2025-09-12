@@ -752,7 +752,15 @@ class ModernProfessionalPortfolio {
     }
 
     populatePortfolio(data) {
-        console.log('Populating portfolio with data:', data);
+        console.log('=== POPULATING PORTFOLIO ===');
+        console.log('Data received:', data);
+        console.log('Data type:', typeof data);
+        console.log('Data keys:', Object.keys(data || {}));
+
+        // Create debug info element for development
+        if (window.location.hostname === 'localhost' || window.location.search.includes('debug=true')) {
+            this.createDebugPanel(data);
+        }
 
         // Update document title and meta tags
         document.title = `${data.name || 'Portfolio'} - ${data.title || 'Professional'}`;
@@ -1079,6 +1087,68 @@ class ModernProfessionalPortfolio {
             controls.style.display = 'block';
             setTimeout(() => controls.classList.add('visible'), 100);
         }
+    }
+
+    createDebugPanel(data) {
+        const existingDebug = document.getElementById('debug-panel');
+        if (existingDebug) {
+            existingDebug.remove();
+        }
+
+        const debugPanel = document.createElement('div');
+        debugPanel.id = 'debug-panel';
+        debugPanel.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 400px;
+            max-height: 300px;
+            overflow: auto;
+            z-index: 10000;
+            border: 2px solid #00ff00;
+        `;
+
+        const debugInfo = {
+            timestamp: new Date().toISOString(),
+            dataExists: !!data,
+            dataKeys: data ? Object.keys(data) : [],
+            name: data?.name || 'NOT SET',
+            title: data?.title || 'NOT SET',
+            email: data?.email || 'NOT SET',
+            skillsCount: data?.skills ? `Technical: ${data.skills.technical?.length || 0}, Soft: ${data.skills.soft?.length || 0}` : 'NOT SET',
+            projectsCount: data?.projects?.length || 0,
+            urlParams: window.location.search,
+            hostname: window.location.hostname
+        };
+
+        debugPanel.innerHTML = `
+            <h3 style="margin: 0 0 10px 0; color: #00ff00;">🐛 Debug Panel</h3>
+            <pre style="margin: 0; white-space: pre-wrap; font-size: 11px;">
+${JSON.stringify(debugInfo, null, 2)}
+            </pre>
+            <button onclick="this.parentElement.remove()" style="
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background: #ff0000;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 2px 6px;
+                cursor: pointer;
+                font-size: 10px;
+            ">✕</button>
+        `;
+
+        document.body.appendChild(debugPanel);
+        
+        console.log('Debug panel created with info:', debugInfo);
     }
 
     // Utility functions

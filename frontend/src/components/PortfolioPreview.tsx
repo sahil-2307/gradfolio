@@ -72,6 +72,7 @@ const PortfolioPreview: React.FC = () => {
 
   const loadPortfolioData = (username: string) => {
     try {
+      console.log('=== Portfolio Data Loading Debug ===');
       console.log('Looking for portfolio data with key:', `portfolio_data_${username}`);
       
       // Check all localStorage keys for debugging
@@ -85,10 +86,34 @@ const PortfolioPreview: React.FC = () => {
       
       if (data) {
         const parsedData = JSON.parse(data);
-        console.log('Parsed portfolio data:', parsedData);
+        console.log('Parsed portfolio data structure:', {
+          hasHero: !!parsedData.hero,
+          hasAbout: !!parsedData.about,
+          hasProjects: !!parsedData.projects,
+          hasContact: !!parsedData.contact,
+          heroTitle: parsedData.hero?.title,
+          aboutSkills: parsedData.about?.skills?.length || 0,
+          projectsCount: parsedData.projects?.projects?.length || 0
+        });
         setPortfolioData(parsedData);
       } else {
         console.log('No portfolio data found for username:', username);
+        // Try to find any portfolio data with similar username patterns
+        const similarKeys = allKeys.filter(key => 
+          key.includes('portfolio_data') && key.toLowerCase().includes(username.toLowerCase())
+        );
+        console.log('Similar keys found:', similarKeys);
+        
+        if (similarKeys.length > 0) {
+          console.log('Attempting to use first similar key:', similarKeys[0]);
+          const alternativeData = localStorage.getItem(similarKeys[0]);
+          if (alternativeData) {
+            const parsedData = JSON.parse(alternativeData);
+            console.log('Using alternative data:', parsedData);
+            setPortfolioData(parsedData);
+            return;
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading portfolio data:', error);
@@ -102,15 +127,39 @@ const PortfolioPreview: React.FC = () => {
   };
 
   const renderModernProfessionalTemplate = () => {
-    if (!portfolioData) return null;
+    if (!portfolioData) {
+      console.log('No portfolio data available for Modern Professional template');
+      return (
+        <div style={{ 
+          width: '100%', 
+          height: '100vh', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          <h2>Loading Portfolio Data...</h2>
+          <p>Please wait while we load your portfolio information.</p>
+        </div>
+      );
+    }
 
     // Transform portfolio data to Modern Professional format
     const modernData = transformToModernFormat(portfolioData);
+    console.log('Rendering Modern Professional with data:', modernData);
+    
+    // Encode the data for URL transmission
+    const encodedData = encodeURIComponent(JSON.stringify(modernData));
+    const iframeSrc = `/portfolio-templates/modern-professional/index.html?data=${encodedData}`;
+    
+    console.log('Iframe source:', iframeSrc);
+    console.log('Data length:', encodedData.length);
     
     return (
       <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
         <iframe
-          src={`/portfolio-templates/modern-professional/index.html?data=${encodeURIComponent(JSON.stringify(modernData))}`}
+          src={iframeSrc}
           style={{ 
             width: '100%', 
             height: '100%', 
@@ -118,6 +167,7 @@ const PortfolioPreview: React.FC = () => {
             display: 'block'
           }}
           title="Modern Professional Portfolio"
+          onLoad={() => console.log('Modern Professional iframe loaded')}
         />
       </div>
     );
