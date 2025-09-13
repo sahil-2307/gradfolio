@@ -162,12 +162,13 @@ const ResumeTemplatePreview: React.FC = () => {
     setDeploymentStatus('deploying');
 
     try {
-      const response = await fetch('/api/deploy-portfolio', {
+      const response = await fetch('/api/portfolio-management', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          action: 'deploy',
           userId: user.id,
           username: user.username,
           templateId: selectedTemplate.id,

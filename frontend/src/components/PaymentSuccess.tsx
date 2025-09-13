@@ -60,12 +60,15 @@ const PaymentSuccess: React.FC = () => {
         console.log('Sending to API:', apiData);
 
         // Store payment in database
-        const response = await fetch('/api/store-payment', {
+        const response = await fetch('/api/payment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(apiData),
+          body: JSON.stringify({
+            action: 'store',
+            ...apiData
+          }),
         });
 
         console.log('API Response status:', response.status);

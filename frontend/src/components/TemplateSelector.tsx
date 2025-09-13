@@ -109,7 +109,7 @@ const TemplateSelector: React.FC = () => {
     const user = await AuthService.getCurrentUser();
     if (user) {
       try {
-        const response = await fetch(`/api/check-access?userId=${user.id}&templateId=${template.id}`);
+        const response = await fetch(`/api/auth-unified?action=check-access&userId=${user.id}&templateId=${template.id}`);
         const accessData = await response.json();
         
         if (accessData.success && accessData.hasTemplateAccess) {

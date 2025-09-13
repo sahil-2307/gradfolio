@@ -280,12 +280,15 @@ class ModernPortfolio {
             timestamp: Date.now()
         };
 
-        const response = await fetch('/api/deploy-portfolio', {
+        const response = await fetch('/api/portfolio-management', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(deployData)
+            body: JSON.stringify({
+                action: 'deploy',
+                ...deployData
+            })
         });
 
         return await response.json();
