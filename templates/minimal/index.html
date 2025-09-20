@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo" id="nav-name">John Doe</a>
+            <ul class="nav-menu">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#work" class="nav-link">Work</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span id="hero-name">John Doe</span>
+                </h1>
+                <p class="hero-subtitle" id="hero-designation">Minimalist Designer & Developer</p>
+                <p class="hero-description" id="hero-description">
+                    I create simple, elegant solutions that focus on user experience and clean aesthetics.
+                </p>
+                <div class="hero-actions">
+                    <a href="#work" class="btn btn-primary">View Work</a>
+                    <a href="#" class="btn btn-text" id="download-resume">Resume</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://via.placeholder.com/300x300" alt="Profile" id="hero-photo">
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About</h2>
+                    <p id="about-para1">
+                        I believe in the power of simplicity. My approach to design and development focuses on creating clean, functional, and beautiful experiences.
+                    </p>
+                    <p id="about-para2">
+                        With a background in both design and development, I bridge the gap between aesthetics and functionality to deliver solutions that truly work.
+                    </p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="stat-projects">50+</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="stat-experience">3+</span>
+                        <span class="stat-label">Years</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="stat-clients">20+</span>
+                        <span class="stat-label">Clients</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2>Skills</h2>
+            <div class="skills-grid" id="skills-container">
+                <!-- Skills will be dynamically populated -->
+                <div class="skill-item">
+                    <h3>Design</h3>
+                    <p>UI/UX, Figma, Adobe Creative Suite</p>
+                </div>
+                <div class="skill-item">
+                    <h3>Frontend</h3>
+                    <p>React, TypeScript, CSS, HTML</p>
+                </div>
+                <div class="skill-item">
+                    <h3>Backend</h3>
+                    <p>Node.js, Python, Databases</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2>Experience</h2>
+            <div class="experience-list" id="experience-container">
+                <!-- Experience items will be dynamically populated -->
+                <div class="exp-item">
+                    <div class="exp-year">2022 - Now</div>
+                    <div class="exp-content">
+                        <h3>Senior Designer</h3>
+                        <p>Creative Agency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Section -->
+    <section id="work" class="work">
+        <div class="container">
+            <h2>Selected Work</h2>
+            <div class="work-grid" id="projects-container">
+                <!-- Projects will be dynamically populated -->
+                <div class="work-item">
+                    <div class="work-image">
+                        <img src="https://via.placeholder.com/400x300" alt="Project">
+                    </div>
+                    <div class="work-content">
+                        <h3>Minimal App</h3>
+                        <p>Clean mobile application design</p>
+                        <div class="work-links">
+                            <a href="#" class="work-link">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-text">
+                    <h2>Let's work together</h2>
+                    <p id="contact-description">
+                        I'm always interested in new opportunities and interesting projects.
+                        Let's create something beautiful together.
+                    </p>
+                    <div class="contact-info">
+                        <a href="mailto:" class="contact-link" id="contact-email">hello@johndoe.com</a>
+                        <a href="tel:" class="contact-link" id="contact-phone">+1 (555) 123-4567</a>
+                        <span class="contact-location" id="contact-location">San Francisco, CA</span>
+                    </div>
+                    <div class="social-links" id="social-links">
+                        <a href="#" class="social-link">LinkedIn</a>
+                        <a href="#" class="social-link">GitHub</a>
+                        <a href="#" class="social-link">Dribbble</a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <input type="text" placeholder="Name" required>
+                        <input type="email" placeholder="Email" required>
+                        <textarea placeholder="Message" required></textarea>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script src="portfolio-updater.js"></script>
+</body>
+</html>

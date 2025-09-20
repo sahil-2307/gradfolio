@@ -387,14 +387,14 @@
 }
 
 .btn-primary {
-  background: var(--gradient-primary);
+  background: #1E73BE;
   color: white !important;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
   border: none;
 }
 
-[data-theme="light"] .btn-primary {
-  background: var(--brand-blue);
+[data-theme="dark"] .btn-primary {
+  background: #4A9EFF;
   color: white !important;
 }
 
