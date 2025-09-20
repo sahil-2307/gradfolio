@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2 id="nav-name">John Executive</h2>
+                <p>Chief Executive Officer</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#achievements" class="nav-link">Achievements</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span id="hero-name">John Executive</span>
+                    </h1>
+                    <h2 class="hero-subtitle" id="hero-designation">Chief Executive Officer</h2>
+                    <p class="hero-description" id="hero-description">
+                        Driving strategic growth and operational excellence across Fortune 500 companies with over 15 years of executive leadership experience.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <h3 id="stat-experience">15+</h3>
+                            <p>Years Leadership</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 id="stat-companies">5</h3>
+                            <p>Companies Led</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 id="stat-revenue">$2B+</h3>
+                            <p>Revenue Generated</p>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn btn-primary">Schedule Meeting</a>
+                        <a href="#" class="btn btn-outline" id="download-resume">Executive Summary</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="image-frame">
+                        <img src="https://via.placeholder.com/400x500" alt="Executive Profile" id="hero-photo">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Executive Profile</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="lead-paragraph" id="about-para1">
+                        A visionary executive with a proven track record of transforming organizations and driving sustainable growth in competitive markets.
+                    </p>
+                    <p id="about-para2">
+                        Specializing in strategic planning, operational efficiency, and stakeholder management, I have successfully led multiple organizations through periods of significant transformation and growth.
+                    </p>
+                    <div class="expertise-areas">
+                        <h3>Core Expertise</h3>
+                        <div class="expertise-grid" id="skills-container">
+                            <div class="expertise-item">
+                                <i class="fas fa-chart-line"></i>
+                                <h4>Strategic Planning</h4>
+                                <p>Long-term vision and execution</p>
+                            </div>
+                            <div class="expertise-item">
+                                <i class="fas fa-users"></i>
+                                <h4>Team Leadership</h4>
+                                <p>Building high-performing teams</p>
+                            </div>
+                            <div class="expertise-item">
+                                <i class="fas fa-handshake"></i>
+                                <h4>Stakeholder Relations</h4>
+                                <p>Board and investor management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Executive Experience</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="experience-timeline" id="experience-container">
+                <!-- Experience items will be dynamically populated -->
+                <div class="timeline-item">
+                    <div class="timeline-date">2020 - Present</div>
+                    <div class="timeline-content">
+                        <div class="company-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Chief Executive Officer</h3>
+                        <h4>Fortune 500 Corporation</h4>
+                        <p>Leading strategic transformation initiatives resulting in 40% revenue growth and improved operational efficiency across all business units.</p>
+                        <ul>
+                            <li>Increased company valuation by $500M</li>
+                            <li>Expanded into 3 new international markets</li>
+                            <li>Implemented digital transformation strategy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="achievements">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Key Achievements</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Industry Leader of the Year</h3>
+                    <p>Forbes Recognition 2023</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Excellence in Leadership</h3>
+                    <p>Harvard Business Review 2022</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Digital Transformation Award</h3>
+                    <p>McKinsey Institute 2021</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Executive Contact</h2>
+                <div class="title-underline"></div>
+                <p class="section-subtitle" id="contact-description">
+                    Available for board positions, advisory roles, and strategic consulting opportunities.
+                </p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Executive Assistant</h4>
+                            <p id="contact-email">john.executive@company.com</p>
+                            <span>Available Mon-Fri, 9AM-5PM PST</span>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Direct Line</h4>
+                            <p id="contact-phone">+1 (555) 123-4567</p>
+                            <span>For urgent matters only</span>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Corporate Office</h4>
+                            <p id="contact-location">New York, NY</p>
+                            <span>By appointment only</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Schedule Executive Meeting</h3>
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Company/Organization" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="email" placeholder="Email Address" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" placeholder="Phone Number" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select required>
+                                <option value="">Meeting Purpose</option>
+                                <option value="board">Board Position</option>
+                                <option value="advisory">Advisory Role</option>
+                                <option value="consulting">Strategic Consulting</option>
+                                <option value="investment">Investment Opportunity</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Meeting Agenda & Key Discussion Points" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-check"></i>
+                            Request Meeting
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="social-links" id="social-links">
+                <a href="#" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fas fa-globe"></i>
+                    <span>Company Website</span>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Press Coverage</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>&copy; 2024 <span id="footer-name">John Executive</span>. All rights reserved.</p>
+                    <p>Executive Portfolio | Confidential & Proprietary</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Legal Disclaimer</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="portfolio-updater.js"></script>
+</body>
+</html>
